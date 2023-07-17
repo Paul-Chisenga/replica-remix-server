@@ -1,0 +1,48 @@
+@import url("../../template/assets/css/all.css");
+@import url("../../template/assets/css/bootstrap-icons.css");
+@import url("../../template/assets/css/boxicons.min.css");
+@import url("../../template/assets/css/bootstrap.min.css");
+@import url("../../template/assets/css/animate.css");
+@import url("../../template/assets/css/slick.css");
+@import url("../../template/assets/css/swiper-bundle.css");
+@import url("../../template/assets/css/style.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.recent-post-area .pagination,
+.Shop-pages .pagination,
+.blog-standard-pages .pagination {
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.recent-post-area .page-link,
+.Shop-pages .page-link,
+.blog-standard-pages .page-link {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--primary-color1);
+  font-family: var(--font-jost);
+  border-radius: 5px;
+  margin: 10px;
+}
+.recent-post-area .page-link:hover,
+.Shop-pages .page-link:hover,
+.blog-standard-pages .page-link:hover {
+  color: var(--white);
+  background-color: var(--primary-color1);
+}
+.recent-post-area .page-link:focus,
+.Shop-pages .page-link:focus,
+.blog-standard-pages .page-link:focus {
+  box-shadow: none;
+}
+.recent-post-area .page-item.active .page-link,
+.Shop-pages .page-item.active .page-link,
+.blog-standard-pages .page-item.active .page-link {
+  z-index: 3;
+  color: #fff;
+  background-color: var(--primary-color1);
+  border-color: #e9ecef;
+} /*# sourceMappingURL=main.css.map */

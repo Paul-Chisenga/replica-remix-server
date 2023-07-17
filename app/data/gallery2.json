@@ -1,0 +1,123 @@
+[
+  {
+    "id": 1,
+    "imageBig": "assets/images/bg/2col-gallery-big-01.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-01.png",
+    "sliderImage": "assets/images/bg/h2-gallery-1.png",
+    "category": "Food",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Chef Cooking Vegetarian",
+    "categorySlug": "food"
+  },
+  {
+    "id": 2,
+    "imageBig": "assets/images/bg/2col-gallery-big-02.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-02.png",
+    "sliderImage": "assets/images/bg/h2-gallery-2.png",
+    "category": "Interior",
+    "categorySlug": "interior",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Spicy Beef"
+  },
+  {
+    "id": 3,
+    "imageBig": "assets/images/bg/2col-gallery-big-03.png",
+    "sliderImage": "assets/images/bg/h2-gallery-3.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-03.png",
+    "category": "Traditions",
+    "categorySlug": "traditions",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Delicious Food"
+  },
+  {
+    "id": 4,
+    "imageBig": "assets/images/bg/2col-gallery-big-04.png",
+    "sliderImage": "assets/images/bg/h2-gallery-4.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-04.png",
+    "category": "Privateevent",
+    "categorySlug": "privateevent",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Restho Interior Part"
+  },
+  {
+    "id": 5,
+    "imageBig": "assets/images/bg/2col-gallery-big-05.png",
+    "sliderImage": "assets/images/bg/h2-gallery-5.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-05.png",
+    "category": "Eatingplace",
+    "categorySlug": "eatingplace",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Chef Cooking Vegetarian"
+  },
+  {
+    "id": 6,
+    "imageBig": "assets/images/bg/2col-gallery-big-06.png",
+    "sliderImage": "assets/images/bg/h2-gallery-6.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-06.png",
+    "category": "Interior",
+    "categorySlug": "interior",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Chef Cooking Vegetarian"
+  },
+
+  {
+    "id": 7,
+    "imageBig": "assets/images/bg/2col-gallery-big-02.png",
+    "sliderImage": "assets/images/bg/h2-gallery-2.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-02.png",
+    "category": "Interior",
+    "categorySlug": "interior",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Restho Interior Part"
+  },
+  {
+    "id": 8,
+    "imageBig": "assets/images/bg/2col-gallery-big-05.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-05.png",
+    "sliderImage": "assets/images/bg/h2-gallery-5.png",
+    "category": "Food",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Chef Cooking Vegetarian",
+    "categorySlug": "food"
+  },
+  {
+    "id": 9,
+    "imageBig": "assets/images/bg/2col-gallery-big-02.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-02.png",
+    "sliderImage": "assets/images/bg/h2-gallery-2.png",
+    "category": "Food",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Restho Interior Part",
+    "categorySlug": "food"
+  },
+  {
+    "id": 10,
+    "imageBig": "assets/images/bg/2col-gallery-big-03.png",
+    "sliderImage": "assets/images/bg/h2-gallery-3.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-03.png",
+    "category": "Privateevent",
+    "categorySlug": "privateevent",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Chef Cooking Vegetarian"
+  },
+  {
+    "id": 11,
+    "imageBig": "assets/images/bg/2col-gallery-big-06.png",
+    "sliderImage": "assets/images/bg/h2-gallery-6.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-06.png",
+    "category": "Privateevent",
+    "categorySlug": "privateevent",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Chef Cooking Vegetarian"
+  },
+  {
+    "id": 12,
+    "imageBig": "assets/images/bg/2col-gallery-big-01.png",
+    "sliderImage": "assets/images/bg/h2-gallery-1.png",
+    "imageSmalll": "assets/images/bg/2col-gallery-01.png",
+    "category": "Privateevent",
+    "categorySlug": "privateevent",
+    "slideCategoryTitle": "Cooking",
+    "slideTitle": "Restho Interior Part"
+  }
+]
