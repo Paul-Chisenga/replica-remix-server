@@ -14,7 +14,9 @@ import {
 import mainStyles from "./styles/main.css";
 import { useEffect, useRef } from "react";
 import type { ReactNode, FC } from "react";
-import ErrorBox from "./components/common/ErrorBox";
+import CartContextProvider from "./context/CartContext";
+import NotFound from "./components/errors/404";
+import Error1 from "./components/errors/Error1";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: mainStyles },
@@ -60,7 +62,9 @@ export default function App() {
   return (
     <Document>
       {/* <LoadingBar color={"#f59f0a"} ref={ref} /> */}
-      <Outlet />
+      <CartContextProvider>
+        <Outlet />
+      </CartContextProvider>
       {/* {navigation.state === "submitting" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent">
           <Spinner />
@@ -87,26 +91,26 @@ export function ErrorBoundary() {
   if (isRouteErrorResponse(error)) {
     return (
       <Document title={error.statusText}>
-        <ErrorBox
+        <NotFound />
+        {/* <ErrorBox
           title={error.status === 404 ? "404" : error.statusText}
           message={
             error.data?.message ??
             (error.status === 404 ? "Page not found" : "Something went wrong")
           }
-        />
+        /> */}
       </Document>
     );
   }
 
-  // Don't forget to typecheck with your own logic.
-  // Any value can be thrown, not just errors!
   let errorMessage = "Unknown error";
   if (error.message) {
     errorMessage = error.message;
   }
   return (
-    <Document title={"Something went wrong"}>
-      <ErrorBox title={"Error"} message={errorMessage} />
+    <Document title={"error"}>
+      <Error1 errorMessage={errorMessage} />
+      {/* <ErrorBox title={"Error"} message={errorMessage} /> */}
     </Document>
   );
 }

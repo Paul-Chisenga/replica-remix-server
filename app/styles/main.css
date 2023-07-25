@@ -8,7 +8,27 @@
 @import url("../../template/assets/css/style.css");
 @tailwind base;
 @tailwind components;
+@layer components {
+  .title {
+    @apply tw-font-extrabold tw-font-cormorant tw-text-dark tw-leading-7 tw-capitalize;
+  }
+  .form-input label {
+    @apply tw-mb-3 tw-font-jost tw-text-sm tw-font-medium tw-text-[#505050];
+  }
+  .form-input input.light {
+    @apply tw-block tw-border-solid tw-border tw-border-[#eee] tw-rounded-md tw-h-12 tw-px-5 tw-py-0 tw-leading-10 tw-w-full tw-transition-all tw-text-sm tw-text-[#848484] tw-font-jost;
+  }
+  .form-input p {
+    @apply tw-px-2 tw-text-sm tw-font-medium tw-text-red-500  tw-font-jost;
+  }
+  .btn-primary-fill {
+    @apply tw-py-3 tw-px-16 tw-text-lg tw-font-bold tw-font-jost;
+  }
+}
 @tailwind utilities;
+.box--shadow {
+  box-shadow: 4px 8px 30px rgba(141, 141, 141, 0.1);
+}
 .recent-post-area .pagination,
 .Shop-pages .pagination,
 .blog-standard-pages .pagination {

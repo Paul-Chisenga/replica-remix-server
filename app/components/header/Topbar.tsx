@@ -7,7 +7,8 @@ function Topbar() {
           <div className="col-lg-5 col-md-5 d-flex align-items-center justify-content-md-start justify-content-center">
             <div className="open-time">
               <p>
-                <span>Opening Hour:</span> 9.00 am to 10.00 pm
+                <span>Opening Hour:</span> 7am - 10pm(mon-thu) | 7am -
+                11pm(fri-sat)
               </p>
             </div>
           </div>
@@ -16,13 +17,13 @@ function Topbar() {
               <ul>
                 <li>
                   <a href="mailto:info@example.com">
-                    <i className="bi bi-envelope" /> info@example.com
+                    <i className="bi bi-envelope" /> Replicabakery@gmail.com
                   </a>
                 </li>
                 <li>
                   <a>
                     <i className="bi bi-geo-alt" />
-                    Road-01, Block-B, West London City
+                    Rosslyn Riviera Mall, Floor #1 Nairobi Kenya
                   </a>
                 </li>
               </ul>

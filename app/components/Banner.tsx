@@ -3,7 +3,7 @@ import { Link } from "@remix-run/react";
 
 const Banner = () => {
   return (
-    <div className="home3-banner ">
+    <div className="home3-banner">
       <div className="social-area">
         <ul>
           <li>
@@ -37,7 +37,7 @@ const Banner = () => {
         </div>
         <p>
           <img className="left-vec" src="/images/icon/h3-open-vec.svg" alt="" />
-          Our Restaurant is Opening Hour 9:30 AM to 9.00 PM
+          Opening Hour 7am to 10pm (Mon-Thu) | 7am to 11pm (Fri-Sat)
           <img
             className="right-vec"
             src="/images/icon/h3-open-vec.svg"

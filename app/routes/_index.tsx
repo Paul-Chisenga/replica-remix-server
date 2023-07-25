@@ -6,7 +6,6 @@ import Header2 from "~/components/header/Header2";
 import Topbar from "~/components/header/Topbar";
 import MenuList from "~/components/menuList/MenuList";
 import Reservation2 from "~/components/reservation/Reservation2";
-import { getUsers } from "~/controllers/test.server";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -34,7 +33,5 @@ export default function Index() {
 }
 
 export async function loader() {
-  const users = await getUsers();
-  console.log(users);
   return null;
 }

@@ -168,7 +168,7 @@ function Header() {
               <div className="hotline-info">
                 <span>Call Now</span>
                 <h6>
-                  <a href="tel:+254740000000">+254-740000000</a>
+                  <a href="tel:+254115904863">+254 115 904863</a>
                 </h6>
               </div>
             </div>
@@ -195,7 +195,7 @@ function Header() {
               <div className="hotline-info">
                 <span>Call Now</span>
                 <h6>
-                  <a href="tel:+254740000000">+254-740000000</a>
+                  <a href="tel:+254115904863">+254 115 904863</a>
                 </h6>
               </div>
             </div>

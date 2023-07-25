@@ -15,19 +15,16 @@ function Footer() {
                 <div className="menu-container">
                   <ul>
                     <li>
-                      <Link to="/menu/special#indian">Indian Menu</Link>
-                    </li>
-                    <li>
-                      <Link to="/menu/super">Super Menu List</Link>
+                      <Link to="/menu/special#indian">Our Menu</Link>
                     </li>
                     <li>
                       <Link to="/reservation">Private Event</Link>
                     </li>
                     <li>
-                      <Link to="/menu/special#italian">Italian Menu</Link>
+                      <Link to="/menu/special#italian">Contact us</Link>
                     </li>
                     <li>
-                      <Link to="#">Best Offer</Link>
+                      <Link to="/menu">Shop now</Link>
                     </li>
                   </ul>
                   <ul>
@@ -35,13 +32,7 @@ function Footer() {
                       <Link to="/about">About</Link>
                     </li>
                     <li>
-                      <Link to="/shop">Shopping</Link>
-                    </li>
-                    <li>
-                      <Link to="#">New Food</Link>
-                    </li>
-                    <li>
-                      <Link to="#">Special Offer</Link>
+                      <Link to="/reservation">Reservation</Link>
                     </li>
                   </ul>
                 </div>
@@ -97,20 +88,22 @@ function Footer() {
                   <div className="single-contact">
                     <span className="title">Phone:</span>
                     <span className="content">
-                      <a href="tel:+254740000000">+254-740000000</a>
+                      <a href="tel:+254115904863">+254 115 904863</a>
                     </span>
                   </div>
                   <div className="single-contact">
                     <span className="title">Email:</span>
                     <span className="content">
-                      <a href="mailto:info@example.com">info@example.com</a>
+                      <a href="mailto:Replicabakery@gmail.com">
+                        Replicabakery@gmail.com
+                      </a>
                     </span>
                   </div>
                   <div className="single-contact">
                     <span className="title">Location:</span>
                     <span className="content">
-                      <a href="https://www.google.com/maps/d/viewer?mid=1SuwNJ-HqTWSF2Bmaur7HqmVqZBk&hl=en&ll=-1.2933369999999977%2C36.80705299999999&z=17">
-                        Parkland,House-167/170,
+                      <a href="https://goo.gl/maps/nsvSqtQXTSBzFBqQ9">
+                        Rosslyn Riviera Mall, Floor #1
                         <br />
                         Nairobi, Kenya.
                       </a>

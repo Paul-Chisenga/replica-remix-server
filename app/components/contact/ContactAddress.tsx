@@ -19,7 +19,7 @@ const ContactAddress = () => {
                     </div>
                     <div className="content">
                       <a>
-                        Parklands,House-167/170,
+                        Rosslyn Riviera Mall, Floor #1
                         <br />
                         Nairobi, Kenya.
                       </a>
@@ -30,7 +30,7 @@ const ContactAddress = () => {
                       <img src="/images/icon/phone.svg" alt="phone" />
                     </div>
                     <div className="content">
-                      <a href="#">+254-740000000</a>
+                      <a href="#">+254 115 904863</a>
                     </div>
                   </li>
                   <li>
@@ -38,7 +38,7 @@ const ContactAddress = () => {
                       <img src="/images/icon/envlope.svg" alt="envlope" />
                     </div>
                     <div className="content">
-                      <a href="#">info@example.com</a>
+                      <a href="#">Replicabakery@gmail.com</a>
                     </div>
                   </li>
                 </ul>

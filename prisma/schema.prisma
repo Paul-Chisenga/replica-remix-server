@@ -10,7 +10,140 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
-  name String
+enum MenuCategory {
+  BEVARAGE
+  BAKERY
+  BREAKFAST
+  FOOD
+}
+
+type ProductVariation {
+  label String
+  price Int
+}
+
+enum AdminPriviledge {
+  CRU_ADMIN
+  CRU_MENU
+  CREATE_PRODUCT
+  UPDATE_PRODUCT
+  DELETE_PRODUCT
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+model Picture {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  ext       String
+  name      String
+  key       String
+  size      Int
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String?  @db.ObjectId
+  updatedAt DateTime @default(now())
+  createdAt DateTime @updatedAt
+}
+
+model Menu {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  category  MenuCategory
+  title     String       @unique
+  subtitle  String?
+  products  Product[]
+  createdBy Admin        @relation(fields: [adminId], references: [id])
+  adminId   String       @db.ObjectId
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Product {
+  id          String             @id @default(auto()) @map("_id") @db.ObjectId
+  title       String             @unique
+  subtitle    String?
+  description String?
+  price       Int?
+  varitions   ProductVariation[]
+  menu        Menu               @relation(fields: [menuId], references: [id])
+  menuId      String             @db.ObjectId
+  children    Product[]          @relation("ParentChilden")
+  parent      Product?           @relation("ParentChilden", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parentId    String?            @db.ObjectId
+  createdBy   Admin              @relation(fields: [adminId], references: [id])
+  adminId     String             @db.ObjectId
+  pictures    Picture[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  cartItem    CartItem[]
+  orderItem   OrderItem[]
+}
+
+model Profile {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstname String
+  lastname  String
+  email     String    @unique
+  phone     Int
+  role      Role
+  password  String
+  active    Boolean   @default(true)
+  admin     Admin?
+  customer  Customer?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Admin {
+  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  profile     Profile           @relation(fields: [profileId], references: [id])
+  profileId   String            @unique @db.ObjectId
+  priviledges AdminPriviledge[]
+  menu        Menu[]
+  product     Product[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model CartItem {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  product    Product   @relation(fields: [productId], references: [id])
+  productId  String    @db.ObjectId
+  count      Int
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?   @db.ObjectId
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model OrderItem {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
+  count     Int
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderNo    Int
+  items      OrderItem[]
+  customer   Customer    @relation(fields: [customerId], references: [id])
+  customerId String      @db.ObjectId
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model Customer {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  profile   Profile    @relation(fields: [profileId], references: [id])
+  profileId String     @unique @db.ObjectId
+  cart      CartItem[]
+  orders    Order[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }

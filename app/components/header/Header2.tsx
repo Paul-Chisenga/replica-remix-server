@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link, NavLink } from "@remix-run/react";
-import { useEffect, useReducer, useRef } from "react";
+import { useContext, useEffect, useReducer, useRef } from "react";
+import { CartContext } from "~/context/CartContext";
 
 /*---------Using reducer mange the active or inactive menu----------*/
 const initialState = {
@@ -39,6 +40,9 @@ function reducer(state: any, action: any) {
 function Header2() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const headerRef = useRef(null);
+
+  const ctx = useContext(CartContext);
+
   const handleScroll = () => {
     const { scrollY } = window;
     dispatch({ type: "setScrollY", payload: scrollY });
@@ -132,7 +136,7 @@ function Header2() {
             <div className="hotline-info">
               <span>Call Now</span>
               <h6>
-                <a href="tel:+254740000000">+254-740000000</a>
+                <a href="tel:+254115904863">+254 115 904863</a>
               </h6>
             </div>
           </div>
@@ -154,7 +158,7 @@ function Header2() {
             <div className="hotline-info">
               <span>Call Now</span>
               <h6>
-                <a href="tel:+254740000000">+254-740000000</a>
+                <a href="tel:+254115904863">+254 115 904863</a>
               </h6>
             </div>
           </div>
@@ -163,9 +167,11 @@ function Header2() {
               <Link to="/cart">
                 <i className="bi bi-cart tw-text-xl tw-text-white" />
               </Link>
-              <span className="tw-absolute -tw-right-2 -tw-top-2 tw-text-emerald-400 tw-text-xs tw-font-bold">
-                3
-              </span>
+              {ctx.cart > 0 && (
+                <span className="tw-absolute -tw-right-2 -tw-top-2 tw-text-emerald-400 tw-text-xs tw-font-bold">
+                  {ctx.cart}
+                </span>
+              )}
             </div>
             <Link to="/menu" className="primary-btn btn-md">
               Order Now

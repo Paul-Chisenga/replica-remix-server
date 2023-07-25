@@ -2,7 +2,7 @@
 import ReservationForm from "~/components/category/ReservationForm";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import datePickerCss from "react-datepicker/dist/react-datepicker.css";
-import { LinksFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 
 const Reservation = () => {
   return (
