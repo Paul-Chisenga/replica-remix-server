@@ -1,12 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import ReactDatePicker from "react-datepicker";
-
-const ReservationForm = () => {
-  const [startDate1, setStartDate1] = useState<Date | null>(null);
-
+import "react-datepicker/dist/react-datepicker.css";
+function Reservation2() {
+  const [startDate1, setStartDate1] = useState(false);
   return (
-    <div className="container">
-      <div className="reservation-1 mb-120 mt-120">
+    <div className="h2-reservarion-area mb-120">
+      <div className="bg-vector">
+        <img
+          className="img-fluid"
+          src="/images/bg/h2-reservation-1.png"
+          alt=""
+        />
+      </div>
+      <div className="container">
         <div className="row d-flex align-items-center justify-content-center mb-40">
           <div className="col-lg-8">
             <div className="section-title text-center">
@@ -49,10 +55,10 @@ const ReservationForm = () => {
                 <div className="col-lg-6 col-md-6 mb-25">
                   <div className="form-inner date-icon">
                     <ReactDatePicker
-                      selected={startDate1}
-                      onChange={(date) => setStartDate1(date)}
+                      selected={startDate1 as any}
+                      onChange={(date) => setStartDate1(date as any)}
                       placeholderText="Check In"
-                      className="claender"
+                      className="calendar"
                     />
                   </div>
                 </div>
@@ -83,13 +89,11 @@ const ReservationForm = () => {
                   </div>
                 </div>
                 <div className="col-lg-6 col-md-6">
-                  <div className="col-lg-12 mb-40">
-                    <div className="form-inner2">
-                      <label htmlFor="vehicle" className="tw-text-center">
-                        Please not that your reservation will be canceled 15
-                        minutes past the reservation time{" "}
-                      </label>
-                    </div>
+                  <div className="form-inner2">
+                    <label htmlFor="vehicle" className="tw-text-center">
+                      Please not that your reservation will be canceled 15
+                      minutes past the reservation time{" "}
+                    </label>
                   </div>
                   <div className="form-inner">
                     <button type="submit">Reserve Now</button>
@@ -102,6 +106,6 @@ const ReservationForm = () => {
       </div>
     </div>
   );
-};
+}
 
-export default ReservationForm;
+export default Reservation2;

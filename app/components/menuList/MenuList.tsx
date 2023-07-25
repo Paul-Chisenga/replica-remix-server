@@ -1,3 +1,5 @@
+import { Link } from "@remix-run/react";
+
 const MenuList = () => {
   return (
     <div className="h3-menu-area mb-240">
@@ -18,7 +20,7 @@ const MenuList = () => {
                   alt=""
                 />
               </span>
-              <h2>Super Menu List</h2>
+              <h2>Our Menu</h2>
             </div>
           </div>
         </div>
@@ -48,16 +50,25 @@ const MenuList = () => {
                       <img src="/images/bg/h3-menu-food-1.png" alt="" />
                     </div>
                     <div className="content">
-                      <h3>Breakfast Bar</h3>
+                      <h3>
+                        <Link
+                          to={`/shop/id`}
+                          className="tw-text-inherit hover:tw-text-emerald-500 hover:tw-underline"
+                        >
+                          Breakfast Bar
+                        </Link>
+                      </h3>
                       <p>Special Breakfast to make for our customer.</p>
                     </div>
                   </div>
                   <div className="divider">
                     <img src="/images/icon/h3-menu-divider.svg" alt="" />
                   </div>
-                  <div className="price">
-                    <span>$45</span>
-                  </div>
+                  <Link to={`/shop/id`} className="link">
+                    <div className="price">
+                      <span>$45</span>
+                    </div>
+                  </Link>
                 </li>
                 <li>
                   <div className="item-name">

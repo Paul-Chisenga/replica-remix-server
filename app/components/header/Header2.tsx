@@ -105,35 +105,11 @@ function Header2() {
             <li>
               <NavLink to="/about">About</NavLink>
             </li>
-            <li className="menu-item-has-children">
-              <NavLink to="/menu" className={"drop-down"}>
-                Menu
-              </NavLink>
-              <i
-                onClick={() => dispatch({ type: "menu" })}
-                className={
-                  state.activeMenu === "menu"
-                    ? "bi bi-plus dropdown-icon active"
-                    : "bi bi-plus dropdown-icon"
-                }
-              />
-              <ul
-                className={
-                  state.activeMenu === "menu"
-                    ? "sub-menu  d-block"
-                    : "sub-menu d-xl-block d-none"
-                }
-              >
-                <li>
-                  <NavLink to="/menu/super">Super Menu</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/menu/special">Special Menu</NavLink>
-                </li>
-              </ul>
+            <li>
+              <NavLink to="/menu">Menu</NavLink>
             </li>
             <li>
-              <NavLink to="/shop">Shop</NavLink>
+              <NavLink to="/reservation">Reservation</NavLink>
             </li>
 
             <li>
@@ -187,12 +163,12 @@ function Header2() {
               <Link to="/cart">
                 <i className="bi bi-cart tw-text-xl tw-text-white" />
               </Link>
-              <span className="tw-absolute -tw-right-2 -tw-top-2 tw-text-amber-400 tw-text-xs tw-font-bold">
+              <span className="tw-absolute -tw-right-2 -tw-top-2 tw-text-emerald-400 tw-text-xs tw-font-bold">
                 3
               </span>
             </div>
-            <Link to="/contact" className="primary-btn btn-md">
-              Connect Now
+            <Link to="/menu" className="primary-btn btn-md">
+              Order Now
             </Link>
           </div>
 

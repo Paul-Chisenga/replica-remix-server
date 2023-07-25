@@ -142,32 +142,8 @@ function Header() {
               <li>
                 <NavLink to="/about">About</NavLink>
               </li>
-              <li className="menu-item-has-children">
-                <Link to="/menu" className="drop-down">
-                  Menu
-                </Link>
-                <i
-                  onClick={() => dispatch({ type: "menu" })}
-                  className={
-                    state.activeMenu === "menu"
-                      ? "bi bi-plus dropdown-icon active"
-                      : "bi bi-plus dropdown-icon"
-                  }
-                />
-                <ul
-                  className={
-                    state.activeMenu === "menu"
-                      ? "sub-menu  d-block"
-                      : "sub-menu d-xl-block d-none"
-                  }
-                >
-                  <li>
-                    <Link to="/menu/super">Super Menu</Link>
-                  </li>
-                  <li>
-                    <Link to="/menu/special">Special Menu</Link>
-                  </li>
-                </ul>
+              <li>
+                <NavLink to="/menu">Menu</NavLink>
               </li>
               <li>
                 <Link to="/shop">Shop</Link>

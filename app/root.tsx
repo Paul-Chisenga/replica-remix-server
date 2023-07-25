@@ -14,7 +14,7 @@ import {
 import mainStyles from "./styles/main.css";
 import { useEffect, useRef } from "react";
 import type { ReactNode, FC } from "react";
-import ErrorBox from "./components/ErrorBox";
+import ErrorBox from "./components/common/ErrorBox";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: mainStyles },

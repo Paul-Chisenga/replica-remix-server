@@ -1,10 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link } from "@remix-run/react";
-import React from "react";
 
 const Banner = () => {
   return (
-    <div className="home3-banner">
+    <div className="home3-banner ">
       <div className="social-area">
         <ul>
           <li>
