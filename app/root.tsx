@@ -17,6 +17,7 @@ import type { ReactNode, FC } from "react";
 import CartContextProvider from "./context/CartContext";
 import NotFound from "./components/errors/404";
 import Error1 from "./components/errors/Error1";
+import LoadingBar from "react-top-loading-bar";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: mainStyles },
@@ -40,7 +41,7 @@ const Document: FC<{ title?: string; children: ReactNode }> = ({
         {children}
         <ScrollRestoration />
         <Scripts />
-        <script src="/js/bootstrap.bundle.min.js"></script>
+        {/* <script src="/js/bootstrap.bundle.min.js"></script> */}
         <LiveReload />
       </body>
     </html>
@@ -61,7 +62,7 @@ export default function App() {
 
   return (
     <Document>
-      {/* <LoadingBar color={"#f59f0a"} ref={ref} /> */}
+      <LoadingBar color={"#34d399"} ref={ref} />
       <CartContextProvider>
         <Outlet />
       </CartContextProvider>

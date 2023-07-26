@@ -12,7 +12,9 @@
   .title {
     @apply tw-font-extrabold tw-font-cormorant tw-text-dark tw-leading-7 tw-capitalize;
   }
-  .form-input label {
+  /* Regular Input */
+  .form-input label,
+  .form-input-label {
     @apply tw-mb-3 tw-font-jost tw-text-sm tw-font-medium tw-text-[#505050];
   }
   .form-input input.light {
@@ -21,6 +23,24 @@
   .form-input p {
     @apply tw-px-2 tw-text-sm tw-font-medium tw-text-red-500  tw-font-jost;
   }
+
+  /* Check Input */
+  .form-check {
+    @apply tw-block tw-min-h-[1.5rem] tw-pl-[1.5em] tw-mb-4;
+  }
+  .form-check-input {
+    @apply tw-w-3 tw-h-3 tw-align-top tw-bg-white tw-bg-no-repeat tw-bg-center tw-bg-contain tw-border-solid tw-border-black/25 tw-appearance-none tw-float-left tw-shadow-none -tw-ml-6 tw-mt-2;
+  }
+  .form-check-input[type="radio"] {
+    @apply tw-rounded-full;
+  }
+  .form-check-input:checked {
+    @apply ![background:#848484] tw-border-transparent tw-shadow-none tw-outline-none tw-mt-2;
+  }
+  .form-check-label {
+    @apply tw-font-semibold tw-text-base tw-text-[#00152b] tw-inline-block tw-mb-0;
+  }
+
   .btn-primary-fill {
     @apply tw-py-3 tw-px-16 tw-text-lg tw-font-bold tw-font-jost;
   }
@@ -29,6 +49,9 @@
 .box--shadow {
   box-shadow: 4px 8px 30px rgba(141, 141, 141, 0.1);
 }
+/* .form-check-input:checked {
+  background: #848484 !important;
+} */
 .recent-post-area .pagination,
 .Shop-pages .pagination,
 .blog-standard-pages .pagination {

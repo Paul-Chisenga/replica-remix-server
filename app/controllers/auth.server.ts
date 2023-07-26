@@ -49,7 +49,7 @@ export async function getUserSession(request: Request) {
 export async function requireUserSession(request: Request, role?: Role[]) {
   const session = await getUserSession(request);
   if (!session) {
-    throw redirect("/auth");
+    throw redirect("/login");
   }
 
   if (role && !role.includes(session.role)) {

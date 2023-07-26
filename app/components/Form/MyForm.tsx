@@ -98,10 +98,19 @@ const MyForm: FormObj = {
     );
   },
   Input: forwardRef((props, ref) => {
-    // const isSelect = props.type === "radio" || props.type === "checkbox";
     const inputProps = { ...props };
     if (inputProps.horizontal) {
       delete inputProps.horizontal;
+    }
+    if (props.type === "radio" || props.type === "checkbox") {
+      return (
+        <div className="form-check">
+          <input {...inputProps} className="form-check-input" ref={ref} />
+          <label className="form-check-label" htmlFor={props.id}>
+            {props.label}
+          </label>
+        </div>
+      );
     }
     return (
       <div className="tw-mb-6 form-input">

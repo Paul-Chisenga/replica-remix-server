@@ -7,8 +7,7 @@ function Topbar() {
           <div className="col-lg-5 col-md-5 d-flex align-items-center justify-content-md-start justify-content-center">
             <div className="open-time">
               <p>
-                <span>Opening Hour:</span> 7am - 10pm(mon-thu) | 7am -
-                11pm(fri-sat)
+                <span>Opening:</span> 7am - 10pm(mon-thu) | 7am - 11pm(fri-sat)
               </p>
             </div>
           </div>

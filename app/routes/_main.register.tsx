@@ -3,7 +3,7 @@ import { redirect } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import MyForm from "~/components/Form/MyForm";
 import { createAdmin } from "~/controllers/admin.server";
-import { getUserSession } from "~/controllers/auth.server";
+import { getUserSession, login } from "~/controllers/auth.server";
 import {
   hasErrors,
   invariantValidate,
@@ -151,7 +151,7 @@ export async function action({ request }: ActionArgs) {
       phone: +data.phone,
     });
 
-    return redirect("/login");
+    return login({ email: data.email, password: data.password }, "/");
   } catch (error: any) {
     if (error.status === 422) {
       return {

@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link, NavLink } from "@remix-run/react";
-import { useContext, useEffect, useReducer, useRef } from "react";
+import { FC, useContext, useEffect, useReducer, useRef } from "react";
 import { CartContext } from "~/context/CartContext";
+import AccountDropdown from "../Dropdown/AccountDropdown";
 
 /*---------Using reducer mange the active or inactive menu----------*/
 const initialState = {
@@ -37,7 +38,14 @@ function reducer(state: any, action: any) {
   }
 }
 
-function Header2() {
+interface Props {
+  user?: {
+    name: string;
+    email: string;
+  };
+}
+
+const Header2: FC<Props> = ({ user }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const headerRef = useRef(null);
 
@@ -162,7 +170,22 @@ function Header2() {
               </h6>
             </div>
           </div>
-          <div className="tw-flex tw-items-center tw-gap-16">
+          <div className="tw-relative">
+            <Link to="/cart">
+              <i className="bi bi-cart tw-text-xl tw-text-white" />
+            </Link>
+            {ctx.cart > 0 && (
+              <span className="tw-absolute -tw-right-2 -tw-top-2 tw-text-emerald-400 tw-text-xs tw-font-bold">
+                {ctx.cart}
+              </span>
+            )}
+          </div>
+
+          <Link to="/menu" className="primary-btn btn-md">
+            Order Now
+          </Link>
+          <AccountDropdown user={user} />
+          {/* <div className="tw-flex tw-items-center tw-gap-16">
             <div className="tw-relative mr-2">
               <Link to="/cart">
                 <i className="bi bi-cart tw-text-xl tw-text-white" />
@@ -176,10 +199,10 @@ function Header2() {
             <Link to="/menu" className="primary-btn btn-md">
               Order Now
             </Link>
-          </div>
+          </div> */}
 
           <div
-            className="sidebar-button mobile-menu-btn "
+            className="sidebar-button mobile-menu-btn"
             onClick={() => dispatch({ type: "mobileMenu", isMobileMenu: true })}
           >
             <i className="bi bi-list" />
@@ -188,6 +211,6 @@ function Header2() {
       </div>
     </header>
   );
-}
+};
 
 export default Header2;
