@@ -114,6 +114,7 @@ export async function action({ request, params }: ActionArgs) {
         error: error.message,
       };
     }
+    console.log("LOGIN", error);
     throw new Error("Something went wrong");
   }
 }
