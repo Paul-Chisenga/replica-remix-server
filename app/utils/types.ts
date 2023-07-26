@@ -12,3 +12,7 @@ export interface PicturePayload {
   name: string;
   size: number;
 }
+export interface MyActionData {
+  error?: string;
+  errors?: MyObject<string | null>;
+}

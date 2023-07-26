@@ -45,16 +45,22 @@ export async function createMenu(
   adminProfileId: string,
   payload: {
     title: string;
-    subtitle?: string;
+    subtitle: string;
     category: string;
   }
 ) {
   const menu = await prisma.menu.findUnique({
-    where: { title: payload.title },
+    where: {
+      title_category_subtitle: {
+        title: payload.title,
+        subtitle: payload.subtitle,
+        category: payload.category as any,
+      },
+    },
   });
 
   if (menu) {
-    throw parseCustomError("A simular menu is found, use another title", 422);
+    throw parseCustomError("A simular menu exists", 422);
   }
 
   await prisma.menu.create({
@@ -69,6 +75,10 @@ export async function createMenu(
       },
     },
   });
+}
+export async function getMenuList() {
+  const list = await prisma.menu.findMany({ orderBy: { title: "asc" } });
+  return list;
 }
 
 // PRODUCTS
@@ -121,4 +131,16 @@ export async function createProduct(
         : undefined,
     },
   });
+}
+export async function getProducts() {
+  const products = await prisma.product.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      menu: true,
+    },
+  });
+
+  return products;
 }

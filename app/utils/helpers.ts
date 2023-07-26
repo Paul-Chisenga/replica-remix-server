@@ -1,5 +1,6 @@
 import invariant from "invariant";
-import { MyObject } from "./types";
+import type { MyObject } from "./types";
+import { MenuCategory } from "@prisma/client";
 
 // ERRORS
 export function parseCustomError(message: string, status: number) {
@@ -36,4 +37,20 @@ export function requiredFieldValidate(
 }
 export function hasErrors(errors: MyObject<string | null>) {
   return Object.values(errors).some((errorMessage) => errorMessage);
+}
+
+// MENU
+export function parseMenuCategory(cat: MenuCategory) {
+  switch (cat) {
+    case MenuCategory.BAKERY:
+      return "Bakery";
+    case MenuCategory.BEVARAGE:
+      return "Beverage";
+    case MenuCategory.BREAKFAST:
+      return "Breakfast";
+    case MenuCategory.FOOD:
+      return "Lunch/Dinner";
+    default:
+      return "";
+  }
 }

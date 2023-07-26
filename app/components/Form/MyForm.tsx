@@ -122,7 +122,7 @@ const MyForm: FormObj = {
         <input
           {...inputProps}
           ref={ref}
-          className={`form-input light ${props.className}`}
+          className={`light ${props.className}`}
         />
         {props.errormessage && <p>{props.errormessage}</p>}
       </div>
@@ -130,18 +130,14 @@ const MyForm: FormObj = {
   }),
   TextArea: forwardRef((props, ref) => {
     return (
-      <div className="flex flex-col-reverse">
-        {props.errormessage && <div className="">{props.errormessage}</div>}
-        <textarea
-          {...props}
-          ref={ref}
-          className={`form-input ${props.className} rounded-lg`}
-        />
+      <div className="tw-mb-6 form-input">
         {props.label && (
-          <label htmlFor={props.id} className={"form-input-label required"}>
+          <label htmlFor={props.id} className="required">
             {props.label}
           </label>
         )}
+        <textarea {...props} ref={ref} className={`light ${props.className}`} />
+        {props.errormessage && <p>{props.errormessage}</p>}
       </div>
     );
   }),
@@ -178,23 +174,18 @@ const MyForm: FormObj = {
         );
       }
       return (
-        <div className="flex flex-col-reverse">
-          {props.errormessage && (
-            <div className="px-2 text-xs text-red-500 ">
-              {props.errormessage}
-            </div>
-          )}
-          <select
-            {...props}
-            children={children}
-            className="form-input"
-            ref={ref}
-          />
+        <div className="tw-mb-6 form-input">
           {props.label && (
-            <label htmlFor={props.id} className={"form-input-label required"}>
+            <label htmlFor={props.id} className="required">
               {props.label}
             </label>
           )}
+          <select
+            {...props}
+            ref={ref}
+            className={`light tw-appearance-none ${props.className}`}
+          />
+          {props.errormessage && <p>{props.errormessage}</p>}
         </div>
       );
     }),

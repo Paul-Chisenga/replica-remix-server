@@ -1,29 +1,32 @@
-import { MenuCategory } from "@prisma/client";
-import { Form, useActionData } from "@remix-run/react";
+import { MenuCategory, Role } from "@prisma/client";
+import type { ActionArgs } from "@remix-run/node";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import Button2 from "~/components/Button/Button2";
+import FormError from "~/components/Form/FormError";
 import MyForm from "~/components/Form/MyForm";
+import { createMenu } from "~/controllers/admin.server";
+import { requireUserSession } from "~/controllers/auth.server";
+import {
+  hasErrors,
+  invariantValidate,
+  requiredFieldValidate,
+} from "~/utils/helpers";
+import type { MyActionData, MyObject } from "~/utils/types";
 
 const AddMenu = () => {
-  const actionData = useActionData();
+  const actionData = useActionData() as MyActionData | null;
+  const navigation = useNavigation();
+
   return (
     <>
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-screen-sm">
         <h4 className="mb-20 tw-text-3xl title">Add Menu</h4>
-        {actionData?.error && (
-          <div className="tw-px-2 tw-text-sm tw-text-red-500 tw-font-jost">
-            {actionData?.error}
-          </div>
-        )}
+        <FormError message={actionData?.error} />
         <br />
         <Form action="" method="POST">
-          <MyForm.Group>
-            <MyForm.Input
-              type="text"
-              placeholder="Title"
-              label="Title"
-              required
-              name="title"
-            />
+          <MyForm.Group disabled={navigation.state === "submitting"}>
+            <MyForm.Input type="text" label="Title" required name="title" />
+            <MyForm.Input type="text" label="Subtitle" name="subtitle" />
             <MyForm.Misc>
               <MyForm.Label required>Category</MyForm.Label>
               <MyForm.Input
@@ -64,3 +67,33 @@ const AddMenu = () => {
 };
 
 export default AddMenu;
+
+export async function action({ request }: ActionArgs) {
+  if (request.method !== "POST") {
+    throw new Error("Bad Request");
+  }
+
+  const session = await requireUserSession(request, [Role.ADMIN]);
+  const data = Object.fromEntries(await request.formData()) as MyObject<string>;
+  // Invariant validation
+  invariantValidate(data);
+  // Required input validation
+  const errors = requiredFieldValidate(data, ["title", "category"]);
+  if (hasErrors(errors)) {
+    return errors;
+  }
+  try {
+    await createMenu(session.profileId, {
+      title: data.title.toLowerCase(),
+      subtitle: data.subtitle.toLowerCase(),
+      category: data.category,
+    });
+    // return redirect("/admin/menu");
+    return null;
+  } catch (error: any) {
+    if (error.status === 422) {
+      return { error: error.message };
+    }
+    throw new Error("Something went wrong.");
+  }
+}
