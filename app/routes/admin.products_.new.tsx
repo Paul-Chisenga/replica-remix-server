@@ -65,6 +65,7 @@ const NewProduct = () => {
               label="Price"
               name="price"
               required
+              defaultValue={250}
             />
             <MyForm.TextArea
               rows={3}

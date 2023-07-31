@@ -122,7 +122,7 @@ export async function createProduct(
         connectOrCreate: {
           where: {
             id:
-              payload.submenu !== "other"
+              payload.submenu !== "other" && payload.submenu !== "none"
                 ? payload.submenu
                 : ObjectID().toHexString(),
           },
