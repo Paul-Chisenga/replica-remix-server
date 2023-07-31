@@ -17,11 +17,6 @@ enum MenuCategory {
   FOOD
 }
 
-type ProductVariation {
-  label String
-  price Int
-}
-
 enum AdminPriviledge {
   CRU_ADMIN
   CRU_MENU
@@ -47,12 +42,22 @@ model Picture {
   createdAt DateTime @updatedAt
 }
 
+model SubMenu {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  title     String?
+  products  Product[]
+  menu      Menu      @relation(fields: [menuId], references: [id])
+  menuId    String    @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
 model Menu {
   id        String       @id @default(auto()) @map("_id") @db.ObjectId
   category  MenuCategory
   title     String
   subtitle  String?
-  products  Product[]
+  submenu   SubMenu[]
   createdBy Admin        @relation(fields: [adminId], references: [id])
   adminId   String       @db.ObjectId
   createdAt DateTime     @default(now())
@@ -62,22 +67,18 @@ model Menu {
 }
 
 model Product {
-  id          String             @id @default(auto()) @map("_id") @db.ObjectId
-  title       String             @unique
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  title       String      @unique
   subtitle    String?
   description String?
-  price       Int?
-  varitions   ProductVariation[]
-  menu        Menu               @relation(fields: [menuId], references: [id])
-  menuId      String             @db.ObjectId
-  children    Product[]          @relation("ParentChilden")
-  parent      Product?           @relation("ParentChilden", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  parentId    String?            @db.ObjectId
-  createdBy   Admin              @relation(fields: [adminId], references: [id])
-  adminId     String             @db.ObjectId
+  prices      Float[]
+  subMenu     SubMenu     @relation(fields: [subMenuId], references: [id])
+  subMenuId   String      @db.ObjectId
+  createdBy   Admin       @relation(fields: [adminId], references: [id])
+  adminId     String      @db.ObjectId
   pictures    Picture[]
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   cartItem    CartItem[]
   orderItem   OrderItem[]
 }

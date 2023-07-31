@@ -10,7 +10,7 @@ const MenuList = () => {
   return (
     <div>
       <LinkButton2 to="new" className="tw-text-white">
-        new menu
+        Add menu
       </LinkButton2>
 
       <div className="tw-py-6 tw-grid tw-grid-cols-2 tw-gap-6">

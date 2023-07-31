@@ -10,7 +10,7 @@ const Products = () => {
   return (
     <div>
       <LinkButton2 to="new" className="tw-text-white">
-        new menu
+        Add product
       </LinkButton2>
 
       <div className="tw-py-6 tw-grid tw-grid-cols-2 tw-gap-6">
@@ -30,17 +30,17 @@ const Products = () => {
                 </h4>
                 <h6 className="tw-capitalize tw-flex tw-gap-4">
                   <div>
-                    <p className="tw-text-dark">{item.menu.title}</p>
-                    <p>{item.menu.subtitle}</p>
+                    <p className="tw-text-dark">{item.subMenu.menu.title}</p>
+                    <p>{item.subMenu.menu.subtitle}</p>
                   </div>
                   <span className="tw-flex-shrink-0  tw-text-primary tw-uppercase">
-                    {parseMenuCategory(item.menu.category)}
+                    {parseMenuCategory(item.subMenu.menu.category)}
                   </span>
                 </h6>
               </div>
               <div>
                 <h1 className="tw-font-bold tw-text-dark tw-font-cormorant tw-flex-shrink-0">
-                  {item.price}
+                  {item.prices[0]}
                   <p className="tw-text-base tw-text-right">ksh</p>
                 </h1>
               </div>

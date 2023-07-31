@@ -1,4 +1,3 @@
-import type { ProductVariation } from "@prisma/client";
 import { Role } from "@prisma/client";
 import { hashPassword } from "~/services/bcrypt.server";
 import prisma from "~/services/prisma.server";
@@ -77,7 +76,12 @@ export async function createMenu(
   });
 }
 export async function getMenuList() {
-  const list = await prisma.menu.findMany({ orderBy: { title: "asc" } });
+  const list = await prisma.menu.findMany({
+    orderBy: { title: "asc" },
+    include: {
+      submenu: true,
+    },
+  });
   return list;
 }
 
@@ -88,10 +92,9 @@ export async function createProduct(
     title: string;
     subtitle?: string;
     description?: string;
-    price?: number;
-    variations: ProductVariation[];
-    menuId: string;
-    parentProductId?: string;
+    prices: number[];
+    menu: string;
+    submenu: string;
   }
 ) {
   const product = await prisma.product.findUnique({
@@ -110,11 +113,19 @@ export async function createProduct(
       title: payload.title,
       subtitle: payload.subtitle,
       description: payload.description,
-      price: payload.price,
-      varitions: payload.variations,
-      menu: {
-        connect: {
-          id: payload.menuId,
+      prices: payload.prices,
+      subMenu: {
+        connectOrCreate: {
+          where: {
+            id: payload.submenu,
+          },
+          create: {
+            menu: {
+              connect: {
+                id: payload.menu,
+              },
+            },
+          },
         },
       },
       createdBy: {
@@ -122,13 +133,6 @@ export async function createProduct(
           profileId: adminProfileId,
         },
       },
-      parent: payload.parentProductId
-        ? {
-            connect: {
-              id: payload.parentProductId,
-            },
-          }
-        : undefined,
     },
   });
 }
@@ -138,7 +142,11 @@ export async function getProducts() {
       createdAt: "desc",
     },
     include: {
-      menu: true,
+      subMenu: {
+        include: {
+          menu: true,
+        },
+      },
     },
   });
 
