@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 import { hashPassword } from "~/services/bcrypt.server";
 import prisma from "~/services/prisma.server";
 import { parseCustomError } from "~/utils/helpers";
+import ObjectID from "bson-objectid";
 
 // ADMIN USERS
 export async function createAdmin(payload: {
@@ -95,6 +96,7 @@ export async function createProduct(
     prices: number[];
     menu: string;
     submenu: string;
+    submenuTitle?: string;
   }
 ) {
   const product = await prisma.product.findUnique({
@@ -112,14 +114,20 @@ export async function createProduct(
     data: {
       title: payload.title,
       subtitle: payload.subtitle,
-      description: payload.description,
+      description:
+        payload.description ??
+        "Nulla facilisi. In lacinia eu odio ut iaculis. Vivamus cursus commodo libero vel porttitor.",
       prices: payload.prices,
       subMenu: {
         connectOrCreate: {
           where: {
-            id: payload.submenu,
+            id:
+              payload.submenu !== "other"
+                ? payload.submenu
+                : ObjectID().toHexString(),
           },
           create: {
+            title: payload.submenuTitle,
             menu: {
               connect: {
                 id: payload.menu,

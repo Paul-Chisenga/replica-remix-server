@@ -21,12 +21,12 @@ const NewProduct = () => {
   const actionData = useActionData() as MyActionData | null;
 
   const [submenu, setSubmenu] = useState<SubMenu[]>([]);
-  const [selectedSubmenu, setSelectedSubmenu] = useState("");
+  const [selectedSubmenu, setSelectedSubmenu] = useState("none");
 
   const navigation = useNavigation();
 
   const handleChangeMenu = (menuId: string) => {
-    setSelectedSubmenu("");
+    setSelectedSubmenu("none");
     const selectedMenu = menu.find((item) => item.id === menuId);
     if (!selectedMenu) {
       setSubmenu([]);
@@ -42,7 +42,10 @@ const NewProduct = () => {
         <FormError message={actionData?.error} />
         <br />
         <Form action="" method="POST">
-          <MyForm.Group disabled={navigation.state === "submitting"}>
+          <MyForm.Group
+            disabled={navigation.state === "submitting"}
+            className="mb-5"
+          >
             <MyForm.Input
               type="text"
               id="title"
@@ -98,14 +101,14 @@ const NewProduct = () => {
                 <MyForm.Select.Wrapper
                   id="sub-menu-selector"
                   label="Sub menu"
-                  name="menu"
+                  name="submenu"
                   required
                   value={selectedSubmenu}
                   onChange={(e) => {
                     setSelectedSubmenu(e.target.value);
                   }}
                 >
-                  <MyForm.Select.Option value="">
+                  <MyForm.Select.Option value="none">
                     No Submenu
                   </MyForm.Select.Option>
                   {submenu.map((item) => (
@@ -125,14 +128,10 @@ const NewProduct = () => {
                   <MyForm.Input
                     id="sub-Menu"
                     label="Enter a submenu title here"
+                    name="submenuTitle"
                     required
                   />
                 )}
-                <MyForm.Input
-                  name="submenu"
-                  type="hidden"
-                  value={selectedSubmenu}
-                />
               </div>
             </MyForm.Misc>
           </MyForm.Group>
@@ -165,12 +164,8 @@ export async function action({ request }: ActionArgs) {
     "submenu",
   ]);
   if (hasErrors(errors)) {
+    console.log(errors);
     return errors;
-  }
-
-  //
-  if (data.submenu === "other") {
-    throw new Error("Invalid request");
   }
 
   try {
@@ -181,10 +176,12 @@ export async function action({ request }: ActionArgs) {
       prices: [+data.price],
       menu: data.menu,
       submenu: data.submenu,
+      submenuTitle: data.submenuTitle ? data.submenuTitle : undefined,
     });
     // return redirect("/admin/menu");
     return null;
   } catch (error: any) {
+    console.log(error);
     if (error.status === 422) {
       return { error: error.message };
     }
