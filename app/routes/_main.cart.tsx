@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Link } from "@remix-run/react";
+import { Link, V2_MetaFunction } from "@remix-run/react";
 import { useReducer } from "react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 
@@ -40,6 +40,16 @@ function ItemCounter({ price }) {
     </>
   );
 }
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "Cart - Replica restaurant" },
+    {
+      name: "description",
+      content: "Find healthy and awesome food at replica!",
+    },
+  ];
+};
 
 function Cart() {
   return (

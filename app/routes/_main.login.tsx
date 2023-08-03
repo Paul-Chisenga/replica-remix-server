@@ -1,10 +1,20 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, Link } from "@remix-run/react";
 import invariant from "invariant";
 import { useTypedActionData } from "remix-typedjson";
 import MyForm from "~/components/Form/MyForm";
 import { getUserSession, login } from "~/controllers/auth.server";
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "Welcome back - Replica restaurant" },
+    {
+      name: "description",
+      content: "Login into your account and enjoy shopping at replica!",
+    },
+  ];
+};
 
 const Authentication = () => {
   const actionData = useTypedActionData();

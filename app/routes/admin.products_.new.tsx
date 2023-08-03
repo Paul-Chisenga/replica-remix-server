@@ -1,5 +1,6 @@
-import { Role, SubMenu } from "@prisma/client";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { SubMenu } from "@prisma/client";
+import { Role } from "@prisma/client";
+import type { ActionArgs } from "@remix-run/node";
 import { Form, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
@@ -144,7 +145,7 @@ const NewProduct = () => {
 };
 
 export default NewProduct;
-export async function loader({ request }: LoaderArgs) {
+export async function loader() {
   const menuList = getMenuList();
   return menuList;
 }
@@ -171,13 +172,15 @@ export async function action({ request }: ActionArgs) {
 
   try {
     await createProduct(session.profileId, {
-      title: data.title.toLowerCase(),
-      subtitle: data.subtitle.toLowerCase(),
-      description: data.description.toLowerCase(),
+      title: data.title.trim().toLowerCase(),
+      subtitle: data.subtitle.trim().toLowerCase(),
+      description: data.description.trim().toLowerCase(),
       prices: [+data.price],
       menu: data.menu,
       submenu: data.submenu,
-      submenuTitle: data.submenuTitle ? data.submenuTitle : undefined,
+      submenuTitle: data.submenuTitle
+        ? data.submenuTitle.trim().toLowerCase()
+        : undefined,
     });
     // return redirect("/admin/menu");
     return null;

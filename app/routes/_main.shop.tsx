@@ -1,3 +1,4 @@
+import type { V2_MetaFunction } from "@remix-run/node";
 import BannerBlogWidget from "~/components/blog/BannerBlogWidget";
 import CategoryBlogWidget from "~/components/blog/CategoryBlogWidget";
 import SearchBlogWidget from "~/components/blog/SearchBlogWidget";
@@ -5,6 +6,16 @@ import TagBlogWidget from "~/components/blog/TagBlogWidget";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import PaginatedItems from "~/components/pagination/PaginatedItems";
 import ShopNewItem from "~/components/shop/ShopNewItem";
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "Shopping - Replica restaurant" },
+    {
+      name: "description",
+      content: "Find healthy and awesome food at replica!",
+    },
+  ];
+};
 
 const Shop = () => {
   return (

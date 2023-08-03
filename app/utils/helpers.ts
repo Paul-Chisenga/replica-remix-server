@@ -1,6 +1,7 @@
 import invariant from "invariant";
 import type { MyObject } from "./types";
 import { MenuCategory } from "@prisma/client";
+import prisma from "~/services/prisma.server";
 
 // ERRORS
 export function parseCustomError(message: string, status: number) {
@@ -52,5 +53,26 @@ export function parseMenuCategory(cat: MenuCategory) {
       return "Lunch/Dinner";
     default:
       return "";
+  }
+}
+
+// COMMON DB OP
+export async function menuLoader(category: MenuCategory) {
+  try {
+    const menu = await prisma.menu.findMany({
+      where: {
+        category,
+      },
+      include: {
+        submenu: {
+          include: {
+            products: true,
+          },
+        },
+      },
+    });
+    return menu;
+  } catch (error) {
+    throw new Error("Something went wrong.");
   }
 }

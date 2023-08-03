@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import type { V2_MetaFunction } from "@remix-run/react";
 import { Link } from "@remix-run/react";
 import { useState } from "react";
 import SwiperCore, {
@@ -9,7 +10,19 @@ import SwiperCore, {
 } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Breadcrumb from "~/components/common/Breadcrumb";
+
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectFade]);
+
+export const meta: V2_MetaFunction = ({ data }) => {
+  return [
+    { title: "A product name - Replica restaurant" },
+    {
+      name: "description",
+      content: "Find healthy and awesome food at replica!",
+    },
+  ];
+};
+
 function ShopDetails() {
   const [count, setCount] = useState(0);
   const increment = () => {

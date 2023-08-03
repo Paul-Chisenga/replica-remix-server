@@ -2,7 +2,6 @@ import { Role } from "@prisma/client";
 import { hashPassword } from "~/services/bcrypt.server";
 import prisma from "~/services/prisma.server";
 import { parseCustomError } from "~/utils/helpers";
-import ObjectID from "bson-objectid";
 
 // ADMIN USERS
 export async function createAdmin(payload: {
@@ -110,41 +109,43 @@ export async function createProduct(
     );
   }
 
-  await prisma.product.create({
-    data: {
-      title: payload.title,
-      subtitle: payload.subtitle,
-      description:
-        payload.description ??
-        "Nulla facilisi. In lacinia eu odio ut iaculis. Vivamus cursus commodo libero vel porttitor.",
-      prices: payload.prices,
-      subMenu: {
-        connectOrCreate: {
-          where: {
-            id:
-              payload.submenu !== "other" && payload.submenu !== "none"
-                ? payload.submenu
-                : ObjectID().toHexString(),
-          },
-          create: {
-            title: payload.submenuTitle,
-            menu: {
-              connect: {
-                id: payload.menu,
-              },
-            },
-          },
-        },
-      },
-      createdBy: {
-        connect: {
-          profileId: adminProfileId,
-        },
-      },
-    },
-  });
+  // await prisma.product.create({
+  //   data: {
+  //     title: payload.title,
+  //     subtitle: payload.subtitle,
+  //     description:
+  //       payload.description ??
+  //       "Nulla facilisi. In lacinia eu odio ut iaculis. Vivamus cursus commodo libero vel porttitor.",
+  //     prices: payload.prices,
+  //     subMenu: {
+  //       connectOrCreate: {
+  //         where: {
+  //           id:
+  //             payload.submenu !== "other" && payload.submenu !== "none"
+  //               ? payload.submenu
+  //               : ObjectID().toHexString(),
+  //         },
+  //         create: {
+  //           title: payload.submenuTitle,
+  //           menu: {
+  //             connect: {
+  //               id: payload.menu,
+  //             },
+  //           },
+  //         },
+  //       },
+  //     },
+  //     createdBy: {
+  //       connect: {
+  //         profileId: adminProfileId,
+  //       },
+  //     },
+  //   },
+  // });
 }
 export async function getProducts() {
+  // await prisma.subMenu.deleteMany();
+  // await prisma.product.deleteMany();
   const products = await prisma.product.findMany({
     orderBy: {
       createdAt: "desc",

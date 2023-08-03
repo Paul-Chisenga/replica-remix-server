@@ -49,6 +49,9 @@
   .btn-primary-fill {
     @apply tw-py-3 tw-px-16 tw-text-lg tw-font-bold tw-font-jost;
   }
+  .menu2-area .menu2-left-img img {
+    @apply tw-object-cover;
+  }
 }
 @tailwind utilities;
 .box--shadow {
@@ -95,3 +98,7 @@
   background-color: var(--primary-color1);
   border-color: #e9ecef;
 } /*# sourceMappingURL=main.css.map */
+
+.menu2-area .menu2-wrap .menu-title h2::after {
+  display: none;
+}

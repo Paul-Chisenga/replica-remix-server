@@ -41,7 +41,7 @@ const Document: FC<{ title?: string; children: ReactNode }> = ({
         {children}
         <ScrollRestoration />
         <Scripts />
-        {/* <script src="/js/bootstrap.bundle.min.js"></script> */}
+        <script src="/js/bootstrap.bundle.min.js"></script>
         <LiveReload />
       </body>
     </html>

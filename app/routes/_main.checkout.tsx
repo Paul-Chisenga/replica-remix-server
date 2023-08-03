@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import { V2_MetaFunction } from "@remix-run/node";
 import type { FC } from "react";
 import { useReducer } from "react";
 import Breadcrumb from "~/components/common/Breadcrumb";
@@ -51,6 +52,16 @@ const MyComponent: FC<{ price: number }> = ({ price }) => {
       </div>
     </>
   );
+};
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "Payment - Replica restaurant" },
+    {
+      name: "description",
+      content: "Find healthy and awesome food at replica!",
+    },
+  ];
 };
 
 function Checkout() {

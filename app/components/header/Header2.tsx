@@ -117,8 +117,30 @@ const Header2: FC<Props> = ({ user }) => {
             <li>
               <NavLink to="/about">About</NavLink>
             </li>
-            <li>
-              <NavLink to="/menu">Menu</NavLink>
+            <li className="menu-item-has-children">
+              <NavLink to="/menu" className="drop-down">
+                Menu
+              </NavLink>
+              <ul
+                className={
+                  state.activeMenu === "homeOne"
+                    ? "sub-menu  d-block"
+                    : "sub-menu d-xl-block d-none"
+                }
+              >
+                <li>
+                  <NavLink to="/menu/breakfast">Breakfast</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/menu/lunch-dinner">Lunch/Dinner</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/menu/bakery">Bakery</NavLink>
+                </li>
+                <li>
+                  <NavLink to="/menu/beverages">Beverages</NavLink>
+                </li>
+              </ul>
             </li>
             <li>
               <NavLink to="/reservation">Reservation</NavLink>

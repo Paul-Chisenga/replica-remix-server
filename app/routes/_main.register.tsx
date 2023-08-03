@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import MyForm from "~/components/Form/MyForm";
@@ -10,6 +10,16 @@ import {
   requiredFieldValidate,
 } from "~/utils/helpers";
 import type { MyObject } from "~/utils/types";
+
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: "Welcome on board - Replica restaurant" },
+    {
+      name: "description",
+      content: "Create an account and enjoy shopping at replica!",
+    },
+  ];
+};
 
 const Register = () => {
   const actionData = useActionData();
