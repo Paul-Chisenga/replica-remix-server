@@ -2,6 +2,24 @@ import invariant from "invariant";
 import type { MyObject } from "./types";
 import { MenuCategory } from "@prisma/client";
 import prisma from "~/services/prisma.server";
+import { format } from "date-fns";
+
+// DATES
+export function formatDate(date: string | Date) {
+  return format(new Date(date), "dd MMM, yyyy");
+}
+export function formatTime(date: string | Date) {
+  return format(new Date(date), "hh:mm a");
+}
+export function formatDateTime(date: string | Date) {
+  return format(new Date(date), "dd MMM, yyyy - hh:mm a");
+}
+
+//RANDOM NUMBERS
+export function randomNumber(min: number, max: number) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 // ERRORS
 export function parseCustomError(message: string, status: number) {

@@ -203,7 +203,7 @@ const Header2: FC<Props> = ({ user }) => {
             )}
           </div>
 
-          <Link to="/menu" className="primary-btn btn-md">
+          <Link to="/shop" className="primary-btn btn-md">
             Order Now
           </Link>
           <AccountDropdown user={user} />

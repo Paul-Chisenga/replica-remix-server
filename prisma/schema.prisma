@@ -69,20 +69,33 @@ model Menu {
 }
 
 model Product {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  title       String      @unique
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  title       String          @unique
   subtitle    String?
   description String?
   prices      Float[]
-  subMenu     SubMenu     @relation(fields: [subMenuId], references: [id], onDelete: Cascade)
-  subMenuId   String      @db.ObjectId
-  createdBy   Admin       @relation(fields: [adminId], references: [id])
-  adminId     String      @db.ObjectId
+  subMenu     SubMenu         @relation(fields: [subMenuId], references: [id], onDelete: Cascade)
+  subMenuId   String          @db.ObjectId
+  createdBy   Admin           @relation(fields: [adminId], references: [id])
+  adminId     String          @db.ObjectId
   pictures    Picture[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  reviews     ProductReview[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   cartItem    CartItem[]
   orderItem   OrderItem[]
+}
+
+model ProductReview {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
+  name      String
+  rating    Int
+  email     String
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Profile {
@@ -112,14 +125,16 @@ model Admin {
 }
 
 model CartItem {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  product    Product   @relation(fields: [productId], references: [id])
-  productId  String    @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String   @db.ObjectId
   count      Int
-  customer   Customer? @relation(fields: [customerId], references: [id])
-  customerId String?   @db.ObjectId
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([productId, customerId])
 }
 
 model OrderItem {

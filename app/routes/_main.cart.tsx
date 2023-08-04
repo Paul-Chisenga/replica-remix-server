@@ -1,45 +1,17 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Link, V2_MetaFunction } from "@remix-run/react";
-import { useReducer } from "react";
+import { Role } from "@prisma/client";
+import type { LoaderArgs } from "@remix-run/node";
+import type { V2_MetaFunction } from "@remix-run/react";
+import { Link } from "@remix-run/react";
+import { useContext, useEffect, useState } from "react";
+import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import Breadcrumb from "~/components/common/Breadcrumb";
-
-const initialState = { count: 1 };
-
-function reducer(state: any, action: any) {
-  switch (action.type) {
-    case "increment":
-      return { count: state.count + 1 };
-    case "decrement":
-      return { count: state.count - 1 };
-    default:
-      throw new Error();
-  }
-}
-function ItemCounter({ price }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const increment = () => {
-    dispatch({ type: "increment" });
-  };
-
-  const decrement = () => {
-    if (state.count > 1) {
-      dispatch({ type: "decrement" });
-    }
-  };
-
-  return (
-    <>
-      <button onClick={decrement} type="button">
-        <i className="bi bi-dash"></i>
-      </button>
-      <span style={{ margin: "0 8px" }}>{state.count}</span>
-      <button onClick={increment} type="button">
-        <i className="bi bi-plus"></i>
-      </button>
-    </>
-  );
-}
+import { requireUserSession } from "~/controllers/auth.server";
+import prisma from "~/services/prisma.server";
+import { CartContext } from "~/context/CartContext";
+import { randomNumber } from "~/utils/helpers";
+import type { action } from "./_main.cart.$id.increment";
+import { ClipLoader } from "react-spinners";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -51,12 +23,65 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
+const IMAGES = ["cart-01.png", "cart-02.png", "cart-03.png"];
+
 function Cart() {
+  const cart = useTypedLoaderData<typeof loader>();
+  const [items, setItems] = useState(cart);
+  const fetcher = useTypedFetcher<typeof action>();
+  const cartContext = useContext(CartContext);
+
+  const cartTotal = cart.reduce((prev, cur) => {
+    const sum = cur.count * cur.product.prices[0];
+    return prev + sum;
+  }, 0);
+
+  const increment = (itemId: string) => {
+    fetcher.submit(
+      {},
+      {
+        action: `${itemId}/increment`,
+        method: "POST",
+      }
+    );
+  };
+
+  const decrement = (itemId: string) => {
+    fetcher.submit(
+      {},
+      {
+        action: `${itemId}/decrement`,
+        method: "POST",
+      }
+    );
+  };
+  const handleDelete = (itemId: string) => {
+    fetcher.submit(
+      {},
+      {
+        action: `${itemId}/remove`,
+        method: "DELETE",
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (fetcher.data) {
+      cartContext.updateCart(fetcher.data.count);
+      setItems(fetcher.data.items);
+    }
+  }, [fetcher.data]);
+
   return (
     <>
       <Breadcrumb pageName="Cart" pageTitle="Cart" />
       <div className="cart-section pt-120 pb-120">
         <div className="container">
+          {fetcher.state === "submitting" && (
+            <div className="tw-fixed tw-inset-0 tw-z-10 tw-flex tw-items-center tw-justify-center tw-bg-white/5">
+              <ClipLoader />
+            </div>
+          )}
           <div className="row">
             <div className="col-12">
               <div className="table-wrapper">
@@ -73,85 +98,65 @@ function Cart() {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td data-label="Delete">
-                        <div className="delete-icon">
-                          <i className="bi bi-x" />
-                        </div>
-                      </td>
-                      <td data-label="Image">
-                        <img src="/images/bg/cart-01.png" alt="" />
-                      </td>
-                      <td data-label="Food Name">
-                        <Link to="/shop/id">
-                          <a>Organic Vegetable grains 100%</a>
-                        </Link>
-                      </td>
-                      <td data-label="Unite Price">
-                        <del>$32.36</del>
-                      </td>
-                      <td data-label="Discount Price">$22.36</td>
-                      <td data-label="Quantity">
-                        <div className="quantity d-flex align-items-center">
-                          <div className="quantity-nav nice-number d-flex align-items-center">
-                            <ItemCounter price={0} />
+                    {items.map((item) => (
+                      <tr key={item.id}>
+                        <td data-label="Delete">
+                          <div
+                            className="delete-icon"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <i className="bi bi-x" />
                           </div>
-                        </div>
-                      </td>
-                      <td data-label="Subtotal">$22.36</td>
-                    </tr>
-                    <tr>
-                      <td data-label="Delete">
-                        <div className="delete-icon">
-                          <i className="bi bi-x" />
-                        </div>
-                      </td>
-                      <td data-label="Image">
-                        <img src="/images/bg/cart-02.png" alt="" />
-                      </td>
-                      <td data-label="Food Name">
-                        <Link to="/shop/id">
-                          <a>Fresh Vegetable Eggplant</a>
-                        </Link>
-                      </td>
-                      <td data-label="Unite Price">
-                        <del>$45.36</del>
-                      </td>
-                      <td data-label="Discount Price">$35</td>
-                      <td data-label="Quantity">
-                        <div className="quantity d-flex align-items-center">
-                          <div className="quantity-nav nice-number d-flex align-items-center">
-                            <ItemCounter price={0} />
+                        </td>
+                        <td data-label="Image">
+                          <img
+                            src={"/images/bg/" + IMAGES[randomNumber(0, 2)]}
+                            alt=""
+                          />
+                        </td>
+                        <td data-label="Food Name">
+                          <Link
+                            to={`/shop/${item.productId}`}
+                            className="tw-capitalize"
+                          >
+                            {item.product.title}
+                          </Link>
+                        </td>
+                        <td data-label="Unite Price">
+                          <del>
+                            <span className="tw-text-xs">ksh</span>
+                            <span>{item.product.prices[0]}</span>
+                          </del>
+                        </td>
+                        <td data-label="Discount Price">
+                          <span className="tw-text-xs">ksh</span>
+                          <span>{item.product.prices[0]}</span>
+                        </td>
+                        <td data-label="Quantity">
+                          <div className="quantity d-flex align-items-center">
+                            <div className="quantity-nav nice-number d-flex align-items-center">
+                              <button
+                                onClick={() => decrement(item.id)}
+                                type="button"
+                              >
+                                <i className="bi bi-dash"></i>
+                              </button>
+                              <div>{item.count}</div>
+                              <button
+                                onClick={() => increment(item.id)}
+                                type="button"
+                              >
+                                <i className="bi bi-plus"></i>
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td data-label="Subtotal">$35.36</td>
-                    </tr>
-                    <tr>
-                      <td data-label="Delete">
-                        <div className="delete-icon">
-                          <i className="bi bi-x" />
-                        </div>
-                      </td>
-                      <td data-label="Image">
-                        <img src="/images/bg/cart-03.png" alt="" />
-                      </td>
-                      <td data-label="Food Name">
-                        <Link to="/shop/id">
-                          <a>Fresh Delicious And Healthy</a>
-                        </Link>
-                      </td>
-                      <td data-label="Unite Price">$15.36</td>
-                      <td data-label="Discount Price">$22.36</td>
-                      <td data-label="Quantity">
-                        <div className="quantity d-flex align-items-center">
-                          <div className="quantity-nav nice-number d-flex align-items-center">
-                            <ItemCounter price={0} />
-                          </div>
-                        </div>
-                      </td>
-                      <td data-label="Subtotal">$30.72</td>
-                    </tr>
+                        </td>
+                        <td data-label="Subtotal">
+                          <span className="tw-text-xs">ksh</span>
+                          <span>{item.product.prices[0] * item.count}</span>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -175,7 +180,10 @@ function Cart() {
                   <tr>
                     <th>Cart Totals</th>
                     <th />
-                    <th>$128.70</th>
+                    <th>
+                      <span className="tw-text-xs">ksh</span>
+                      <span>{cartTotal}</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -195,19 +203,34 @@ function Cart() {
                     </td>
                     <td>
                       <ul className="single-cost text-center">
-                        <li>Fee</li>
-                        <li>$15</li>
+                        <li>
+                          <span className="tw-text-xs">ksh</span>
+                          <span>100</span>
+                        </li>
+                        <li>
+                          <span className="tw-text-xs">ksh</span>
+                          <span>50</span>
+                        </li>
                         <li></li>
-                        <li>$15</li>
-                        <li>$15</li>
-                        <li>$5</li>
+                        <li>
+                          <span className="tw-text-xs">ksh</span>
+                          <span>20</span>
+                        </li>
+                        <li>
+                          <span className="tw-text-xs">ksh</span>
+                          <span>10</span>
+                        </li>
+                        <li>
+                          <span className="tw-text-xs">ksh</span>
+                          <span>10</span>
+                        </li>
                       </ul>
                     </td>
                   </tr>
                   <tr>
                     <td>Subtotal</td>
                     <td />
-                    <td>$162.70</td>
+                    <td>{cartTotal + 100 + 50 + 20 + 10 + 10}</td>
                   </tr>
                 </tbody>
               </table>
@@ -228,3 +251,22 @@ function Cart() {
 }
 
 export default Cart;
+export async function loader({ request }: LoaderArgs) {
+  const session = await requireUserSession(request, [Role.CUSTOMER]);
+  try {
+    const cart = await prisma.cartItem.findMany({
+      where: {
+        customer: {
+          profileId: session.profileId,
+        },
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return cart;
+  } catch (error) {
+    throw new Error("Something went wrong");
+  }
+}

@@ -1,4 +1,5 @@
 import type { Role } from "@prisma/client";
+import type { ReactNode } from "react";
 
 export interface AuthSession {
   email: string;
@@ -15,4 +16,8 @@ export interface PicturePayload {
 export interface MyActionData {
   error?: string;
   errors?: MyObject<string | null>;
+}
+export interface InitProps {
+  children?: ReactNode;
+  className?: string;
 }

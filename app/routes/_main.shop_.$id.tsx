@@ -1,7 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-has-content */
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import type { LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/react";
-import { Link } from "@remix-run/react";
-import { useState } from "react";
+import { Form, Link } from "@remix-run/react";
+import invariant from "invariant";
+import { useContext, useEffect, useState } from "react";
+import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import SwiperCore, {
   Autoplay,
   EffectFade,
@@ -10,28 +14,55 @@ import SwiperCore, {
 } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import { getUserSession } from "~/controllers/auth.server";
+import prisma from "~/services/prisma.server";
+import { formatDate, parseMenuCategory } from "~/utils/helpers";
+import type { action } from "./_main.shop_.$id.add-to-cart";
+import { ClipLoader } from "react-spinners";
+import ShopItem from "~/components/shop/ShopItem";
+import { CartContext } from "~/context/CartContext";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectFade]);
 
-export const meta: V2_MetaFunction = ({ data }) => {
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: "A product name - Replica restaurant" },
+    { title: `${data?.product.title ?? "Product"} - Replica restaurant` },
     {
       name: "description",
-      content: "Find healthy and awesome food at replica!",
+      content:
+        data?.product.description ??
+        "Find healthy and awesome food at replica!",
     },
   ];
 };
 
 function ShopDetails() {
-  const [count, setCount] = useState(0);
+  const { product, relatedProducts, cartCount } =
+    useTypedLoaderData<typeof loader>();
+  const [count, setCount] = useState(cartCount ?? 0);
+
+  const fetcher = useTypedFetcher<typeof action>();
+  const cartContext = useContext(CartContext);
+
   const increment = () => {
-    setCount(count + 1);
+    fetcher.submit(
+      {},
+      {
+        action: `add-to-cart`,
+        method: "POST",
+      }
+    );
   };
 
   const decrement = () => {
     if (count > 0) {
-      setCount(count - 1);
+      fetcher.submit(
+        {},
+        {
+          action: `remove-from-cart`,
+          method: "POST",
+        }
+      );
     }
   };
   const relatedproduceSlider = {
@@ -73,9 +104,17 @@ function ShopDetails() {
       },
     },
   };
+
+  useEffect(() => {
+    if (fetcher.data) {
+      cartContext.updateCart(fetcher.data.totalUserCartItems);
+      setCount(fetcher.data.totalProductCartItems);
+    }
+  }, [fetcher.data]);
+
   return (
     <>
-      <Breadcrumb pageName="Shop Details" pageTitle="Shop Details" />
+      <Breadcrumb pageName={product.title} pageTitle={product.title} />
       <div className="shop-details pt-120 mb-120">
         <div className="container">
           <div className="row g-lg-5 gy-5">
@@ -207,88 +246,84 @@ function ShopDetails() {
                     <i className="bi bi-star-fill" />
                   </li>
                   <li>
-                    <a href="#" className="review-no" />
-                    (32 Review)
+                    <a href="#" className="review-no" />(
+                    {product.reviews.length} Review)
                   </li>
                 </ul>
-                <h2>To Make Delicious Food Item.</h2>
+                <h2 className="tw-capitalize">{product.title}</h2>
                 <div className="price-tag">
                   <h4>
-                    $30 <del>$40</del>
+                    {/* $30 <del>$40</del> */}
+                    <span className="tw-text-sm">ksh</span>
+                    <span>{product.prices[0]}</span>
                   </h4>
                 </div>
-                <p>
-                  Donec bibendum enim ut elit porta ullamcorper enim. Vestibulum
-                  Nai wekemd bendum enim ut elit porta ullamcorper enim.
-                  Vestibulum Nai sgdad bendum enim ut elit porta ullamcorper
-                  enim. Vestibulum Nai wekemdini iaculis vitae nulla.nec
-                  bibendum enim ut elit porta ullamcor
-                </p>
+                <p className="tw-capitalize">{product.subtitle}</p>
                 <div className="prod-quantity d-flex align-items-center justify-content-start mb-20">
                   <div className="quantity d-flex align-items-center">
                     <div className="quantity-nav nice-number d-flex align-items-center">
-                      <button onClick={decrement} type="button">
+                      <button
+                        onClick={decrement}
+                        type="button"
+                        disabled={fetcher.state === "submitting"}
+                      >
                         <i className="bi bi-dash"></i>
                       </button>
-                      <span style={{ margin: "0 8px" }}>{count}</span>
-                      <button onClick={increment} type="button">
+                      <span style={{ margin: "0 8px" }}>
+                        {fetcher.state === "submitting" ? (
+                          <ClipLoader size={15} />
+                        ) : (
+                          count
+                        )}
+                      </span>
+                      <button
+                        onClick={increment}
+                        type="button"
+                        disabled={fetcher.state === "submitting"}
+                      >
                         <i className="bi bi-plus"></i>
                       </button>
                     </div>
                   </div>
-                  <Link to="/cart">
-                    <a className="primary-btn3">Add to cart</a>
-                  </Link>
+                  <button
+                    type="submit"
+                    className="primary-btn3 "
+                    onClick={increment}
+                    disabled={fetcher.state === "submitting"}
+                  >
+                    Add to cart
+                  </button>
                 </div>
                 <div className="category-tag">
                   <ul>
                     <li>Category:</li>
                     <li>
-                      <Link to="/shop">
-                        <a>Food(05),</a>
+                      <Link
+                        to={`/shop?m=${product.subMenu.menu.id}`}
+                        className="tw-capitalize"
+                      >
+                        {product.subMenu.menu.title},
                       </Link>
                     </li>
-                    <li>
-                      <Link to="/shop">
-                        <a>Modern Life(10),</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/shop">
-                        <a>Healthy(02),</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/shop">
-                        <a>Desset(04)</a>
-                      </Link>
-                    </li>
+                    {product.subMenu.title !== product.subMenu.menu.title && (
+                      <li>
+                        <Link
+                          to={`/shop?m=${product.subMenu.menu.id}&sm=${product.subMenu.id}`}
+                          className="tw-capitalize"
+                        >
+                          {product.subMenu.title},
+                        </Link>
+                      </li>
+                    )}
                   </ul>
                   <ul>
-                    <li>Tag:</li>
+                    <li>Menu:</li>
                     <li>
-                      <Link to="/shop">
-                        <a>Dinner,</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/shop">
-                        <a>Breakfast,</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/shop">
-                        <a>Berverage,</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/shop">
-                        <a>Sea Food,</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="/shop">
-                        <a>Menu</a>
+                      <Link
+                        to={`/shop?mcat=${product.subMenu.menu.category}`}
+                        className="tw-capitalize"
+                      >
+                        {parseMenuCategory(product.subMenu.menu.category)},
                       </Link>
                     </li>
                   </ul>
@@ -298,7 +333,7 @@ function ShopDetails() {
           </div>
           <div className="row g-4 pt-50">
             <div className="col-lg-12 mb-25">
-              <h2 className="item-details-tt">Item Details</h2>
+              <h2 className="item-details-tt">Product Details</h2>
             </div>
             <div className="row g-4">
               <div className="col-lg-3">
@@ -309,7 +344,7 @@ function ShopDetails() {
                   aria-orientation="vertical"
                 >
                   <button
-                    className="nav-link btn--lg"
+                    className="nav-link btn--lg "
                     id="v-pills-home-tab"
                     data-bs-toggle="pill"
                     data-bs-target="#v-pills-home"
@@ -340,31 +375,13 @@ function ShopDetails() {
                   id="v-pills-tabContent2"
                 >
                   <div
-                    className="tab-pane fade"
+                    className="tab-pane fade "
                     id="v-pills-home"
                     role="tabpanel"
                     aria-labelledby="v-pills-home-tab"
                   >
                     <div className="description box--shadow">
-                      <p className="para-2 mb-2">
-                        Aenean dolor massa, rhoncus ut tortor in, pretium tempus
-                        neque. Vestibulum venenatis leo et dictum finibus. Nulla
-                        vulputate dolor sit amet tristique dapibus. Maecenas
-                        posuere luctus leo, non consequat felis ullamc orper
-                        non. Aliquam erat volutpat. Donec vitae porta enim. Cras
-                        eu volutpat dolor, vitae accumsan tellus. Donec pulvinar
-                        auctor nunc, et gravida elit porta non. Aliquam erat
-                        volutpat. Proin facilisis interdum felis, sit amet
-                        pretium purus feugiat ac. Donec in leo metus. Sed quis
-                        dui nec justo ullamcorper molestie. Mauris consequat
-                        lacinia est, eget tincidunt leo ornare sed
-                      </p>
-                      <p className="para-2">
-                        Aenean dolor massa, rhoncus ut tortor in, pretium tempus
-                        neque. Vestibulum venenatis leo et dictum finibus dapi
-                        bus Maecenas posuere luctus leo, non consequat felis
-                        ullamcorper non.
-                      </p>
+                      <p className="para-2 mb-2">{product.description}</p>
                     </div>
                   </div>
                   <div
@@ -375,119 +392,61 @@ function ShopDetails() {
                   >
                     <div className="comments-area">
                       <div className="number-of-comment">
-                        <h3>Comments(02) :</h3>
+                        <h3>Comments({product.reviews.length}) :</h3>
                       </div>
                       <div className="comment-list-area mb-60">
                         <ul className="comment-list">
-                          <li>
-                            <div className="single-comment d-flex align-items-center justify-content-between flex-md-nowrap flex-wrap">
-                              <div className="comment-image">
-                                <img
-                                  src="/images/blog/comment-img-1.png"
-                                  alt=""
-                                />
-                              </div>
-                              <div className="comment-content">
-                                <div className="c-header d-flex align-items-center">
-                                  <div className="comment-meta">
-                                    <h5 className="mb-0">
-                                      <a href="#">Rocky Mike ,</a>
-                                    </h5>
-                                    <div className="c-date">06 july,2022</div>
-                                  </div>
-                                  <div className="replay-btn">
-                                    <a href="#">
-                                      <i className="bi bi-reply" />
-                                      Reply
-                                    </a>
-                                  </div>
+                          {product.reviews.map((review) => (
+                            <li key={review.id}>
+                              <div className="single-comment d-flex align-items-center justify-content-between flex-md-nowrap flex-wrap">
+                                <div className="comment-image">
+                                  <img
+                                    src="/images/blog/comment-img-1.png"
+                                    alt=""
+                                  />
                                 </div>
-                                <ul className="product-review">
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                </ul>
-                                <div className="c-body">
-                                  <p>
-                                    I must explain to you how all this mistaken
-                                    idea of denouncing pleasure and praising
-                                    pain was born and I will give you a complete
-                                    account.{" "}
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </li>
-                          <li>
-                            <div className="single-comment d-flex align-items-center justify-content-between flex-md-nowrap flex-wrap">
-                              <div className="comment-image">
-                                <img
-                                  src="/images/blog/comment-img-3.png"
-                                  alt=""
-                                />
-                              </div>
-                              <div className="comment-content">
-                                <div className="c-header d-flex align-items-center">
-                                  <div className="comment-meta">
-                                    <h5 className="mb-0">
-                                      <a href="#">Rony Jhon ,</a>
-                                    </h5>
-                                    <div className="c-date">07 july,2022</div>
+                                <div className="comment-content">
+                                  <div className="c-header d-flex align-items-center">
+                                    <div className="comment-meta">
+                                      <h5 className="mb-0">
+                                        <a href="#" className="tw-capitalize">
+                                          {review.name} ,
+                                        </a>
+                                      </h5>
+                                      <div className="c-date">
+                                        {formatDate(review.createdAt)}
+                                      </div>
+                                    </div>
+                                    <div className="replay-btn">
+                                      <a href="#">
+                                        <i className="bi bi-reply" />
+                                        Reply
+                                      </a>
+                                    </div>
                                   </div>
-                                  <div className="replay-btn">
-                                    <a href="#">
-                                      <i className="bi bi-reply" />
-                                      Reply
-                                    </a>
+                                  <ul className="product-review">
+                                    {Array(review.rating)
+                                      .fill(null)
+                                      .map((_, idx) => (
+                                        <li key={idx}>
+                                          <i className="bi bi-star-fill" />
+                                        </li>
+                                      ))}
+                                  </ul>
+                                  <div className="c-body">
+                                    <p>{review.comment}</p>
                                   </div>
                                 </div>
-                                <ul className="product-review">
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                  <li>
-                                    <i className="bi bi-star-fill" />
-                                  </li>
-                                </ul>
-                                <div className="c-body">
-                                  <p>
-                                    I must explain to you how all this mistaken
-                                    idea of denouncing pleasure and praising
-                                    pain was born and I will give you a complete
-                                    account.{" "}
-                                  </p>
-                                </div>
                               </div>
-                            </div>
-                          </li>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                       <div className="comment-form">
                         <div className="number-of-comment">
                           <h3>Leave A Reply</h3>
                         </div>
-                        <form>
+                        <Form action="review" method="POST">
                           <div className="row">
                             <div className="col-lg-6">
                               <div className="form-inner mb-30">
@@ -495,6 +454,7 @@ function ShopDetails() {
                                   type="text"
                                   placeholder="Name*"
                                   required
+                                  name="name"
                                 />
                               </div>
                             </div>
@@ -504,6 +464,7 @@ function ShopDetails() {
                                   type="email"
                                   placeholder="Email*"
                                   required
+                                  name="email"
                                 />
                               </div>
                             </div>
@@ -512,6 +473,7 @@ function ShopDetails() {
                                 <textarea
                                   placeholder="Message..."
                                   defaultValue={""}
+                                  name="message"
                                 />
                               </div>
                             </div>
@@ -580,7 +542,7 @@ function ShopDetails() {
                               </div>
                             </div>
                           </div>
-                        </form>
+                        </Form>
                       </div>
                     </div>
                   </div>
@@ -594,195 +556,85 @@ function ShopDetails() {
         <div className="container">
           <div className="row mb-50">
             <div className="col-lg-12">
-              <h2 className="item-details-tt">Related Item</h2>
+              <h2 className="item-details-tt">Related Products</h2>
             </div>
           </div>
           <div className="row">
             <Swiper
               {...(relatedproduceSlider as any)}
               className="swiper related-item-sliders"
+              autoplay={{
+                pauseOnMouseEnter: true,
+                disableOnInteraction: false,
+              }}
             >
               <div className="swiper-wrapper">
-                <SwiperSlide className="swiper-slide">
-                  <div className="food-items2-wrap">
-                    <div className="food-img">
-                      <img
-                        className="img-fluid"
-                        src="/images/bg/h2-food-item-8.png"
-                        alt="h2-food-item-1"
-                      />
-                      <div className="cart-icon">
-                        <Link to="/cart">
-                          <a>
-                            <i className="bi bi-cart-plus" />
-                          </a>
-                        </Link>
-                      </div>
-                      <div className="pric-tag">
-                        <span>$17</span>
-                      </div>
-                    </div>
-                    <div className="food-content">
-                      <ul className="d-flex align-items-center justify-content-center p-0 gap-1">
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                      </ul>
-                      <h3>
-                        <Link to="/shop-details">
-                          <a>Mutton with Shrimps</a>
-                        </Link>
-                      </h3>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide className="swiper-slide">
-                  <div className="food-items2-wrap">
-                    <div className="food-img">
-                      <img
-                        className="img-fluid"
-                        src="/images/bg/h2-food-item-5.png"
-                        alt="h2-food-item-1"
-                      />
-                      <div className="cart-icon">
-                        <Link to="/cart">
-                          <a>
-                            <i className="bi bi-cart-plus" />
-                          </a>
-                        </Link>
-                      </div>
-                      <div className="pric-tag">
-                        <span>$41</span>
-                      </div>
-                    </div>
-                    <div className="food-content">
-                      <ul className="d-flex align-items-center justify-content-center p-0 gap-1">
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                      </ul>
-                      <h3>
-                        <Link to="/shop-details">
-                          <a>Mutton Kabab</a>
-                        </Link>
-                      </h3>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide className="swiper-slide">
-                  <div className="food-items2-wrap">
-                    <div className="food-img">
-                      <img
-                        className="img-fluid"
-                        src="/images/bg/h2-food-item-6.png"
-                        alt="h2-food-item-1"
-                      />
-                      <div className="cart-icon">
-                        <Link to="/cart">
-                          <a>
-                            <i className="bi bi-cart-plus" />
-                          </a>
-                        </Link>
-                      </div>
-                      <div className="pric-tag">
-                        <span>$15</span>
-                      </div>
-                    </div>
-                    <div className="food-content">
-                      <ul className="d-flex align-items-center justify-content-center p-0 gap-1">
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                      </ul>
-                      <h3>
-                        <Link to="/shop-details">
-                          <a>Burger with Drinks</a>
-                        </Link>
-                      </h3>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide className="swiper-slide">
-                  <div className="food-items2-wrap">
-                    <div className="food-img">
-                      <img
-                        className="img-fluid"
-                        src="/images/bg/h2-food-item-7.png"
-                        alt="h2-food-item-1"
-                      />
-                      <div className="cart-icon">
-                        <Link to="/cart">
-                          <a>
-                            <i className="bi bi-cart-plus" />
-                          </a>
-                        </Link>
-                      </div>
-                      <div className="pric-tag">
-                        <span>$09</span>
-                      </div>
-                    </div>
-                    <div className="food-content">
-                      <ul className="d-flex align-items-center justify-content-center p-0 gap-1">
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                        <li>
-                          <i className="bi bi-star-fill" />
-                        </li>
-                      </ul>
-                      <h3>
-                        <Link to="/shop-details">
-                          <a>Shrimps with Role</a>
-                        </Link>
-                      </h3>
-                    </div>
-                  </div>
-                </SwiperSlide>
+                {relatedProducts.map((prod, idx) => {
+                  const IMAGES = [
+                    "h2-food-item-2.png",
+                    "h2-food-item-4.png",
+                    "h2-food-item-5.png",
+                    "h2-food-item-6.png",
+                    "h2-food-item-8.png",
+                  ];
+                  return (
+                    <SwiperSlide key={prod.id} className="swiper-slide">
+                      {/* <div className="food-items2-wrap">
+                        <div className="food-img">
+                          <img
+                            className="img-fluid"
+                            src={"/images/bg/" + IMAGES[idx]}
+                            alt="h2-food-item-1"
+                          />
+                          <div className="cart-icon">
+                            <Form
+                              action={`/shop/${prod.id}/add-to-cart`}
+                              method="POST"
+                            >
+                              <a>
+                                <i className="bi bi-cart-plus" />
+                              </a>
+                            </Form>
+                          </div>
+                          <div className="pric-tag">
+                            <span>
+                              <div className="tw-text-sm tw-inline">ksh</div>
+                              {prod.prices[0]}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="food-content">
+                          <ul className="d-flex align-items-center justify-content-center p-0 gap-1">
+                            <li>
+                              <i className="bi bi-star-fill" />
+                            </li>
+                            <li>
+                              <i className="bi bi-star-fill" />
+                            </li>
+                            <li>
+                              <i className="bi bi-star-fill" />
+                            </li>
+                            <li>
+                              <i className="bi bi-star-fill" />
+                            </li>
+                            <li>
+                              <i className="bi bi-star-fill" />
+                            </li>
+                          </ul>
+                          <h3>
+                            <Link
+                              to={`/shop/${prod.id}`}
+                              className="tw-capitalize"
+                            >
+                              {prod.title}
+                            </Link>
+                          </h3>
+                        </div>
+                      </div> */}
+                      <ShopItem product={prod} image={IMAGES[idx]} />
+                    </SwiperSlide>
+                  );
+                })}
               </div>
             </Swiper>
           </div>
@@ -793,3 +645,48 @@ function ShopDetails() {
 }
 
 export default ShopDetails;
+export async function loader({ request, params }: LoaderArgs) {
+  const productId = params.id;
+  invariant(typeof productId === "string", "Invalid Request");
+
+  const session = await getUserSession(request);
+  try {
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+      include: {
+        subMenu: {
+          include: {
+            menu: true,
+          },
+        },
+        reviews: true,
+      },
+    });
+
+    const relatedProducts = await prisma.product.findMany({
+      where: {
+        subMenu: {
+          menu: {
+            category: product.subMenu.menu.category,
+          },
+        },
+      },
+      take: 5,
+    });
+
+    if (session) {
+      const cartItem = await prisma.cartItem.findFirst({
+        where: {
+          productId: product.id,
+          customer: {
+            profileId: session.profileId,
+          },
+        },
+      });
+      return { product, relatedProducts, cartCount: cartItem?.count };
+    }
+    return { product, relatedProducts };
+  } catch (error) {
+    throw new Error("Something went wrong.");
+  }
+}

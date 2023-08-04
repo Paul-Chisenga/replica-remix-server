@@ -24,13 +24,16 @@ const Breadcrumb: FC<Props> = ({ pageName, pageTitle }) => {
       <div className="container">
         <div className="row d-flex justify-content-center align-items-center">
           <div className="col-lg-12">
-            <h2 className="breadcrumb-title">{pageTitle}</h2>
+            <h2 className="breadcrumb-title tw-capitalize">{pageTitle}</h2>
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb d-flex">
                 <li className="breadcrumb-item">
                   <Link to="/">Home</Link>
                 </li>
-                <li className="breadcrumb-item active" aria-current="page">
+                <li
+                  className="breadcrumb-item active tw-capitalize"
+                  aria-current="page"
+                >
                   {pageName}
                 </li>
               </ol>

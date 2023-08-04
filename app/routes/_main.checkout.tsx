@@ -1,58 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { V2_MetaFunction } from "@remix-run/node";
-import type { FC } from "react";
-import { useReducer } from "react";
+import { Role } from "@prisma/client";
+import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
+import { useTypedLoaderData } from "remix-typedjson";
 import Breadcrumb from "~/components/common/Breadcrumb";
-
-const initialState = { count: 1 };
-
-function reducer(state: any, action: any) {
-  switch (action.type) {
-    case "increment":
-      return { count: state.count + 1 };
-    case "decrement":
-      return { count: state.count - 1 };
-    default:
-      throw new Error();
-  }
-}
-const MyComponent: FC<{ price: number }> = ({ price }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const increment = () => {
-    dispatch({ type: "increment" });
-  };
-
-  const decrement = () => {
-    if (state.count > 1) {
-      dispatch({ type: "decrement" });
-    }
-  };
-
-  return (
-    <>
-      <div className="product-total d-flex align-items-center">
-        <div className="quantity">
-          <div className="quantity d-flex align-items-center">
-            <div className="quantity-nav nice-number d-flex align-items-center">
-              <button onClick={decrement} type="button">
-                <i className="bi bi-dash"></i>
-              </button>
-              <span style={{ margin: "0 8px" }}>{state.count}</span>
-              <button onClick={increment} type="button">
-                <i className="bi bi-plus"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-        <strong>
-          <i className="bi bi-x-lg px-2" />
-          <span className="product-price">${state.count * price}</span>
-        </strong>
-      </div>
-    </>
-  );
-};
+import { requireUserSession } from "~/controllers/auth.server";
+import prisma from "~/services/prisma.server";
+import { randomNumber } from "~/utils/helpers";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -64,7 +18,14 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
+const IMAGES = ["cart-01.png", "cart-02.png", "cart-03.png"];
+
 function Checkout() {
+  const items = useTypedLoaderData<typeof loader>();
+  const cartTotal = items.reduce((prev, cur) => {
+    const sum = cur.count * cur.product.prices[0];
+    return prev + sum;
+  }, 0);
   return (
     <>
       <Breadcrumb pageName="Checkout" pageTitle="Checkout" />
@@ -218,48 +179,46 @@ function Checkout() {
               <div className="added-product-summary mb-30">
                 <h5 className="title-25 checkout-title">Order Summary</h5>
                 <ul className="added-products">
-                  <li className="single-product d-flex justify-content-start">
-                    <div className="product-img">
-                      <img src="/images/bg/cart-01.png" alt="" />
-                    </div>
-                    <div className="product-info">
-                      <h5 className="product-title">
-                        <a href="#">Organic Vegetable grains</a>
-                      </h5>
-                      <MyComponent price={22.5} />
-                    </div>
-                    <div className="delete-btn">
-                      <i className="bi bi-x-lg" />
-                    </div>
-                  </li>
-                  <li className="single-product d-flex justify-content-start">
-                    <div className="product-img">
-                      <img src="/images/bg/cart-02.png" alt="" />
-                    </div>
-                    <div className="product-info">
-                      <h5 className="product-title">
-                        <a href="#">Fresh Vegetable Eggplant</a>
-                      </h5>
-                      <MyComponent price={35} />
-                    </div>
-                    <div className="delete-btn">
-                      <i className="bi bi-x-lg" />
-                    </div>
-                  </li>
-                  <li className="single-product d-flex justify-content-start">
-                    <div className="product-img">
-                      <img src="/images/bg/cart-03.png" alt="" />
-                    </div>
-                    <div className="product-info">
-                      <h5 className="product-title">
-                        <a href="#">Fresh Vegetable Eggplant</a>
-                      </h5>
-                      <MyComponent price={30} />
-                    </div>
-                    <div className="delete-btn">
-                      <i className="bi bi-x-lg" />
-                    </div>
-                  </li>
+                  {items.map((item) => (
+                    <li
+                      key={item.id}
+                      className="single-product d-flex justify-content-start"
+                    >
+                      <div className="product-img">
+                        <img
+                          src={"/images/bg/" + IMAGES[randomNumber(0, 2)]}
+                          alt=""
+                        />
+                      </div>
+                      <div className="product-info">
+                        <h5 className="product-title tw-capitalize">
+                          <Link to={`/shop/${item.productId}`}>
+                            {item.product.title}
+                          </Link>
+                        </h5>
+                        <div className="product-total d-flex align-items-center">
+                          <div className="quantity">
+                            <div className="quantity d-flex align-items-center">
+                              <div className="quantity-nav nice-number d-flex align-items-center">
+                                <span style={{ margin: "0 8px" }}>
+                                  {item.count}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <strong>
+                            <i className="bi bi-x-lg px-2" />
+                            <span className="product-price">
+                              ${item.product.prices[0]}
+                            </span>
+                          </strong>
+                        </div>
+                      </div>
+                      {/* <div className="delete-btn">
+                        <i className="bi bi-x-lg" />
+                      </div> */}
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="summery-card cost-summery mb-30">
@@ -267,21 +226,33 @@ function Checkout() {
                   <thead>
                     <tr>
                       <th>Subtotal</th>
-                      <th>$128.70</th>
+                      <th>
+                        <span className="tw-text-xs">ksh</span>
+                        <span>{cartTotal}</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td className="tax">Tax</td>
-                      <td>$5</td>
+                      <td>
+                        <span className="tw-text-xs">ksh</span>
+                        <span>{10}</span>
+                      </td>
                     </tr>
                     <tr>
                       <td>Total ( tax excl.)</td>
-                      <td>$15</td>
+                      <td>
+                        <span className="tw-text-xs">ksh</span>
+                        <span>{50}</span>
+                      </td>
                     </tr>
                     <tr>
                       <td>Total ( tax incl.)</td>
-                      <td>$15</td>
+                      <td>
+                        <span className="tw-text-xs">ksh</span>
+                        <span>{20}</span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -291,30 +262,35 @@ function Checkout() {
                   <thead>
                     <tr>
                       <th>Total</th>
-                      <th>$162.70</th>
+                      <th>
+                        <span className="tw-text-xs">ksh</span>
+                        <span>{cartTotal + 50 + 20 + 10}</span>
+                      </th>
                     </tr>
                   </thead>
                 </table>
               </div>
               <form className="payment-form">
                 <div className="payment-methods mb-50">
-                  <div className="form-check payment-check">
+                  <div className="form-check payment-check d-flex flex-wrap tw-gap-4 tw-py-0 tw-my-0 align-items-center">
                     <input
                       className="form-check-input"
                       type="radio"
                       name="flexRadioDefault"
-                      id="flexRadioDefault1"
+                      id="flexRadioDefault3"
+                      defaultChecked
                     />
                     <label
                       className="form-check-label"
-                      htmlFor="flexRadioDefault1"
+                      htmlFor="flexRadioDefault3"
                     >
-                      Check payments
+                      MPESA Payment
                     </label>
-                    <p className="para">
-                      Please send a check to Store Name, Store Street, Store
-                      Town, Store State / County, Store Postcode.
-                    </p>
+                    <img
+                      src="/images/bg/mpesa.svg"
+                      className="tw-h-16"
+                      alt=""
+                    />
                   </div>
                   <div className="form-check payment-check">
                     <input
@@ -322,7 +298,6 @@ function Checkout() {
                       type="radio"
                       name="flexRadioDefault"
                       id="flexRadioDefault2"
-                      defaultChecked
                     />
                     <label
                       className="form-check-label"
@@ -338,18 +313,14 @@ function Checkout() {
                       type="radio"
                       name="flexRadioDefault"
                       id="flexRadioDefault3"
-                      defaultChecked
                     />
                     <label
                       className="form-check-label"
                       htmlFor="flexRadioDefault3"
                     >
-                      PayPal
+                      VISA Card
                     </label>
                     <img src="/images/bg/payonert.png" alt="" />
-                    <a href="#" className="about-paypal">
-                      What is PayPal
-                    </a>
                   </div>
                   <div className="payment-form-bottom d-flex align-items-start">
                     <input type="checkbox" id="terms" />
@@ -374,3 +345,22 @@ function Checkout() {
 }
 
 export default Checkout;
+export async function loader({ request }: LoaderArgs) {
+  const session = await requireUserSession(request, [Role.CUSTOMER]);
+  try {
+    const cart = await prisma.cartItem.findMany({
+      where: {
+        customer: {
+          profileId: session.profileId,
+        },
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return cart;
+  } catch (error) {
+    throw new Error("Something went wrong");
+  }
+}
