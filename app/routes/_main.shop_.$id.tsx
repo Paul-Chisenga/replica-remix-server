@@ -12,14 +12,13 @@ import SwiperCore, {
   Navigation,
   Pagination,
 } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
+// import { Swiper, SwiperSlide } from "swiper/react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import { getUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
 import { formatDate, parseMenuCategory } from "~/utils/helpers";
 import type { action } from "./_main.shop_.$id.add-to-cart";
 import { ClipLoader } from "react-spinners";
-import ShopItem from "~/components/shop/ShopItem";
 import { CartContext } from "~/context/CartContext";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectFade]);
@@ -37,8 +36,7 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
 };
 
 function ShopDetails() {
-  const { product, relatedProducts, cartCount } =
-    useTypedLoaderData<typeof loader>();
+  const { product, cartCount } = useTypedLoaderData<typeof loader>();
   const [count, setCount] = useState(cartCount ?? 0);
 
   const fetcher = useTypedFetcher<typeof action>();
@@ -65,45 +63,45 @@ function ShopDetails() {
       );
     }
   };
-  const relatedproduceSlider = {
-    slidesPerView: "auto",
-    spaceBetween: 25,
-    loop: true,
-    speed: 1500,
-    autoplay: {
-      delay: 2000,
-    },
-    navigation: {
-      nextEl: ".next-btn-4",
-      prevEl: ".prev-btn-4",
-    },
+  // const relatedproduceSlider = {
+  //   slidesPerView: "auto",
+  //   spaceBetween: 25,
+  //   loop: true,
+  //   speed: 1500,
+  //   autoplay: {
+  //     delay: 2000,
+  //   },
+  //   navigation: {
+  //     nextEl: ".next-btn-4",
+  //     prevEl: ".prev-btn-4",
+  //   },
 
-    breakpoints: {
-      280: {
-        slidesPerView: 1,
-        spaceBetween: 15,
-      },
-      480: {
-        slidesPerView: 2,
-        spaceBetween: 15,
-      },
-      768: {
-        slidesPerView: 2,
-      },
-      992: {
-        slidesPerView: 3,
-      },
-      1200: {
-        slidesPerView: 3,
-      },
-      1400: {
-        slidesPerView: 3,
-      },
-      1600: {
-        slidesPerView: 3,
-      },
-    },
-  };
+  //   breakpoints: {
+  //     280: {
+  //       slidesPerView: 1,
+  //       spaceBetween: 15,
+  //     },
+  //     480: {
+  //       slidesPerView: 2,
+  //       spaceBetween: 15,
+  //     },
+  //     768: {
+  //       slidesPerView: 2,
+  //     },
+  //     992: {
+  //       slidesPerView: 3,
+  //     },
+  //     1200: {
+  //       slidesPerView: 3,
+  //     },
+  //     1400: {
+  //       slidesPerView: 3,
+  //     },
+  //     1600: {
+  //       slidesPerView: 3,
+  //     },
+  //   },
+  // };
 
   useEffect(() => {
     if (fetcher.data) {
@@ -333,7 +331,8 @@ function ShopDetails() {
           </div>
           <div className="row g-4 pt-50">
             <div className="col-lg-12 mb-25">
-              <h2 className="item-details-tt">Product Details</h2>
+              <h2 className="item-details-tt"></h2>
+              {/* <h2 className="item-details-tt">Product Details</h2> */}
             </div>
             <div className="row g-4">
               <div className="col-lg-3">
@@ -343,7 +342,7 @@ function ShopDetails() {
                   role="tablist"
                   aria-orientation="vertical"
                 >
-                  <button
+                  {/* <button
                     className="nav-link btn--lg "
                     id="v-pills-home-tab"
                     data-bs-toggle="pill"
@@ -354,7 +353,7 @@ function ShopDetails() {
                     aria-selected="false"
                   >
                     Details
-                  </button>
+                  </button> */}
                   <button
                     className="nav-link active"
                     id="v-pills-profile-tab"
@@ -552,7 +551,7 @@ function ShopDetails() {
           </div>
         </div>
       </div>
-      <div className="related-items-area mb-120">
+      {/* <div className="related-items-area mb-120">
         <div className="container">
           <div className="row mb-50">
             <div className="col-lg-12">
@@ -579,58 +578,6 @@ function ShopDetails() {
                   ];
                   return (
                     <SwiperSlide key={prod.id} className="swiper-slide">
-                      {/* <div className="food-items2-wrap">
-                        <div className="food-img">
-                          <img
-                            className="img-fluid"
-                            src={"/images/bg/" + IMAGES[idx]}
-                            alt="h2-food-item-1"
-                          />
-                          <div className="cart-icon">
-                            <Form
-                              action={`/shop/${prod.id}/add-to-cart`}
-                              method="POST"
-                            >
-                              <a>
-                                <i className="bi bi-cart-plus" />
-                              </a>
-                            </Form>
-                          </div>
-                          <div className="pric-tag">
-                            <span>
-                              <div className="tw-text-sm tw-inline">ksh</div>
-                              {prod.prices[0]}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="food-content">
-                          <ul className="d-flex align-items-center justify-content-center p-0 gap-1">
-                            <li>
-                              <i className="bi bi-star-fill" />
-                            </li>
-                            <li>
-                              <i className="bi bi-star-fill" />
-                            </li>
-                            <li>
-                              <i className="bi bi-star-fill" />
-                            </li>
-                            <li>
-                              <i className="bi bi-star-fill" />
-                            </li>
-                            <li>
-                              <i className="bi bi-star-fill" />
-                            </li>
-                          </ul>
-                          <h3>
-                            <Link
-                              to={`/shop/${prod.id}`}
-                              className="tw-capitalize"
-                            >
-                              {prod.title}
-                            </Link>
-                          </h3>
-                        </div>
-                      </div> */}
                       <ShopItem product={prod} image={IMAGES[idx]} />
                     </SwiperSlide>
                   );
@@ -639,7 +586,7 @@ function ShopDetails() {
             </Swiper>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
@@ -663,17 +610,6 @@ export async function loader({ request, params }: LoaderArgs) {
       },
     });
 
-    const relatedProducts = await prisma.product.findMany({
-      where: {
-        subMenu: {
-          menu: {
-            category: product.subMenu.menu.category,
-          },
-        },
-      },
-      take: 5,
-    });
-
     if (session) {
       const cartItem = await prisma.cartItem.findFirst({
         where: {
@@ -683,9 +619,9 @@ export async function loader({ request, params }: LoaderArgs) {
           },
         },
       });
-      return { product, relatedProducts, cartCount: cartItem?.count };
+      return { product, cartCount: cartItem?.count };
     }
-    return { product, relatedProducts };
+    return { product };
   } catch (error) {
     throw new Error("Something went wrong.");
   }

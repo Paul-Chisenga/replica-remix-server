@@ -11,7 +11,7 @@ const ContactAddress = () => {
                 <img src="/images/bg/contact-img-02.png" alt="contact-img-01" />
               </div>
               <div className="contact-content">
-                <h3>Parklands Branch</h3>
+                <h3>Rosslyn Branch</h3>
                 <ul>
                   <li>
                     <div className="icon">

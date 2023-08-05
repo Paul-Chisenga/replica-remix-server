@@ -21,15 +21,14 @@ const About = () => {
                   alt=""
                 />
               </span>
-              <h2>Find your best healthy and Tasty food</h2>
+              <h2>We love food, we want you to love it too</h2>
             </div>
             <div className="introduction-content">
               <p>
-                Replica is Suspendisse nec mi non turpis egestas vestibulum.
-                Cras vel sollicitudin libero, id tristique ex. Pellentesque
-                tristique malesuada nunc quis vulputate. Integer aliquet
-                convallis ante id interdum of Lorem Ipsum.Suspendisse nec mi non
-                turpis egestas vestibulum
+                Our eclectic American cuisine is a taste of our home, with a
+                blend of other cuisines. We want our customers to feel
+                appreciated by the effort we put into each dish and the service
+                we provide each table.
               </p>
               <div className="h2-about-area tw-mx-0">
                 <div className="about-right tw-mx-0">
@@ -40,8 +39,8 @@ const About = () => {
                           <img src="/images/icon/h2-about1.svg" alt="" />
                         </div>
                         <div className="features-content">
-                          <h4>Pure Fresh Food.</h4>
-                          <p>We are serve different type of fresh food.</p>
+                          <h4>Delicious Food.</h4>
+                          {/* <p>We are serve different type of fresh food.</p> */}
                         </div>
                       </li>
                       <li>
@@ -49,8 +48,8 @@ const About = () => {
                           <img src="/images/icon/h2-about2.svg" alt="" />
                         </div>
                         <div className="features-content">
-                          <h4>Experties Chef.</h4>
-                          <p>We are serve different type of fresh food.</p>
+                          <h4>ExpertChef.</h4>
+                          {/* <p>We are serve different type of fresh food.</p> */}
                         </div>
                       </li>
                     </ul>

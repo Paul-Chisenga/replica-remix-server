@@ -5,9 +5,10 @@ function Topbar() {
       <div className="container-lg container-fluid ">
         <div className="row">
           <div className="col-lg-5 col-md-5 d-flex align-items-center justify-content-md-start justify-content-center">
-            <div className="open-time">
+            <div className="open-time tw-text-center">
               <p>
-                <span>Opening:</span> 7am - 10pm(mon-thu) | 7am - 11pm(fri-sat)
+                <span>Opening Hour:</span> 7.a.m-10.p.m(Mon-Thur) |
+                7.a.m-11.p.m(Fri-Sat) <strong>Closed Sunday</strong>
               </p>
             </div>
           </div>

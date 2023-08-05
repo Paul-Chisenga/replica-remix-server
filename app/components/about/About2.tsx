@@ -18,7 +18,7 @@ const About2 = () => {
                   alt="sub-title-vec"
                 />
               </span>
-              <h2>Come to Our Restaurant, Ready Your Food.</h2>
+              <h2>We love food, we want you to love it too</h2>
             </div>
           </div>
         </div>
@@ -40,12 +40,10 @@ const About2 = () => {
                 <img src="/images/icon/mission.svg" alt="" />
                 <h4>Our Mission</h4>
               </div>
-              <div className="description">
-                <p>
-                  Replica is Suspendisse nec mi non turpis egestas vestibulum.
-                  Cras vel sollicitudin libero, id tristique ex. Pellentesque
-                  tristique malesuada nunc quis vulputate. Integer aliquet
-                  convallis ante id interdum
+              <div className="description ">
+                <p className="tw-capitalize">
+                  To provide high quality food, service, and aesthetic at a
+                  price that works for us all.
                 </p>
               </div>
             </div>
@@ -73,7 +71,7 @@ const About2 = () => {
                     </li>
                     <li>
                       <i className="bi bi-check-circle" />
-                      Letraset Sheets.
+                      Great Service.
                     </li>
                     <li>
                       <i className="bi bi-check-circle" />
@@ -81,21 +79,22 @@ const About2 = () => {
                     </li>
                   </ul>
                 </div>
-                <div className="author-area">
-                  <div className="author-content">
-                    <p>
-                      “Welcome our restaurant! Our Restaurant is the best as
-                      like delicious food, nutrition food etc in world-wide.”
-                    </p>
+                <div className="our-mission tw-block tw-mt-4">
+                  <div className="icon tw-border-none">
+                    <img src="/images/icon/mission.svg" alt="" />
+                    <h4>About us</h4>
                   </div>
-                  <div className="author-img-name">
-                    <div className="author-img">
-                      <img src="/images/bg/h1-intro-author.png" alt="" />
-                    </div>
-                    <div className="author-name">
-                      <h4>Mr. Brady Searl</h4>
-                      <span>CEO &amp;Founder</span>
-                    </div>
+                  <div className="description">
+                    <p>
+                      We started Replica in 2023 with the desire of providing
+                      East Africans with a unique and quality dining experience.
+                      Our eclectic American cuisine is a taste of our home, with
+                      a blend of other cuisines. We want our customers to feel
+                      appreciated by the effort we put into each dish and the
+                      service we provide each table. Our hope is to replicate
+                      ourselves throughout East Africa and grow with the
+                      communities we are in.
+                    </p>
                   </div>
                 </div>
               </div>

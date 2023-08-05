@@ -37,7 +37,8 @@ const Banner = () => {
         </div>
         <p>
           <img className="left-vec" src="/images/icon/h3-open-vec.svg" alt="" />
-          Opening Hour 7am to 10pm (Mon-Thu) | 7am to 11pm (Fri-Sat)
+          7 a.m.-10.p.m (Mon-Thur) | 7.a.m-11.p.m (Fri-Sat){" "}
+          <strong>Closed Sunday</strong>
           <img
             className="right-vec"
             src="/images/icon/h3-open-vec.svg"
@@ -47,7 +48,10 @@ const Banner = () => {
       </div>
       <div className="video-wrap d-flex align-items-center justify-content-center">
         <video autoPlay loop muted preload="auto">
-          <source src="/video/v1.mp4" type="video/mp4" />
+          <source
+            src="https://assets.mixkit.co/videos/preview/mixkit-toast-between-two-people-at-lunch-44012-large.mp4"
+            type="video/mp4"
+          />
         </video>
         <div className="banner-content text-center">
           <span>
@@ -63,10 +67,12 @@ const Banner = () => {
               alt=""
             />
           </span>
-          <h1>Find Your Best Healthy &amp; Tasty Food.</h1>
-          <Link to="/about">
+          <h1 className="tw-capitalize">
+            We love food, we want you to love it too.
+          </h1>
+          <Link to="/order">
             <a className="primary-btn7 btn-md2">
-              <i className="bi bi-arrow-up-right-circle" /> Discover More
+              <i className="bi bi-arrow-up-right-circle" /> Order now
             </a>
           </Link>
         </div>
