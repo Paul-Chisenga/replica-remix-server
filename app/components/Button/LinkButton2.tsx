@@ -11,7 +11,9 @@ const LinkButton2: FC<Props> = ({ to, children, className }) => {
   return (
     <Link
       to={to}
-      className={"primary-btn8 lg--btn btn-primary-fill " + className}
+      className={
+        "primary-btn8 lg--btn btn-primary-fill tw-text-white " + className
+      }
     >
       {children}
     </Link>

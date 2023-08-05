@@ -102,3 +102,12 @@
 .menu2-area .menu2-wrap .menu-title h2::after {
   display: none;
 }
+
+.faq-area .accordion .accordion-item .accordion-header .accordion-button {
+  background: rgba(209, 250, 229, 0.4) !important;
+  /* background: rgb(209 250 229) !important; */
+}
+
+.faq-area .accordion .accordion-item .accordion-collapse {
+  background: transparent !important;
+}

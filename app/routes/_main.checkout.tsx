@@ -1,7 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Role } from "@prisma/client";
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
-import { Link } from "@remix-run/react";
+import {
+  redirect,
+  type ActionArgs,
+  type LoaderArgs,
+  type V2_MetaFunction,
+} from "@remix-run/node";
+import { Form, Link } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import { requireUserSession } from "~/controllers/auth.server";
@@ -270,7 +275,7 @@ function Checkout() {
                   </thead>
                 </table>
               </div>
-              <form className="payment-form">
+              <Form className="payment-form" action="" method="POST">
                 <div className="payment-methods mb-50">
                   <div className="form-check payment-check d-flex flex-wrap tw-gap-4 tw-py-0 tw-my-0 align-items-center">
                     <input
@@ -335,7 +340,7 @@ function Checkout() {
                     Place Order
                   </button>
                 </div>
-              </form>
+              </Form>
             </aside>
           </div>
         </div>
@@ -360,6 +365,57 @@ export async function loader({ request }: LoaderArgs) {
     });
 
     return cart;
+  } catch (error) {
+    throw new Error("Something went wrong");
+  }
+}
+
+export async function action({ request }: ActionArgs) {
+  if (request.method !== "POST") {
+    throw new Error("Bad Request");
+  }
+  const session = await requireUserSession(request, [Role.CUSTOMER]);
+  try {
+    await prisma.$transaction(async (tx) => {
+      const cart = await tx.cartItem.findMany({
+        where: {
+          customer: {
+            profileId: session.profileId,
+          },
+        },
+        include: {
+          product: true,
+        },
+      });
+      const count = await tx.order.count();
+
+      await tx.order.create({
+        data: {
+          orderNo: count + 1,
+          customer: {
+            connect: {
+              profileId: session.profileId,
+            },
+          },
+          items: {
+            create: cart.map((item) => ({
+              count: item.count,
+              productId: item.productId,
+            })),
+          },
+        },
+      });
+
+      await tx.cartItem.deleteMany({
+        where: {
+          customer: {
+            profileId: session.profileId,
+          },
+        },
+      });
+    });
+
+    return redirect("/orders");
   } catch (error) {
     throw new Error("Something went wrong");
   }
