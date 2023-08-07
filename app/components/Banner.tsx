@@ -48,10 +48,7 @@ const Banner = () => {
       </div>
       <div className="video-wrap d-flex align-items-center justify-content-center">
         <video autoPlay loop muted preload="auto">
-          <source
-            src="https://assets.mixkit.co/videos/preview/mixkit-toast-between-two-people-at-lunch-44012-large.mp4"
-            type="video/mp4"
-          />
+          <source src="/video/v1.mp4" type="video/mp4" />
         </video>
         <div className="banner-content text-center">
           <span>
