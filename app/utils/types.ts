@@ -21,3 +21,8 @@ export interface InitProps {
   children?: ReactNode;
   className?: string;
 }
+
+export type SEED = {
+  title: string | string[];
+  prices: number | [string, number][];
+};

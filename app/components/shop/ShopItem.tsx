@@ -72,10 +72,26 @@ const ShopItem: FC<Props> = ({ product, image }) => {
             {fetcher.state === "submitting" && <ClipLoader size={15} />}
           </a>
         </div>
-        <div className="pric-tag">
-          <span>
-            <div className="tw-text-xs tw-inline">ksh</div>
-            {product.prices[0]}
+        <div className="pric-tag ">
+          <span className="tw-flex">
+            {product.prices.map((price, idx) => (
+              <>
+                <div
+                  className={`tw-text-xs tw-inline ${
+                    price.value === 0 && "tw-hidden"
+                  }`}
+                >
+                  ksh
+                </div>
+                <div
+                  className={`tw-inline-block tw-mr-1 ${
+                    price.value === 0 && "tw-hidden"
+                  }`}
+                >
+                  {price.value}
+                </div>{" "}
+              </>
+            ))}
           </span>
         </div>
       </div>

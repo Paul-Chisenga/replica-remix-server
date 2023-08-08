@@ -19,7 +19,7 @@ export const meta: V2_MetaFunction = () => {
 const Authentication = () => {
   const actionData = useTypedActionData();
   return (
-    <div className="container tw-my-32">
+    <div className="container">
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-md tw-mx-auto">
         <h4 className="mb-20 tw-text-3xl title">Login</h4>
         {actionData?.error && (

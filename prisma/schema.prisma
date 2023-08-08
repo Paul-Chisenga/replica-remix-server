@@ -68,12 +68,17 @@ model Menu {
   @@unique([title, category, subtitle])
 }
 
+type ProductPrice {
+  label String
+  value Float
+}
+
 model Product {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   title       String          @unique
   subtitle    String?
   description String?
-  prices      Float[]
+  prices      ProductPrice[]
   subMenu     SubMenu         @relation(fields: [subMenuId], references: [id], onDelete: Cascade)
   subMenuId   String          @db.ObjectId
   createdBy   Admin           @relation(fields: [adminId], references: [id])
@@ -139,7 +144,7 @@ model CartItem {
 
 model OrderItem {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String   @db.ObjectId
   count     Int
   order     Order    @relation(fields: [orderId], references: [id])

@@ -111,3 +111,6 @@
 .faq-area .accordion .accordion-item .accordion-collapse {
   background: transparent !important;
 }
+.video-wrap::after {
+  /* background-color: rgba(9, 22, 29, 0.7) !important; */
+}

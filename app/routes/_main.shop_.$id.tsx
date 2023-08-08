@@ -249,12 +249,17 @@ function ShopDetails() {
                   </li>
                 </ul>
                 <h2 className="tw-capitalize">{product.title}</h2>
-                <div className="price-tag">
-                  <h4>
-                    {/* $30 <del>$40</del> */}
-                    <span className="tw-text-sm">ksh</span>
-                    <span>{product.prices[0]}</span>
-                  </h4>
+                <div className="price-tag tw-flex tw-items-center tw-gap-2">
+                  {product.prices.map((price, idx) => (
+                    <h4
+                      key={idx}
+                      className={`${price.value === 0 && `tw-hidden`}`}
+                    >
+                      {/* $30 <del>$40</del> */}
+                      <span className="tw-text-sm">ksh</span>
+                      <span>{price.value}</span>
+                    </h4>
+                  ))}
                 </div>
                 <p className="tw-capitalize">{product.subtitle}</p>
                 <div className="prod-quantity d-flex align-items-center justify-content-start mb-20">

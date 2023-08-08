@@ -119,14 +119,25 @@ const Menu1: FC<Props> = ({ menu, category }) => {
                                           {prod.subtitle}
                                         </p>
                                       </div>
-                                      <div className="flex tw-gap-4">
+                                      <div className="tw-flex tw-gap-2">
                                         {prod.prices.map((price, idx) => (
-                                          <div key={idx} className="price">
+                                          <div
+                                            key={idx}
+                                            className={`price ${
+                                              price.value === 0 &&
+                                              "tw-invisible"
+                                            }`}
+                                          >
+                                            {price.label !== "std" && (
+                                              <div className="tw-text-center tw-text-primary tw-capitalize">
+                                                {price.label}
+                                              </div>
+                                            )}
                                             <span className="tw-relative">
-                                              {price}
-                                              <i className="tw-absolute tw-text-sm tw-font-cormorant tw-right-0 -tw-top-3">
+                                              <div className="tw-inline tw-text-sm tw-font-cormorant tw-right-0 -tw-top-3">
                                                 ksh
-                                              </i>
+                                              </div>
+                                              {price.value}
                                             </span>
                                           </div>
                                         ))}

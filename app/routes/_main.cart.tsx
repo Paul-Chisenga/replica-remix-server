@@ -33,7 +33,7 @@ function Cart() {
   const cartContext = useContext(CartContext);
 
   const cartTotal = cart.reduce((prev, cur) => {
-    const sum = cur.count * cur.product.prices[0];
+    const sum = cur.count * cur.product.prices[0].value;
     return prev + sum;
   }, 0);
 
@@ -134,12 +134,12 @@ function Cart() {
                             <td data-label="Unite Price">
                               <del>
                                 <span className="tw-text-xs">ksh</span>
-                                <span>{item.product.prices[0]}</span>
+                                <span>{item.product.prices[0].value}</span>
                               </del>
                             </td>
                             <td data-label="Discount Price">
                               <span className="tw-text-xs">ksh</span>
-                              <span>{item.product.prices[0]}</span>
+                              <span>{item.product.prices[0].value}</span>
                             </td>
                             <td data-label="Quantity">
                               <div className="quantity d-flex align-items-center">
@@ -162,7 +162,9 @@ function Cart() {
                             </td>
                             <td data-label="Subtotal">
                               <span className="tw-text-xs">ksh</span>
-                              <span>{item.product.prices[0] * item.count}</span>
+                              <span>
+                                {item.product.prices[0].value * item.count}
+                              </span>
                             </td>
                           </tr>
                         ))}

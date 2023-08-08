@@ -95,7 +95,8 @@ const Orders = () => {
                               <span className="tw-text-dark tw-font-bold">
                                 {order.items.reduce(
                                   (prev, cur) =>
-                                    prev + cur.count * cur.product.prices[0],
+                                    prev +
+                                    cur.count * cur.product.prices[0].value,
                                   0
                                 )}
                               </span>
@@ -128,7 +129,7 @@ const Orders = () => {
                                 <h5 className="tw-text-xl tw-items-start tw-flex tw-justify-between tw-leading-3 tw-font-black tw-font-cormorant tw-text-dark tw-transition-all tw-duration-300 tw-capitalize">
                                   <div>{item.product.title}</div>
                                   <div className="tw-text-2xl">
-                                    {item.count * item.product.prices[0]}
+                                    {item.count * item.product.prices[0].value}
                                   </div>
                                 </h5>
                                 <div className="product-total d-flex align-items-center">
@@ -149,7 +150,7 @@ const Orders = () => {
                                     <span className="tw-text-dark tw-font-normal tw-text-lg tw-font-jost">
                                       <div className="tw-inline">ksh</div>
                                       <div className="tw-inline">
-                                        {item.product.prices[0]}
+                                        {item.product.prices[0].value}
                                       </div>
                                     </span>
                                   </strong>

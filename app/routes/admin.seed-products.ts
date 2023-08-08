@@ -1,3 +1,4 @@
+import type { ProductPrice } from "@prisma/client";
 import { MenuCategory, Role } from "@prisma/client";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "remix-typedjson";
@@ -17,12 +18,12 @@ import {
 import {
   A_LA_CARTE,
   COMBINATIONS,
-  FRENCH_TOAST,
   HEALTHIER_SIDE,
   OMELETTES,
   PANCAKES,
   SANDWICHES,
 } from "~/data/breakfast";
+import { KIDS_BREACK_FAST, KIDS_LUNCH } from "~/data/kids-menu";
 import {
   APPETIZERS,
   BURGERS,
@@ -35,6 +36,7 @@ import {
   TACOS,
 } from "~/data/lunch-dinner";
 import prisma from "~/services/prisma.server";
+import type { SEED } from "~/utils/types";
 
 // HELPERS
 const createProduct = async (payload: {
@@ -43,17 +45,15 @@ const createProduct = async (payload: {
   menuCat: MenuCategory;
   menuSubtitle?: string;
   subMenuTitle?: string;
-  products: string[] | string[][];
-  prices: number[];
+  products: SEED[];
 }) => {
   const {
     adminProfileId,
     menuTitle,
-    prices,
-    products,
     subMenuTitle,
     menuCat,
     menuSubtitle,
+    products,
   } = payload;
   await prisma.$transaction(async (tx) => {
     const admin = await tx.admin.findUniqueOrThrow({
@@ -86,25 +86,28 @@ const createProduct = async (payload: {
           title: subMenuTitle ? subMenuTitle.trim().toLowerCase() : menu.title,
         },
       }));
+
     await tx.product.createMany({
       data: products.map((prod) => {
-        if (Array.isArray(prod)) {
-          return {
-            title: prod[0].trim().toLowerCase(),
-            description:
-              "Nulla facilisi. In lacinia eu odio ut iaculis. Vivamus cursus commodo libero vel porttitor.",
-            prices: prices,
-            adminId: admin.id,
-            subMenuId: subMenu.id,
-            subtitle: prod[1].trim().toLowerCase(),
-          };
+        let title = "";
+        let subtitle: string | undefined;
+        if (Array.isArray(prod.title)) {
+          title = prod.title[0];
+          subtitle = prod.title[1];
+        } else {
+          title = prod.title;
         }
 
+        const prices: ProductPrice[] = Array.isArray(prod.prices)
+          ? prod.prices.map((item) => ({ label: item[0], value: item[1] }))
+          : [{ label: "std", value: prod.prices }];
+
         return {
-          title: prod.trim().toLowerCase(),
+          title: title.trim().toLowerCase(),
+          subtitle: subtitle?.trim().toLowerCase(),
+          prices: prices,
           description:
             "Nulla facilisi. In lacinia eu odio ut iaculis. Vivamus cursus commodo libero vel porttitor.",
-          prices: prices,
           adminId: admin.id,
           subMenuId: subMenu.id,
         };
@@ -130,7 +133,6 @@ export async function action({ request }: ActionArgs) {
         menuTitle: "pastries",
         menuCat: MenuCategory.BAKERY,
         subMenuTitle: "yeast donuts",
-        prices: [250],
         products: YEAST_DONUTS,
       });
       break;
@@ -141,7 +143,6 @@ export async function action({ request }: ActionArgs) {
         menuTitle: "pastries",
         menuCat: MenuCategory.BAKERY,
         subMenuTitle: "special donuts",
-        prices: [250],
         products: SPECIAL_DONUTS,
       });
       break;
@@ -150,7 +151,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "pastries",
         menuCat: MenuCategory.BAKERY,
-        prices: [250],
         products: PASTRIES,
       });
       break;
@@ -159,7 +159,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "cakes & cupcakes",
         menuCat: MenuCategory.BAKERY,
-        prices: [250],
         products: CAKES_CUPCAKES,
       });
       break;
@@ -168,7 +167,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "bread",
         menuCat: MenuCategory.BAKERY,
-        prices: [250],
         products: BREAD,
       });
       break;
@@ -177,7 +175,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "coffee & tea",
         menuCat: MenuCategory.BEVARAGE,
-        prices: [250, 250],
         products: COFFE_TEA,
       });
       break;
@@ -186,7 +183,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "beer",
         menuCat: MenuCategory.BEVARAGE,
-        prices: [250],
         products: BEER,
       });
       break;
@@ -195,7 +191,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "wine",
         menuCat: MenuCategory.BEVARAGE,
-        prices: [250, 1050],
         products: WINE,
       });
       break;
@@ -204,28 +199,14 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "additional beverages",
         menuCat: MenuCategory.BEVARAGE,
-        prices: [250],
         products: ADDITIONAL_BEV,
       });
       break;
     case "FRECH_JUICE":
-      await prisma.menu.update({
-        where: {
-          title_category_subtitle: {
-            title: "fresh & juices",
-            category: MenuCategory.BEVARAGE,
-            subtitle: "",
-          },
-        },
-        data: {
-          title: "fresh juice",
-        },
-      });
       await createProduct({
         adminProfileId: session.profileId,
         menuTitle: "fresh juice",
         menuCat: MenuCategory.BEVARAGE,
-        prices: [250],
         products: FRECH_JUICE,
       });
       break;
@@ -236,7 +217,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "combinations",
         menuCat: MenuCategory.BREAKFAST,
-        prices: [850],
         products: COMBINATIONS,
       });
       break;
@@ -245,7 +225,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "omelettes",
         menuCat: MenuCategory.BREAKFAST,
-        prices: [850],
         products: OMELETTES,
       });
       break;
@@ -254,7 +233,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "sandwiches",
         menuCat: MenuCategory.BREAKFAST,
-        prices: [850],
         products: SANDWICHES,
       });
       break;
@@ -263,7 +241,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "healthier side",
         menuCat: MenuCategory.BREAKFAST,
-        prices: [850],
         products: HEALTHIER_SIDE,
       });
       break;
@@ -272,7 +249,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "a la carte",
         menuCat: MenuCategory.BREAKFAST,
-        prices: [650],
         products: A_LA_CARTE,
       });
       break;
@@ -282,20 +258,18 @@ export async function action({ request }: ActionArgs) {
         menuTitle: "a la carte",
         subMenuTitle: "pancakes",
         menuCat: MenuCategory.BREAKFAST,
-        prices: [650],
         products: PANCAKES,
       });
       break;
-    case "FRENCH_TOAST":
-      await createProduct({
-        adminProfileId: session.profileId,
-        menuTitle: "a la carte",
-        subMenuTitle: "french toast",
-        menuCat: MenuCategory.BREAKFAST,
-        prices: [850],
-        products: FRENCH_TOAST,
-      });
-      break;
+    // case "FRENCH_TOAST":
+    //   await createProduct({
+    //     adminProfileId: session.profileId,
+    //     menuTitle: "a la carte",
+    //     subMenuTitle: "french toast",
+    //     menuCat: MenuCategory.BREAKFAST,
+    //     products: FRENCH_TOAST,
+    //   });
+    //   break;
 
     // LUNCH AND DINNER
     case "APPETIZERS":
@@ -303,7 +277,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "appetizers",
         menuCat: MenuCategory.FOOD,
-        prices: [850],
         products: APPETIZERS,
       });
       break;
@@ -312,7 +285,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "soup & salad",
         menuCat: MenuCategory.FOOD,
-        prices: [700],
         products: SOUP_SALAD,
       });
       break;
@@ -321,7 +293,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "burgers",
         menuCat: MenuCategory.FOOD,
-        prices: [700],
         products: BURGERS,
       });
       break;
@@ -330,7 +301,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "sandwiches",
         menuCat: MenuCategory.FOOD,
-        prices: [850],
         products: SANDWICHES_LUNCH,
       });
       break;
@@ -340,7 +310,6 @@ export async function action({ request }: ActionArgs) {
         menuTitle: "sandwiches",
         subMenuTitle: "tacos",
         menuCat: MenuCategory.FOOD,
-        prices: [850],
         products: TACOS,
       });
       break;
@@ -351,7 +320,6 @@ export async function action({ request }: ActionArgs) {
         menuTitle: "mains",
         menuSubtitle: "includes 2 side item",
         menuCat: MenuCategory.FOOD,
-        prices: [850],
         products: MAINS_1,
       });
       break;
@@ -361,7 +329,6 @@ export async function action({ request }: ActionArgs) {
         menuTitle: "mains",
         menuSubtitle: "served with choice of bread",
         menuCat: MenuCategory.FOOD,
-        prices: [850],
         products: MAINS_2,
       });
       break;
@@ -370,7 +337,6 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "sides",
         menuCat: MenuCategory.FOOD,
-        prices: [250],
         products: SIDES,
       });
       break;
@@ -379,8 +345,25 @@ export async function action({ request }: ActionArgs) {
         adminProfileId: session.profileId,
         menuTitle: "desserts",
         menuCat: MenuCategory.FOOD,
-        prices: [700],
         products: DESSERTS,
+      });
+      break;
+
+    // KIDS
+    case "KIDS_BREAKFAST":
+      await createProduct({
+        adminProfileId: session.profileId,
+        menuTitle: "kids breakfast",
+        menuCat: MenuCategory.BREAKFAST,
+        products: KIDS_BREACK_FAST,
+      });
+      break;
+    case "KIDS_LUNCH":
+      await createProduct({
+        adminProfileId: session.profileId,
+        menuTitle: "kids lunch/dinner",
+        menuCat: MenuCategory.FOOD,
+        products: KIDS_LUNCH,
       });
       break;
 

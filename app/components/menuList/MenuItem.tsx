@@ -32,7 +32,7 @@ const MenuItem: FC<Props> = ({ product, image }) => {
       <Link to={`/shop/${product.id}`} className="link">
         <div className="price">
           <span className="tw-relative">
-            {product.prices[0]}
+            {product.prices[0].value}
             {/* <i className="tw-text-xs tw-absolute tw-left-0">ksh</i> */}
           </span>
         </div>

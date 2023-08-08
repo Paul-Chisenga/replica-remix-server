@@ -1,4 +1,3 @@
-import { MenuCategory } from "@prisma/client";
 import type { LoaderArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
@@ -23,7 +22,6 @@ const MENU_TITLES = [
   "HEALTHIER_SIDE",
   "ALL_OTHER_A_LA_CARTE",
   "PANCAKES",
-  "FRENCH_TOAST",
   "APPETIZERS",
   "SOUP_SALAD",
   "BURGERS",
@@ -33,6 +31,8 @@ const MENU_TITLES = [
   "MAINS_2",
   "SIDES",
   "DESSERTS",
+  "KIDS_BREAKFAST",
+  "KIDS_LUNCH",
 ];
 
 const Products = () => {
@@ -104,7 +104,7 @@ const Products = () => {
                                   key={idx}
                                   className="tw-font-bold tw-text-dark tw-flex-shrink-0 "
                                 >
-                                  {price}
+                                  {price.value}
                                   {/* <p className="tw-text-base tw-text-right">ksh</p> */}
                                 </h5>
                               ))}
@@ -128,9 +128,6 @@ export default Products;
 
 export async function loader({ request }: LoaderArgs) {
   const menu = await prisma.menu.findMany({
-    where: {
-      category: MenuCategory.BREAKFAST,
-    },
     include: {
       submenu: {
         include: {
@@ -142,7 +139,5 @@ export async function loader({ request }: LoaderArgs) {
       updatedAt: "desc",
     },
   });
-  console.log(menu.filter((item) => item.title === "healthier side"));
-  // const products = getProducts();
   return menu;
 }

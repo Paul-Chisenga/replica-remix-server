@@ -1,7 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link } from "@remix-run/react";
+import { useEffect, useRef } from "react";
 
 const Banner = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultPlaybackRate = 0.5;
+      videoRef.current.playbackRate = 0.5;
+    }
+  }, []);
   return (
     <div className="home3-banner">
       <div className="social-area">
@@ -47,8 +56,8 @@ const Banner = () => {
         </p>
       </div>
       <div className="video-wrap d-flex align-items-center justify-content-center">
-        <video autoPlay loop muted preload="auto">
-          <source src="/video/v1.mp4" type="video/mp4" />
+        <video autoPlay loop muted preload="auto" ref={videoRef}>
+          <source src="/video/v2.webm" type="video/mp4" />
         </video>
         <div className="banner-content text-center">
           <span>
