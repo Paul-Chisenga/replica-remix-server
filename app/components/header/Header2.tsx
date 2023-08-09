@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link, NavLink } from "@remix-run/react";
-import { FC, useContext, useEffect, useReducer, useRef } from "react";
+import type { FC } from "react";
+import { useContext, useEffect, useReducer, useRef } from "react";
 import { CartContext } from "~/context/CartContext";
 import AccountDropdown from "../Dropdown/AccountDropdown";
 
@@ -121,9 +122,17 @@ const Header2: FC<Props> = ({ user }) => {
               <NavLink to="/menu" className="drop-down">
                 Menu
               </NavLink>
+              <i
+                onClick={() => dispatch({ type: "menu" })}
+                className={
+                  state.activeMenu === "menu"
+                    ? "bi bi-plus dropdown-icon active"
+                    : "bi bi-plus dropdown-icon"
+                }
+              />
               <ul
                 className={
-                  state.activeMenu === "homeOne"
+                  state.activeMenu === "menu"
                     ? "sub-menu  d-block"
                     : "sub-menu d-xl-block d-none"
                 }
@@ -207,22 +216,6 @@ const Header2: FC<Props> = ({ user }) => {
             Order Now
           </Link>
           <AccountDropdown user={user} />
-          {/* <div className="tw-flex tw-items-center tw-gap-16">
-            <div className="tw-relative mr-2">
-              <Link to="/cart">
-                <i className="bi bi-cart tw-text-xl tw-text-white" />
-              </Link>
-              {ctx.cart > 0 && (
-                <span className="tw-absolute -tw-right-2 -tw-top-2 tw-text-emerald-400 tw-text-xs tw-font-bold">
-                  {ctx.cart}
-                </span>
-              )}
-            </div>
-            <Link to="/menu" className="primary-btn btn-md">
-              Order Now
-            </Link>
-          </div> */}
-
           <div
             className="sidebar-button mobile-menu-btn"
             onClick={() => dispatch({ type: "mobileMenu", isMobileMenu: true })}

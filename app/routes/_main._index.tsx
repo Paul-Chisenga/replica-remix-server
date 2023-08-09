@@ -3,7 +3,7 @@ import { MenuCategory } from "@prisma/client";
 import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
 import { useTypedLoaderData } from "remix-typedjson";
 import About from "~/components/about/About";
-import Banner from "~/components/Banner";
+import Banner from "~/components/home/Banner";
 import MenuList from "~/components/menuList/MenuList";
 import Reservation2 from "~/components/reservation/Reservation2";
 import prisma from "~/services/prisma.server";
