@@ -1,3 +1,4 @@
+import { Form } from "@remix-run/react";
 import React, { useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -35,7 +36,7 @@ function Reservation2() {
         </div>
         <div className="row justify-content-center">
           <div className="col-lg-10">
-            <form>
+            <Form action="/reservation" method="POST">
               <div className="row justify-content-center">
                 <div className="col-lg-6 col-md-6 mb-25">
                   <div className="form-inner">
@@ -100,7 +101,7 @@ function Reservation2() {
                   </div>
                 </div>
               </div>
-            </form>
+            </Form>
           </div>
         </div>
       </div>

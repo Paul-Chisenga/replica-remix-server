@@ -22,6 +22,7 @@ export const meta: V2_MetaFunction = () => {
 };
 
 const PRODUCT_IMAGES = [
+  "food-item.jpeg",
   "h2-food-item-1.png",
   "h2-food-item-2.png",
   "h2-food-item-3.png",
@@ -214,6 +215,9 @@ export async function loader({ request }: LoaderArgs) {
     const count = await prisma.product.count({ where: productWhere });
     const products = await prisma.product.findMany({
       where: productWhere,
+      include: {
+        pictures: true,
+      },
       skip: page * 8,
       take: 8,
     });

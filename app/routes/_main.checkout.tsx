@@ -28,7 +28,7 @@ const IMAGES = ["cart-01.png", "cart-02.png", "cart-03.png"];
 function Checkout() {
   const items = useTypedLoaderData<typeof loader>();
   const cartTotal = items.reduce((prev, cur) => {
-    const sum = cur.count * cur.product.prices[0];
+    const sum = cur.count * cur.product.prices[0].value;
     return prev + sum;
   }, 0);
   return (
@@ -214,7 +214,7 @@ function Checkout() {
                           <strong>
                             <i className="bi bi-x-lg px-2" />
                             <span className="product-price">
-                              ${item.product.prices[0]}
+                              ksh{item.product.prices[0].value}
                             </span>
                           </strong>
                         </div>

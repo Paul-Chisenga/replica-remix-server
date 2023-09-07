@@ -84,8 +84,8 @@ export async function action({ request }: ActionArgs) {
   }
   try {
     await createMenu(session.profileId, {
-      title: data.title.toLowerCase(),
-      subtitle: data.subtitle.toLowerCase(),
+      title: data.title.trim().toLowerCase(),
+      subtitle: data.subtitle.trim().toLowerCase(),
       category: data.category,
     });
     // return redirect("/admin/menu");

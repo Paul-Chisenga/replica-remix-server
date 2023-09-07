@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link, NavLink } from "@remix-run/react";
 import type { FC } from "react";
-import { useContext, useEffect, useReducer, useRef } from "react";
-import { CartContext } from "~/context/CartContext";
+import { useEffect, useReducer, useRef } from "react";
 import AccountDropdown from "../Dropdown/AccountDropdown";
+import useCartContext from "~/hooks/useCartContext";
 
 /*---------Using reducer mange the active or inactive menu----------*/
 const initialState = {
@@ -50,7 +50,7 @@ const Header2: FC<Props> = ({ user }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const headerRef = useRef(null);
 
-  const ctx = useContext(CartContext);
+  const ctx = useCartContext();
 
   const handleScroll = () => {
     const { scrollY } = window;
@@ -205,9 +205,9 @@ const Header2: FC<Props> = ({ user }) => {
             <Link to="/cart">
               <i className="bi bi-cart tw-text-xl tw-text-white" />
             </Link>
-            {ctx.cart > 0 && (
+            {ctx.items.length > 0 && (
               <span className="tw-absolute -tw-right-2 -tw-top-2 tw-text-emerald-400 tw-text-xs tw-font-bold">
-                {ctx.cart}
+                {ctx.items.length}
               </span>
             )}
           </div>

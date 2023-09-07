@@ -1,18 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Role } from "@prisma/client";
-import type { LoaderArgs } from "@remix-run/node";
+import { type LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/react";
 import { Link } from "@remix-run/react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import Breadcrumb from "~/components/common/Breadcrumb";
-import { requireUserSession } from "~/controllers/auth.server";
+import { getUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
-import { CartContext } from "~/context/CartContext";
 import { randomNumber } from "~/utils/helpers";
 import type { action } from "./_main.cart.$id.increment";
 import { ClipLoader } from "react-spinners";
 import LinkButton2 from "~/components/Button/LinkButton2";
+import useCartContext from "~/hooks/useCartContext";
+import type { ContextCartItem } from "~/context/CartContext";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -27,49 +27,112 @@ export const meta: V2_MetaFunction = () => {
 const IMAGES = ["cart-01.png", "cart-02.png", "cart-03.png"];
 
 function Cart() {
-  const cart = useTypedLoaderData<typeof loader>();
-  const [items, setItems] = useState(cart);
+  const { cart, authenticated } = useTypedLoaderData<typeof loader>();
+  const [items, setItems] = useState<ContextCartItem[]>([]);
+
   const fetcher = useTypedFetcher<typeof action>();
-  const cartContext = useContext(CartContext);
+  const cartContext = useCartContext();
 
-  const cartTotal = cart.reduce((prev, cur) => {
-    const sum = cur.count * cur.product.prices[0].value;
-    return prev + sum;
-  }, 0);
+  const [cartTotal, setCartTotal] = useState(0);
 
-  const increment = (itemId: string) => {
-    fetcher.submit(
-      {},
-      {
-        action: `${itemId}/increment`,
-        method: "POST",
-      }
+  const increment = (prodId: string, price: number) => {
+    const cartItem = items.find(
+      (item) => item.product.id === prodId && item.price === price
     );
+
+    if (!cartItem) return;
+
+    cartContext.increment(cartItem.product, price);
+
+    // fetcher.submit(
+    //   {},
+    //   {
+    //     action: `${itemId}/increment`,
+    //     method: "POST",
+    //   }
+    // );
   };
 
-  const decrement = (itemId: string) => {
-    fetcher.submit(
-      {},
-      {
-        action: `${itemId}/decrement`,
-        method: "POST",
-      }
+  const decrement = (prodId: string, price: number) => {
+    const cartItem = items.find(
+      (item) => item.product.id === prodId && item.price === price
     );
+
+    if (!cartItem) return;
+
+    cartContext.decrement(cartItem.product, price);
   };
-  const handleDelete = (itemId: string) => {
-    fetcher.submit(
-      {},
-      {
-        action: `${itemId}/remove`,
-        method: "DELETE",
-      }
+  const handleDelete = (prodId: string, price: number) => {
+    const cartItem = items.find(
+      (item) => item.product.id === prodId && item.price === price
     );
+
+    if (!cartItem) return;
+
+    cartContext.remove(cartItem.product, price);
   };
+
+  // const increment = (itemId: string) => {
+  //   fetcher.submit(
+  //     {},
+  //     {
+  //       action: `${itemId}/increment`,
+  //       method: "POST",
+  //     }
+  //   );
+  // };
+
+  // const decrement = (itemId: string) => {
+  //   fetcher.submit(
+  //     {},
+  //     {
+  //       action: `${itemId}/decrement`,
+  //       method: "POST",
+  //     }
+  //   );
+  // };
+  // const handleDelete = (itemId: string) => {
+  //   fetcher.submit(
+  //     {},
+  //     {
+  //       action: `${itemId}/remove`,
+  //       method: "DELETE",
+  //     }
+  //   );
+  // };
+
+  // compare cart from db and context
+  useEffect(() => {
+    if (authenticated) {
+      cartContext.setCart(
+        cart.map((item) => ({
+          id: item.id,
+          count: item.count,
+          price: item.price,
+          product: item.product,
+        }))
+      );
+    }
+  }, [cartContext]);
+
+  useEffect(() => {
+    setItems(cartContext.items);
+  }, [cartContext.items]);
+
+  // compute total
+  useEffect(() => {
+    const sum = items.reduce((prev, cur) => {
+      const sum = cur.count * cur.product.prices[0].value;
+      return prev + sum;
+    }, 0);
+
+    setCartTotal(sum);
+  }, [items]);
 
   useEffect(() => {
     if (fetcher.data) {
-      cartContext.updateCart(fetcher.data.count);
-      setItems(fetcher.data.items);
+      // cartContext.updateCart(fetcher.data.count);
+      // setItems(fetcher.data.items);
     }
   }, [fetcher.data]);
 
@@ -83,13 +146,13 @@ function Cart() {
               <ClipLoader />
             </div>
           )}
-          {cart.length === 0 && (
+          {items.length === 0 && (
             <div className="tw-p-5 tw-text-center">
               <p className="">There is nothing to see</p>
               <LinkButton2 to="/shop">Go shopping</LinkButton2>
             </div>
           )}
-          {cart.length > 0 && (
+          {items.length > 0 && (
             <>
               <div className="row">
                 <div className="col-12">
@@ -112,7 +175,9 @@ function Cart() {
                             <td data-label="Delete">
                               <div
                                 className="delete-icon"
-                                onClick={() => handleDelete(item.id)}
+                                onClick={() =>
+                                  handleDelete(item.product.id, item.price)
+                                }
                               >
                                 <i className="bi bi-x" />
                               </div>
@@ -125,7 +190,7 @@ function Cart() {
                             </td>
                             <td data-label="Food Name">
                               <Link
-                                to={`/shop/${item.productId}`}
+                                to={`/shop/${item.product.id}`}
                                 className="tw-capitalize"
                               >
                                 {item.product.title}
@@ -134,25 +199,29 @@ function Cart() {
                             <td data-label="Unite Price">
                               <del>
                                 <span className="tw-text-xs">ksh</span>
-                                <span>{item.product.prices[0].value}</span>
+                                <span>{item.price}</span>
                               </del>
                             </td>
                             <td data-label="Discount Price">
                               <span className="tw-text-xs">ksh</span>
-                              <span>{item.product.prices[0].value}</span>
+                              <span>{item.price}</span>
                             </td>
                             <td data-label="Quantity">
                               <div className="quantity d-flex align-items-center">
                                 <div className="quantity-nav nice-number d-flex align-items-center">
                                   <button
-                                    onClick={() => decrement(item.id)}
+                                    onClick={() =>
+                                      decrement(item.product.id, item.price)
+                                    }
                                     type="button"
                                   >
                                     <i className="bi bi-dash"></i>
                                   </button>
                                   <div>{item.count}</div>
                                   <button
-                                    onClick={() => increment(item.id)}
+                                    onClick={() =>
+                                      increment(item.product.id, item.price)
+                                    }
                                     type="button"
                                   >
                                     <i className="bi bi-plus"></i>
@@ -267,20 +336,27 @@ function Cart() {
 
 export default Cart;
 export async function loader({ request }: LoaderArgs) {
-  const session = await requireUserSession(request, [Role.CUSTOMER]);
+  const session = await getUserSession(request);
+  // if (session && session.role === Role.ADMIN) return redirect("/");
   try {
-    const cart = await prisma.cartItem.findMany({
-      where: {
-        customer: {
-          profileId: session.profileId,
-        },
-      },
-      include: {
-        product: true,
-      },
-    });
+    const cart = session
+      ? await prisma.cartItem.findMany({
+          where: {
+            customer: {
+              profileId: session.profileId,
+            },
+          },
+          include: {
+            product: {
+              include: {
+                pictures: true,
+              },
+            },
+          },
+        })
+      : [];
 
-    return cart;
+    return { cart, authenticated: !!session };
   } catch (error) {
     throw new Error("Something went wrong");
   }

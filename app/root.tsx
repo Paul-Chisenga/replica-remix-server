@@ -18,6 +18,7 @@ import CartContextProvider from "./context/CartContext";
 import NotFound from "./components/errors/404";
 import Error1 from "./components/errors/Error1";
 import LoadingBar from "react-top-loading-bar";
+import AuthContextProvider from "./context/AuthContext";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: mainStyles },
@@ -63,9 +64,11 @@ export default function App() {
   return (
     <Document>
       <LoadingBar color={"#34d399"} ref={ref} />
-      <CartContextProvider>
-        <Outlet />
-      </CartContextProvider>
+      <AuthContextProvider>
+        <CartContextProvider>
+          <Outlet />
+        </CartContextProvider>
+      </AuthContextProvider>
       {/* {navigation.state === "submitting" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent">
           <Spinner />

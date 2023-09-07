@@ -2,7 +2,12 @@
 import ReservationForm from "~/components/category/ReservationForm";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import datePickerCss from "react-datepicker/dist/react-datepicker.css";
-import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
+import type {
+  ActionArgs,
+  LinksFunction,
+  V2_MetaFunction,
+} from "@remix-run/node";
+import { sendEmail } from "~/services/email.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: datePickerCss },
@@ -31,3 +36,21 @@ const Reservation = () => {
 };
 
 export default Reservation;
+
+export async function action({ request }: ActionArgs) {
+  try {
+    await sendEmail({
+      to: { name: "Paul", email: "paulchisenga.p@gmail.com" },
+      subject: `RESERVATION`,
+      message: `
+    Dear ${"Paul"}
+    <br >
+    Reservation page
+    `,
+    });
+    return "OK";
+  } catch (error) {
+    console.log(error);
+    throw new Error("Something went wrong");
+  }
+}

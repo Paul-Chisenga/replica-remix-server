@@ -4,7 +4,7 @@ import type { LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/react";
 import { Form, Link } from "@remix-run/react";
 import invariant from "invariant";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import SwiperCore, {
   Autoplay,
@@ -12,14 +12,13 @@ import SwiperCore, {
   Navigation,
   Pagination,
 } from "swiper";
-// import { Swiper, SwiperSlide } from "swiper/react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import { getUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
 import { formatDate, parseMenuCategory } from "~/utils/helpers";
 import type { action } from "./_main.shop_.$id.add-to-cart";
-import { ClipLoader } from "react-spinners";
-import { CartContext } from "~/context/CartContext";
+import MyForm from "~/components/Form/MyForm";
+import useCartContext from "~/hooks/useCartContext";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectFade]);
 
@@ -38,77 +37,59 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
 function ShopDetails() {
   const { product, cartCount } = useTypedLoaderData<typeof loader>();
   const [count, setCount] = useState(cartCount ?? 0);
+  const [selectedPrice, setSelectedPrice] = useState("0");
 
   const fetcher = useTypedFetcher<typeof action>();
-  const cartContext = useContext(CartContext);
+  const cartContext = useCartContext();
 
   const increment = () => {
-    fetcher.submit(
-      {},
-      {
-        action: `add-to-cart`,
-        method: "POST",
-      }
-    );
+    cartContext.increment(product, product.prices[+selectedPrice].value);
   };
 
   const decrement = () => {
-    if (count > 0) {
-      fetcher.submit(
-        {},
-        {
-          action: `remove-from-cart`,
-          method: "POST",
-        }
-      );
-    }
+    cartContext.decrement(product, product.prices[+selectedPrice].value);
   };
-  // const relatedproduceSlider = {
-  //   slidesPerView: "auto",
-  //   spaceBetween: 25,
-  //   loop: true,
-  //   speed: 1500,
-  //   autoplay: {
-  //     delay: 2000,
-  //   },
-  //   navigation: {
-  //     nextEl: ".next-btn-4",
-  //     prevEl: ".prev-btn-4",
-  //   },
 
-  //   breakpoints: {
-  //     280: {
-  //       slidesPerView: 1,
-  //       spaceBetween: 15,
-  //     },
-  //     480: {
-  //       slidesPerView: 2,
-  //       spaceBetween: 15,
-  //     },
-  //     768: {
-  //       slidesPerView: 2,
-  //     },
-  //     992: {
-  //       slidesPerView: 3,
-  //     },
-  //     1200: {
-  //       slidesPerView: 3,
-  //     },
-  //     1400: {
-  //       slidesPerView: 3,
-  //     },
-  //     1600: {
-  //       slidesPerView: 3,
-  //     },
-  //   },
+  // set the count
+  useEffect(() => {
+    const item = cartContext.items.find(
+      (it) =>
+        it.product.id === product.id &&
+        it.price === product.prices[+selectedPrice].value
+    );
+    if (item) {
+      setCount(item.count);
+    }
+  }, [cartContext.items, product.id, product.prices, selectedPrice]);
+
+  // const increment = () => {
+  //   fetcher.submit(
+  //     {},
+  //     {
+  //       action: `add-to-cart`,
+  //       method: "POST",
+  //     }
+  //   );
   // };
 
-  useEffect(() => {
-    if (fetcher.data) {
-      cartContext.updateCart(fetcher.data.totalUserCartItems);
-      setCount(fetcher.data.totalProductCartItems);
-    }
-  }, [fetcher.data]);
+  // const decrement = () => {
+  //   if (count > 0) {
+  //     fetcher.submit(
+  //       {},
+  //       {
+  //         action: `remove-from-cart`,
+  //         method: "POST",
+  //       }
+  //     );
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (fetcher.data) {
+  //     cartContext.updateCart(fetcher.data.totalUserCartItems);
+  //     setCount(fetcher.data.totalProductCartItems);
+  //   }
+  // }, [fetcher.data]);
 
   return (
     <>
@@ -127,7 +108,7 @@ function ShopDetails() {
                   <div className="gallery-big-image">
                     <img
                       className="img-fluid"
-                      src="/images/bg/card-big-01.png"
+                      src="/images/bg/food-item.jpeg"
                       alt=""
                     />
                   </div>
@@ -249,17 +230,29 @@ function ShopDetails() {
                   </li>
                 </ul>
                 <h2 className="tw-capitalize">{product.title}</h2>
-                <div className="price-tag tw-flex tw-items-center tw-gap-2">
-                  {product.prices.map((price, idx) => (
-                    <h4
-                      key={idx}
-                      className={`${price.value === 0 && `tw-hidden`}`}
+                <div className="tw-inline-block tw-w-auto">
+                  {product.prices.length > 1 && (
+                    <MyForm.Select.Wrapper
+                      id="price-selector"
+                      value={selectedPrice}
+                      onChange={(e) => {
+                        setSelectedPrice(e.target.value);
+                      }}
+                      className="tw-capitalize hover:tw-cursor-pointer"
                     >
-                      {/* $30 <del>$40</del> */}
-                      <span className="tw-text-sm">ksh</span>
-                      <span>{price.value}</span>
-                    </h4>
-                  ))}
+                      {product.prices.map((item, idx) => (
+                        <MyForm.Select.Option key={idx} value={idx}>
+                          {item.label}
+                        </MyForm.Select.Option>
+                      ))}
+                    </MyForm.Select.Wrapper>
+                  )}
+                </div>
+                <div className="price-tag tw-flex tw-items-center tw-gap-2">
+                  <h4>
+                    <span className="tw-text-sm">ksh</span>
+                    <span>{product.prices[+selectedPrice].value}</span>
+                  </h4>
                 </div>
                 <p className="tw-capitalize">{product.subtitle}</p>
                 <div className="prod-quantity d-flex align-items-center justify-content-start mb-20">
@@ -273,11 +266,12 @@ function ShopDetails() {
                         <i className="bi bi-dash"></i>
                       </button>
                       <span style={{ margin: "0 8px" }}>
-                        {fetcher.state === "submitting" ? (
+                        {count}
+                        {/* {fetcher.state === "submitting" ? (
                           <ClipLoader size={15} />
                         ) : (
                           count
-                        )}
+                        )} */}
                       </span>
                       <button
                         onClick={increment}
@@ -347,18 +341,6 @@ function ShopDetails() {
                   role="tablist"
                   aria-orientation="vertical"
                 >
-                  {/* <button
-                    className="nav-link btn--lg "
-                    id="v-pills-home-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#v-pills-home"
-                    type="button"
-                    role="tab"
-                    aria-controls="v-pills-home"
-                    aria-selected="false"
-                  >
-                    Details
-                  </button> */}
                   <button
                     className="nav-link active"
                     id="v-pills-profile-tab"
@@ -556,42 +538,6 @@ function ShopDetails() {
           </div>
         </div>
       </div>
-      {/* <div className="related-items-area mb-120">
-        <div className="container">
-          <div className="row mb-50">
-            <div className="col-lg-12">
-              <h2 className="item-details-tt">Related Products</h2>
-            </div>
-          </div>
-          <div className="row">
-            <Swiper
-              {...(relatedproduceSlider as any)}
-              className="swiper related-item-sliders"
-              autoplay={{
-                pauseOnMouseEnter: true,
-                disableOnInteraction: false,
-              }}
-            >
-              <div className="swiper-wrapper">
-                {relatedProducts.map((prod, idx) => {
-                  const IMAGES = [
-                    "h2-food-item-2.png",
-                    "h2-food-item-4.png",
-                    "h2-food-item-5.png",
-                    "h2-food-item-6.png",
-                    "h2-food-item-8.png",
-                  ];
-                  return (
-                    <SwiperSlide key={prod.id} className="swiper-slide">
-                      <ShopItem product={prod} image={IMAGES[idx]} />
-                    </SwiperSlide>
-                  );
-                })}
-              </div>
-            </Swiper>
-          </div>
-        </div>
-      </div> */}
     </>
   );
 }
@@ -611,6 +557,7 @@ export async function loader({ request, params }: LoaderArgs) {
             menu: true,
           },
         },
+        pictures: true,
         reviews: true,
       },
     });

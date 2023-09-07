@@ -1,3 +1,4 @@
+import { Form } from "@remix-run/react";
 import React from "react";
 
 const ContactForm = () => {
@@ -26,7 +27,7 @@ const ContactForm = () => {
         </div>
         <div className="row justify-content-center">
           <div className="col-lg-10">
-            <form>
+            <Form action="" method="POST">
               <div className="row justify-content-center">
                 <div className="col-lg-6 col-md-6 mb-25">
                   <div className="form-inner">
@@ -64,7 +65,7 @@ const ContactForm = () => {
                   </div>
                 </div>
               </div>
-            </form>
+            </Form>
           </div>
         </div>
       </div>

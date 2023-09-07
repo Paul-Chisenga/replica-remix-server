@@ -1,22 +1,32 @@
 import { Role } from "@prisma/client";
 import { redirect, type LoaderArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useTypedLoaderData } from "remix-typedjson";
 import Footer from "~/components/footer/Footer";
 import Header2 from "~/components/header/Header2";
 import Topbar from "~/components/header/Topbar";
-import { CartContext } from "~/context/CartContext";
 import { getUserSession } from "~/controllers/auth.server";
+import useAuthContext from "~/hooks/useAuthContext";
+import useCartContext from "~/hooks/useCartContext";
 import prisma from "~/services/prisma.server";
 
 const Layout = () => {
-  const user = useTypedLoaderData<typeof loader>() as any;
-  const cartContext = useContext(CartContext);
+  const user = useTypedLoaderData();
+  const authContext = useAuthContext();
+  const cartContext = useCartContext();
 
   useEffect(() => {
     if (user) {
-      cartContext.updateCart(user.cartItems);
+      // cartContext.updateCart(user.cartItems);
+      authContext.saveSession({
+        email: user.email,
+        profileId: user.profileId,
+        role: user.role,
+      });
+      cartContext.setCart(user.cartItems);
+    } else {
+      authContext.removeSession();
     }
   }, []);
 
@@ -48,20 +58,48 @@ export async function loader({ request }: LoaderArgs) {
       return redirect("/logout");
     }
 
-    const cartItems = await prisma.cartItem.count({
-      where: {
-        customer: {
-          profileId: user.id,
-        },
-      },
-    });
+    const cartItems =
+      session.role === Role.CUSTOMER
+        ? await prisma.cartItem.findMany({
+            where: {
+              customer: {
+                profileId: user.id,
+              },
+            },
+            include: {
+              product: {
+                include: {
+                  pictures: true,
+                },
+              },
+            },
+          })
+        : [];
 
     return {
-      name: user.firstname,
-      email: user.email,
+      ...session,
       admin: session.role === Role.ADMIN,
-      cartItems,
+      cartItems: cartItems.map((item) => ({
+        product: item.product,
+        count: item.count,
+        price: item.price,
+      })),
     };
+
+    // const cartItems = await prisma.cartItem.count({
+    //   where: {
+    //     customer: {
+    //       profileId: user.id,
+    //     },
+    //   },
+    // });
+
+    // return {
+    //   name: user.firstname,
+    //   email: user.email,
+    //   admin: session.role === Role.ADMIN,
+    //   cartItems,
+    // };
   }
   return null;
 }
