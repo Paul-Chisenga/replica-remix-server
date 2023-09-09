@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Form } from "@remix-run/react";
-=======
 import { Form, useActionData, useNavigation } from "@remix-run/react";
->>>>>>> e88ae82
 import React, { useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

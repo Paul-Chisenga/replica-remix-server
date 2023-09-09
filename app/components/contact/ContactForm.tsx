@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-import { Form } from "@remix-run/react";
-import React from "react";
-=======
 import { Form, useActionData, useNavigation } from "@remix-run/react";
->>>>>>> e88ae82
 
 const ContactForm = () => {
   const actionData = useActionData();

@@ -42,13 +42,7 @@ export default function Index() {
 
 export async function loader() {
   const random = (count: number) => {
-<<<<<<< HEAD
-    if (count <= 4) {
-      return 0;
-    }
-=======
     if (count <= 4) return 0;
->>>>>>> e88ae82
     return randomNumber(0, count - 4);
   };
 

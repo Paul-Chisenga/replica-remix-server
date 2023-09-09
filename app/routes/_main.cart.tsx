@@ -33,13 +33,6 @@ function Cart() {
   const fetcher = useTypedFetcher<typeof action>();
   const cartContext = useCartContext();
 
-<<<<<<< HEAD
-  const [cartTotal, setCartTotal] = useState(0);
-
-  const increment = (prodId: string, price: number) => {
-    const cartItem = items.find(
-      (item) => item.product.id === prodId && item.price === price
-=======
   const cartTotal = cart.reduce((prev, cur) => {
     const sum = cur.count * cur.price;
     return prev + sum;
@@ -54,7 +47,6 @@ function Cart() {
         action: `${itemId}/increment`,
         method: "POST",
       }
->>>>>>> e88ae82
     );
 
     if (!cartItem) return;
