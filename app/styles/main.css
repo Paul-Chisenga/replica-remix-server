@@ -52,6 +52,9 @@
   .menu2-area .menu2-left-img img {
     @apply tw-object-cover;
   }
+  .food-items2-wrap:hover .food-img::before {
+    @apply tw-scale-0;
+  }
 }
 @tailwind utilities;
 .box--shadow {

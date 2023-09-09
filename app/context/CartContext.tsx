@@ -1,6 +1,10 @@
 import React from "react";
 
-const initialState = {} as { cart: number; updateCart: (n: number) => void };
+const initialState = {} as {
+  cart: number;
+  updateCart: (n: number) => void;
+  clearCart: () => void;
+};
 
 export const CartContext = React.createContext(initialState);
 
@@ -16,6 +20,9 @@ const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         cart,
         updateCart: handleUpdateCart,
+        clearCart() {
+          setCart(0);
+        },
       }}
     >
       {children}

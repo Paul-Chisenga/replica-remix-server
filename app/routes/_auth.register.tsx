@@ -1,10 +1,10 @@
-import { Role } from "@prisma/client";
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import MyForm from "~/components/Form/MyForm";
-import { getUserSession, login } from "~/controllers/auth.server";
-import { hashPassword } from "~/services/bcrypt.server";
+import { getUserSession } from "~/controllers/auth.server";
+import { sendEmail } from "~/services/email.server";
+import { generateToken } from "~/services/jwt";
 import prisma from "~/services/prisma.server";
 import {
   hasErrors,
@@ -34,6 +34,13 @@ const Register = () => {
         {actionData?.error && (
           <div className="tw-px-2 tw-text-sm tw-text-red-500 tw-font-jost">
             {actionData?.error}
+          </div>
+        )}
+        {actionData?.success && (
+          <div className="tw-px-2 tw-text-sm tw-text-emerald-500 tw-font-jost">
+            Success, Verification email sent,
+            <br />
+            Use the link sent to your email to complete your registration
           </div>
         )}
         <br />
@@ -82,7 +89,7 @@ const Register = () => {
               <div className="col-12">
                 <MyForm.Input
                   type="password"
-                  placeholder="min 6 characters*"
+                  placeholder="must not be less than 6 characters."
                   label="Password"
                   required
                   name="password"
@@ -165,23 +172,36 @@ export async function action({ request }: ActionArgs) {
         422
       );
     }
-    const password = await hashPassword(data.password);
-    await prisma.customer.create({
-      data: {
-        profile: {
-          create: {
-            role: Role.CUSTOMER,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            email: data.email,
-            password,
-            phone: +data.phone,
-          },
-        },
+
+    // send verification email
+    const token = generateToken(
+      {
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        password: data.password,
+        phone: +data.phone,
       },
+      process.env.ACCOUNT_NEW as string
+    );
+
+    await sendEmail({
+      to: {
+        name: data.firstname,
+        email: data.email,
+      },
+      subject: "WELECOME TO REPLICA",
+      message: `
+      Hey ${data.firstname},
+      
+      Thank you for registering on replica,
+      
+      Click <a href="${process.env.HOST_URL}/register/${token}" target="_blank" rel="noopener noreferrer">here</a> to verify your email address.
+      You can ignore this email if you did not initiate this request.
+    `,
     });
 
-    return login({ email: data.email, password: data.password }, "/");
+    return { success: true };
   } catch (error: any) {
     if (error.status === 422) {
       return {

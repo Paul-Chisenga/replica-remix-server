@@ -1,30 +1,36 @@
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, Link, useSearchParams } from "@remix-run/react";
+import { Form, useSearchParams } from "@remix-run/react";
 import invariant from "invariant";
 import { useTypedActionData } from "remix-typedjson";
 import MyForm from "~/components/Form/MyForm";
 import { getUserSession, login } from "~/controllers/auth.server";
+import { hashPassword } from "~/services/bcrypt.server";
+import { verifyToken } from "~/services/jwt";
+import prisma from "~/services/prisma.server";
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { title: "Welcome back - Replica restaurant" },
+    { title: "New password - Replica restaurant" },
     {
       name: "description",
-      content: "Login into your account and enjoy shopping at replica!",
+      content: "Restore a forgotten password!",
     },
   ];
 };
 
-const Authentication = () => {
+const LostPWD = () => {
   const actionData = useTypedActionData();
   const [searchParams] = useSearchParams();
-  const next = searchParams.get("next");
+  const token = searchParams.get("t");
 
   return (
     <div className="container">
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-md tw-mx-auto">
-        <h4 className="mb-20 tw-text-3xl title">Login</h4>
+        <h4 className="mb-20 tw-text-3xl title">New Password</h4>
+        <p className="tw-px-2 tw-text-sm tw-font-jost">
+          Enter your new password
+        </p>
         {actionData?.error && (
           <div className="tw-px-2 tw-text-sm tw-text-red-500 tw-font-jost">
             {actionData?.error}
@@ -32,71 +38,61 @@ const Authentication = () => {
         )}
         <br />
         <Form action="" method="POST">
-          <input type="hidden" name="next" value={next ?? ""} />
+          <input type="hidden" name="token" value={token!} />
           <MyForm.Group>
             <MyForm.Input
-              type="text"
-              placeholder="Your email address"
-              label="Email"
-              required
-              name="email"
-            />
-            <MyForm.Input
               type="password"
-              placeholder="password"
-              label="Password"
+              placeholder="must not be less than 6 characters."
+              minLength={6}
               required
               name="password"
             />
           </MyForm.Group>
-          <div className="tw-text-right tw-mb-6">
-            <Link
-              to="/lost-password"
-              className="tw-no-underline tw-text-dark hover:tw-text-primary tw-text-sm tw-font-medium tw-font-jost"
-            >
-              Forgot password ?
-            </Link>
-          </div>
           <button
             type="submit"
             className="primary-btn8 lg--btn btn-primary-fill tw-block tw-w-full"
           >
-            Login
+            Submit
           </button>
-          <div className="tw-text-center tw-my-6 tw-text-sm tw-font-medium tw-font-jost">
-            <span className="tw-text-emerald-600">Not registered ?</span>
-            <Link
-              to="/register"
-              className="tw-text-secondary tw-underline hover:tw-text-black tw-inline-block tw-mx-1"
-            >
-              Create an account!
-            </Link>
-          </div>
         </Form>
       </div>
     </div>
   );
 };
 
-export default Authentication;
+export default LostPWD;
 export async function loader({ request }: LoaderArgs) {
   const session = await getUserSession(request);
+
   if (session) {
     return redirect("/");
   }
+
+  const searchParams = new URL(request.url).searchParams;
+  const token = searchParams.get("t");
+  if (!token) {
+    throw new Error("Invalid link.");
+  }
+
   return null;
 }
 
 export async function action({ request }: ActionArgs) {
-  const { email, password, next } = Object.fromEntries(
-    await request.formData()
-  );
+  if (request.method !== "POST") {
+    throw new Error("Bad Request");
+  }
+  const formData = await request.formData();
+  const password = formData.get("password");
+  const token = formData.get("token");
+
+  // validate token
+  if (!token || typeof token !== "string") {
+    throw new Error("Invalid request");
+  }
   // Invariant Validation
-  invariant(typeof email === "string", "email must be a string");
   invariant(typeof password === "string", "password must be a string");
   // Custom form errors
   const errors = {
-    email: email ? null : "Username is required",
     password: password ? null : "Password is required",
   };
 
@@ -106,20 +102,25 @@ export async function action({ request }: ActionArgs) {
     return errors;
   }
 
-  // reach the server
-  let url = "/";
-  if (next) {
-    url = next as string;
-  }
   try {
-    return await login({ email, password }, url);
+    const decodedToken = verifyToken(
+      token,
+      process.env.ACCOUNT_RESET as string
+    ) as any;
+    const { email } = decodedToken;
+    const pwd = await hashPassword(password);
+    const user = await prisma.profile.update({
+      where: {
+        email,
+      },
+      data: {
+        password: pwd,
+      },
+    });
+
+    return login({ email: user.email, password }, "/");
   } catch (error: any) {
-    if (error.status === 422) {
-      return {
-        error: error.message,
-      };
-    }
-    console.log("LOGIN", error);
+    console.log(error);
     throw new Error("Something went wrong");
   }
 }

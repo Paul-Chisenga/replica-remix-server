@@ -33,13 +33,15 @@ function Cart() {
   const cartContext = useContext(CartContext);
 
   const cartTotal = cart.reduce((prev, cur) => {
-    const sum = cur.count * cur.product.prices[0].value;
+    const sum = cur.count * cur.price;
     return prev + sum;
   }, 0);
 
-  const increment = (itemId: string) => {
+  const increment = (itemId: string, price: number) => {
     fetcher.submit(
-      {},
+      {
+        price,
+      },
       {
         action: `${itemId}/increment`,
         method: "POST",
@@ -47,18 +49,22 @@ function Cart() {
     );
   };
 
-  const decrement = (itemId: string) => {
+  const decrement = (itemId: string, price: number) => {
     fetcher.submit(
-      {},
+      {
+        price,
+      },
       {
         action: `${itemId}/decrement`,
         method: "POST",
       }
     );
   };
-  const handleDelete = (itemId: string) => {
+  const handleDelete = (itemId: string, price: number) => {
     fetcher.submit(
-      {},
+      {
+        price,
+      },
       {
         action: `${itemId}/remove`,
         method: "DELETE",
@@ -107,67 +113,84 @@ function Cart() {
                         </tr>
                       </thead>
                       <tbody>
-                        {items.map((item) => (
-                          <tr key={item.id}>
-                            <td data-label="Delete">
-                              <div
-                                className="delete-icon"
-                                onClick={() => handleDelete(item.id)}
-                              >
-                                <i className="bi bi-x" />
-                              </div>
-                            </td>
-                            <td data-label="Image">
-                              <img
-                                src={"/images/bg/" + IMAGES[randomNumber(0, 2)]}
-                                alt=""
-                              />
-                            </td>
-                            <td data-label="Food Name">
-                              <Link
-                                to={`/shop/${item.productId}`}
-                                className="tw-capitalize"
-                              >
-                                {item.product.title}
-                              </Link>
-                            </td>
-                            <td data-label="Unite Price">
-                              <del>
-                                <span className="tw-text-xs">ksh</span>
-                                <span>{item.product.prices[0].value}</span>
-                              </del>
-                            </td>
-                            <td data-label="Discount Price">
-                              <span className="tw-text-xs">ksh</span>
-                              <span>{item.product.prices[0].value}</span>
-                            </td>
-                            <td data-label="Quantity">
-                              <div className="quantity d-flex align-items-center">
-                                <div className="quantity-nav nice-number d-flex align-items-center">
-                                  <button
-                                    onClick={() => decrement(item.id)}
-                                    type="button"
-                                  >
-                                    <i className="bi bi-dash"></i>
-                                  </button>
-                                  <div>{item.count}</div>
-                                  <button
-                                    onClick={() => increment(item.id)}
-                                    type="button"
-                                  >
-                                    <i className="bi bi-plus"></i>
-                                  </button>
+                        {items.map((item) => {
+                          let variationLabel = "";
+                          const price = item.product.prices.find(
+                            (price) => price.value === item.price
+                          );
+
+                          if (price && price.label !== "std") {
+                            variationLabel = price.label;
+                          }
+                          return (
+                            <tr key={item.id}>
+                              <td data-label="Delete">
+                                <div
+                                  className="delete-icon"
+                                  onClick={() =>
+                                    handleDelete(item.id, item.price)
+                                  }
+                                >
+                                  <i className="bi bi-x" />
                                 </div>
-                              </div>
-                            </td>
-                            <td data-label="Subtotal">
-                              <span className="tw-text-xs">ksh</span>
-                              <span>
-                                {item.product.prices[0].value * item.count}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
+                              </td>
+                              <td data-label="Image">
+                                <img
+                                  src={
+                                    "/images/bg/" + IMAGES[randomNumber(0, 2)]
+                                  }
+                                  alt=""
+                                />
+                              </td>
+                              <td data-label="Food Name">
+                                <Link
+                                  to={`/shop/${item.productId}`}
+                                  className="tw-capitalize"
+                                >
+                                  {item.product.title}
+                                  {variationLabel && ` ( ${variationLabel} ) `}
+                                </Link>
+                              </td>
+                              <td data-label="Unite Price">
+                                <del>
+                                  <span className="tw-text-xs">ksh</span>
+                                  <span>{item.price}</span>
+                                </del>
+                              </td>
+                              <td data-label="Discount Price">
+                                <span className="tw-text-xs">ksh</span>
+                                <span>{item.price}</span>
+                              </td>
+                              <td data-label="Quantity">
+                                <div className="quantity d-flex align-items-center">
+                                  <div className="quantity-nav nice-number d-flex align-items-center">
+                                    <button
+                                      onClick={() =>
+                                        decrement(item.id, item.price)
+                                      }
+                                      type="button"
+                                    >
+                                      <i className="bi bi-dash"></i>
+                                    </button>
+                                    <div>{item.count}</div>
+                                    <button
+                                      onClick={() =>
+                                        increment(item.id, item.price)
+                                      }
+                                      type="button"
+                                    >
+                                      <i className="bi bi-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                              <td data-label="Subtotal">
+                                <span className="tw-text-xs">ksh</span>
+                                <span>{item.price * item.count}</span>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -267,7 +290,7 @@ function Cart() {
 
 export default Cart;
 export async function loader({ request }: LoaderArgs) {
-  const session = await requireUserSession(request, [Role.CUSTOMER]);
+  const session = await requireUserSession(request, [Role.CUSTOMER], "/cart");
   try {
     const cart = await prisma.cartItem.findMany({
       where: {
