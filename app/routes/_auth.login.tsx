@@ -1,6 +1,6 @@
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, useSearchParams } from "@remix-run/react";
 import invariant from "invariant";
 import { useTypedActionData } from "remix-typedjson";
 import MyForm from "~/components/Form/MyForm";
@@ -18,6 +18,9 @@ export const meta: V2_MetaFunction = () => {
 
 const Authentication = () => {
   const actionData = useTypedActionData();
+  const [searchParams] = useSearchParams();
+  const next = searchParams.get("next");
+
   return (
     <div className="container">
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-md tw-mx-auto">
@@ -29,6 +32,7 @@ const Authentication = () => {
         )}
         <br />
         <Form action="" method="POST">
+          <input type="hidden" name="next" value={next ?? ""} />
           <MyForm.Group>
             <MyForm.Input
               type="text"
@@ -83,8 +87,10 @@ export async function loader({ request }: LoaderArgs) {
   return null;
 }
 
-export async function action({ request, params }: ActionArgs) {
-  const { email, password } = Object.fromEntries(await request.formData());
+export async function action({ request }: ActionArgs) {
+  const { email, password, next } = Object.fromEntries(
+    await request.formData()
+  );
   // Invariant Validation
   invariant(typeof email === "string", "email must be a string");
   invariant(typeof password === "string", "password must be a string");
@@ -101,12 +107,10 @@ export async function action({ request, params }: ActionArgs) {
   }
 
   // reach the server
-  const next = new URL(request.url).searchParams.get("next");
   let url = "/";
   if (next) {
-    url = next;
+    url = next as string;
   }
-
   try {
     return await login({ email, password }, url);
   } catch (error: any) {

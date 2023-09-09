@@ -33,11 +33,28 @@ function Cart() {
   const fetcher = useTypedFetcher<typeof action>();
   const cartContext = useCartContext();
 
+<<<<<<< HEAD
   const [cartTotal, setCartTotal] = useState(0);
 
   const increment = (prodId: string, price: number) => {
     const cartItem = items.find(
       (item) => item.product.id === prodId && item.price === price
+=======
+  const cartTotal = cart.reduce((prev, cur) => {
+    const sum = cur.count * cur.price;
+    return prev + sum;
+  }, 0);
+
+  const increment = (itemId: string, price: number) => {
+    fetcher.submit(
+      {
+        price,
+      },
+      {
+        action: `${itemId}/increment`,
+        method: "POST",
+      }
+>>>>>>> e88ae82
     );
 
     if (!cartItem) return;
@@ -53,18 +70,42 @@ function Cart() {
     // );
   };
 
+<<<<<<< HEAD
   const decrement = (prodId: string, price: number) => {
     const cartItem = items.find(
       (item) => item.product.id === prodId && item.price === price
+=======
+  const decrement = (itemId: string, price: number) => {
+    fetcher.submit(
+      {
+        price,
+      },
+      {
+        action: `${itemId}/decrement`,
+        method: "POST",
+      }
+>>>>>>> e88ae82
     );
 
     if (!cartItem) return;
 
     cartContext.decrement(cartItem.product, price);
   };
+<<<<<<< HEAD
   const handleDelete = (prodId: string, price: number) => {
     const cartItem = items.find(
       (item) => item.product.id === prodId && item.price === price
+=======
+  const handleDelete = (itemId: string, price: number) => {
+    fetcher.submit(
+      {
+        price,
+      },
+      {
+        action: `${itemId}/remove`,
+        method: "DELETE",
+      }
+>>>>>>> e88ae82
     );
 
     if (!cartItem) return;
@@ -170,6 +211,7 @@ function Cart() {
                         </tr>
                       </thead>
                       <tbody>
+<<<<<<< HEAD
                         {items.map((item) => (
                           <tr key={item.id}>
                             <td data-label="Delete">
@@ -226,17 +268,86 @@ function Cart() {
                                   >
                                     <i className="bi bi-plus"></i>
                                   </button>
+=======
+                        {items.map((item) => {
+                          let variationLabel = "";
+                          const price = item.product.prices.find(
+                            (price) => price.value === item.price
+                          );
+
+                          if (price && price.label !== "std") {
+                            variationLabel = price.label;
+                          }
+                          return (
+                            <tr key={item.id}>
+                              <td data-label="Delete">
+                                <div
+                                  className="delete-icon"
+                                  onClick={() =>
+                                    handleDelete(item.id, item.price)
+                                  }
+                                >
+                                  <i className="bi bi-x" />
+>>>>>>> e88ae82
                                 </div>
-                              </div>
-                            </td>
-                            <td data-label="Subtotal">
-                              <span className="tw-text-xs">ksh</span>
-                              <span>
-                                {item.product.prices[0].value * item.count}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
+                              </td>
+                              <td data-label="Image">
+                                <img
+                                  src={
+                                    "/images/bg/" + IMAGES[randomNumber(0, 2)]
+                                  }
+                                  alt=""
+                                />
+                              </td>
+                              <td data-label="Food Name">
+                                <Link
+                                  to={`/shop/${item.productId}`}
+                                  className="tw-capitalize"
+                                >
+                                  {item.product.title}
+                                  {variationLabel && ` ( ${variationLabel} ) `}
+                                </Link>
+                              </td>
+                              <td data-label="Unite Price">
+                                <del>
+                                  <span className="tw-text-xs">ksh</span>
+                                  <span>{item.price}</span>
+                                </del>
+                              </td>
+                              <td data-label="Discount Price">
+                                <span className="tw-text-xs">ksh</span>
+                                <span>{item.price}</span>
+                              </td>
+                              <td data-label="Quantity">
+                                <div className="quantity d-flex align-items-center">
+                                  <div className="quantity-nav nice-number d-flex align-items-center">
+                                    <button
+                                      onClick={() =>
+                                        decrement(item.id, item.price)
+                                      }
+                                      type="button"
+                                    >
+                                      <i className="bi bi-dash"></i>
+                                    </button>
+                                    <div>{item.count}</div>
+                                    <button
+                                      onClick={() =>
+                                        increment(item.id, item.price)
+                                      }
+                                      type="button"
+                                    >
+                                      <i className="bi bi-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                              <td data-label="Subtotal">
+                                <span className="tw-text-xs">ksh</span>
+                                <span>{item.price * item.count}</span>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -336,8 +447,12 @@ function Cart() {
 
 export default Cart;
 export async function loader({ request }: LoaderArgs) {
+<<<<<<< HEAD
   const session = await getUserSession(request);
   // if (session && session.role === Role.ADMIN) return redirect("/");
+=======
+  const session = await requireUserSession(request, [Role.CUSTOMER], "/cart");
+>>>>>>> e88ae82
   try {
     const cart = session
       ? await prisma.cartItem.findMany({

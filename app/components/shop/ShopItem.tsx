@@ -1,9 +1,18 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Link } from "@remix-run/react";
+<<<<<<< HEAD
 import { useState, type FC, useEffect } from "react";
 import MyForm from "../Form/MyForm";
 import useCartContext from "~/hooks/useCartContext";
 import type { ProductWithPics } from "~/context/CartContext";
+=======
+import { useState, type FC, useEffect, useCallback, useContext } from "react";
+import { ClipLoader } from "react-spinners";
+import { useTypedFetcher } from "remix-typedjson";
+import { CartContext } from "~/context/CartContext";
+import type { action } from "~/routes/_main.shop_.$id.add-to-cart";
+import MyForm from "../Form/MyForm";
+>>>>>>> e88ae82
 
 interface Props {
   product: ProductWithPics;
@@ -14,6 +23,7 @@ const ShopItem: FC<Props> = ({ product, image }) => {
   const cartContext = useCartContext();
   const [added, setAdded] = useState(false);
   const [selectedPrice, setselectedPrice] = useState("0");
+<<<<<<< HEAD
 
   const handleAddToCart = () => {
     cartContext.increment(product, product.prices[+selectedPrice].value);
@@ -25,6 +35,43 @@ const ShopItem: FC<Props> = ({ product, image }) => {
       (it) => it.product.id === product.id
     );
     if (itemIdx > -1) {
+=======
+
+  const fetcher = useTypedFetcher<typeof action>();
+
+  const handleAddToCart = useCallback(() => {
+    fetcher.submit(
+      {
+        price: product.prices[+selectedPrice].value,
+      },
+      {
+        action: `/shop/${product.id}/add-to-cart`,
+        method: "POST",
+      }
+    );
+  }, [selectedPrice]);
+
+  const handleUpdateCartState = useCallback((count: number) => {
+    cartContext.updateCart(count);
+  }, []);
+
+  // useEffect(() => {
+  //   if (added) {
+  //     const timer = setTimeout(() => {
+  //       setAdded(false);
+  //     }, 4000);
+
+  //     return () => {
+  //       if (timer) {
+  //         clearTimeout(timer);
+  //       }
+  //     };
+  //   }
+  // }, [added]);
+
+  useEffect(() => {
+    if (fetcher.data) {
+>>>>>>> e88ae82
       setAdded(true);
     }
   }, [cartContext.items, product.id]);
@@ -79,6 +126,7 @@ const ShopItem: FC<Props> = ({ product, image }) => {
             className="tw-cursor-pointer hover:tw-text-white"
             onClick={handleAddToCart}
           >
+<<<<<<< HEAD
             {/* {!added && fetcher.state !== "submitting" && (
               <i className="bi bi-cart-plus" />
             )}
@@ -86,6 +134,13 @@ const ShopItem: FC<Props> = ({ product, image }) => {
             {fetcher.state === "submitting" && <ClipLoader size={15} />} */}
             <i className="bi bi-cart-plus" />
             {added && (
+=======
+            {fetcher.state !== "submitting" && (
+              <i className="bi bi-cart-plus" />
+            )}
+            {fetcher.state === "submitting" && <ClipLoader size={15} />}
+            {fetcher.state !== "submitting" && added && (
+>>>>>>> e88ae82
               <i className="bi bi-check tw-text-lg tw-text-primary"></i>
             )}
           </a>

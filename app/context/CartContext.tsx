@@ -2,6 +2,7 @@ import { Prisma, Role } from "@prisma/client";
 import React from "react";
 import useAuthContext from "~/hooks/useAuthContext";
 
+<<<<<<< HEAD
 const productWithPics = Prisma.validator<Prisma.ProductArgs>()({
   include: {
     pictures: true,
@@ -29,6 +30,12 @@ const initialState: {
   increment() {},
   decrement() {},
   remove() {},
+=======
+const initialState = {} as {
+  cart: number;
+  updateCart: (n: number) => void;
+  clearCart: () => void;
+>>>>>>> e88ae82
 };
 
 export const CartContext = React.createContext(initialState);
@@ -98,11 +105,19 @@ const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <CartContext.Provider
       value={{
+<<<<<<< HEAD
         items: cart,
         increment: handleIncrement,
         decrement: handleDecrement,
         remove: handleRemoveItem,
         setCart,
+=======
+        cart,
+        updateCart: handleUpdateCart,
+        clearCart() {
+          setCart(0);
+        },
+>>>>>>> e88ae82
       }}
     >
       {children}

@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import { Form } from "@remix-run/react";
 import React from "react";
+=======
+import { Form, useActionData, useNavigation } from "@remix-run/react";
+>>>>>>> e88ae82
 
 const ContactForm = () => {
+  const actionData = useActionData();
+  const navigation = useNavigation();
+
   return (
     <div className="container">
       <div className="contact-form mb-120 mt-120">
@@ -31,19 +38,54 @@ const ContactForm = () => {
               <div className="row justify-content-center">
                 <div className="col-lg-6 col-md-6 mb-25">
                   <div className="form-inner">
-                    <input type="text" placeholder="Name*" />
+                    <input
+                      type="text"
+                      placeholder="Name*"
+                      name="name"
+                      required
+                    />
                   </div>
                 </div>
                 <div className="col-lg-6 col-md-6 mb-25">
                   <div className="form-inner">
-                    <input type="email" placeholder="Email*" />
+                    <input
+                      type="email"
+                      placeholder="Email*"
+                      name="email"
+                      required
+                    />
                   </div>
                 </div>
                 <div className="col-lg-12">
                   <div className="form-inner">
-                    <textarea placeholder="Message ..." defaultValue={""} />
+                    <textarea
+                      placeholder="Message ..."
+                      name="message"
+                      required
+                    />
                   </div>
                 </div>
+                {actionData && actionData.errors && (
+                  <div className="form-inner">
+                    <label
+                      htmlFor="vehicle"
+                      className="tw-text-center tw-text-red-500"
+                    >
+                      Error, missing fields
+                    </label>
+                  </div>
+                )}
+                {actionData && actionData.success && (
+                  <div className="form-inner">
+                    <label
+                      htmlFor="vehicle"
+                      className="tw-text-center tw-text-primary"
+                    >
+                      Thank you for your message, We will reach out to you as
+                      soon as possible
+                    </label>
+                  </div>
+                )}
                 <div className="mb-40"></div>
                 {/* <div className="col-lg-12 mb-40">
                   <div className="form-inner2">
@@ -61,7 +103,11 @@ const ContactForm = () => {
                 </div> */}
                 <div className="col-lg-6 col-md-6">
                   <div className="form-inner">
-                    <button type="submit">Send Message</button>
+                    <button type="submit">
+                      {navigation.state !== "submitting"
+                        ? "Send Message"
+                        : "Submitting..."}
+                    </button>
                   </div>
                 </div>
               </div>

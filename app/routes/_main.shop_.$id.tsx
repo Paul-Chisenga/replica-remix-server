@@ -4,7 +4,11 @@ import type { LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/react";
 import { Form, Link } from "@remix-run/react";
 import invariant from "invariant";
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
+=======
+import { useCallback, useContext, useEffect, useState } from "react";
+>>>>>>> e88ae82
 import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import SwiperCore, {
   Autoplay,
@@ -17,8 +21,14 @@ import { getUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
 import { formatDate, parseMenuCategory } from "~/utils/helpers";
 import type { action } from "./_main.shop_.$id.add-to-cart";
+<<<<<<< HEAD
 import MyForm from "~/components/Form/MyForm";
 import useCartContext from "~/hooks/useCartContext";
+=======
+import { ClipLoader } from "react-spinners";
+import { CartContext } from "~/context/CartContext";
+import MyForm from "~/components/Form/MyForm";
+>>>>>>> e88ae82
 
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectFade]);
 
@@ -42,6 +52,7 @@ function ShopDetails() {
   const fetcher = useTypedFetcher<typeof action>();
   const cartContext = useCartContext();
 
+<<<<<<< HEAD
   const increment = () => {
     cartContext.increment(product, product.prices[+selectedPrice].value);
   };
@@ -71,6 +82,33 @@ function ShopDetails() {
   //     }
   //   );
   // };
+=======
+  const increment = useCallback(() => {
+    fetcher.submit(
+      {
+        price: product.prices[+selectedPrice].value,
+      },
+      {
+        action: `add-to-cart`,
+        method: "POST",
+      }
+    );
+  }, [selectedPrice]);
+
+  const decrement = useCallback(() => {
+    if (count > 0) {
+      fetcher.submit(
+        {
+          price: product.prices[+selectedPrice].value,
+        },
+        {
+          action: `remove-from-cart`,
+          method: "POST",
+        }
+      );
+    }
+  }, [selectedPrice]);
+>>>>>>> e88ae82
 
   // const decrement = () => {
   //   if (count > 0) {

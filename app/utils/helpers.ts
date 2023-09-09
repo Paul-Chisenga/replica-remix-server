@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { MyObject } from "./types";
-import { MenuCategory } from "@prisma/client";
+import { MenuCategory, ProductPrice } from "@prisma/client";
 import prisma from "~/services/prisma.server";
 import { format } from "date-fns";
 
@@ -72,6 +72,21 @@ export function parseMenuCategory(cat: MenuCategory) {
     default:
       return "";
   }
+}
+
+// misc
+export function parseProductVariation(
+  prices: ProductPrice[],
+  selectedPrice: number
+) {
+  let variationLabel = "";
+  const price = prices.find((price) => price.value === selectedPrice);
+
+  if (price && price.label !== "std") {
+    variationLabel = price.label;
+  }
+
+  return variationLabel;
 }
 
 // COMMON DB OP

@@ -7,6 +7,17 @@ import type {
   LinksFunction,
   V2_MetaFunction,
 } from "@remix-run/node";
+<<<<<<< HEAD
+=======
+import {
+  formatDate,
+  hasErrors,
+  invariantValidate,
+  requiredFieldValidate,
+} from "~/utils/helpers";
+import prisma from "~/services/prisma.server";
+import type { MyObject } from "~/utils/types";
+>>>>>>> e88ae82
 import { sendEmail } from "~/services/email.server";
 
 export const links: LinksFunction = () => [
@@ -38,6 +49,7 @@ const Reservation = () => {
 export default Reservation;
 
 export async function action({ request }: ActionArgs) {
+<<<<<<< HEAD
   try {
     await sendEmail({
       to: { name: "Paul", email: "paulchisenga.p@gmail.com" },
@@ -49,6 +61,59 @@ export async function action({ request }: ActionArgs) {
     `,
     });
     return "OK";
+=======
+  if (request.method !== "POST") {
+    throw new Error("Bad Request");
+  }
+  const data = Object.fromEntries(await request.formData()) as MyObject<string>;
+
+  //
+  invariantValidate(data);
+
+  //
+  const errors = requiredFieldValidate(data, [
+    "name",
+    "phone",
+    "time",
+    "date",
+    "people",
+  ]);
+  if (hasErrors(errors)) {
+    return { errors };
+  }
+  try {
+    await prisma.$transaction(async (tx) => {
+      const reservation = await tx.reservation.create({
+        data: {
+          name: data.name.trim(),
+          date: new Date(data.date),
+          people: +data.people,
+          phone: +data.phone,
+          time: data.time.trim(),
+          email: data.email ?? undefined,
+        },
+      });
+
+      // Sendmail to admin
+      await sendEmail({
+        to: {
+          name: process.env.ADMIN_NAME as string,
+          email: process.env.ADMIN_EMAIL as string,
+        },
+        subject: "NEW RESERVATION REPLICA",
+        message: `
+            <p>Name : ${reservation.name}</p>
+            <p>phone Number : 0${reservation.phone}</p>
+            <p>Email Address : ${reservation.email}</p>
+            <p>Date : ${formatDate(reservation.date)}</p>
+            <p>Time : ${reservation.time}</p>
+            <p>Number of people : ${reservation.people}</p>
+          `,
+      });
+    });
+
+    return { success: true };
+>>>>>>> e88ae82
   } catch (error) {
     console.log(error);
     throw new Error("Something went wrong");

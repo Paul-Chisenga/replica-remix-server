@@ -46,10 +46,18 @@ export async function getUserSession(request: Request) {
   return user;
 }
 
-export async function requireUserSession(request: Request, role?: Role[]) {
+export async function requireUserSession(
+  request: Request,
+  role?: Role[],
+  cbkUrl?: string
+) {
   const session = await getUserSession(request);
   if (!session) {
-    throw redirect("/login");
+    let nextUrl = "/login";
+    if (cbkUrl) {
+      nextUrl += "?next=" + cbkUrl;
+    }
+    throw redirect(nextUrl);
   }
 
   if (role && !role.includes(session.role)) {

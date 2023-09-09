@@ -73,6 +73,18 @@ type ProductPrice {
   value Float
 }
 
+type ShippingAddress {
+  firstname   String
+  lastname    String
+  country     String
+  city        String
+  town        String
+  street      String
+  phone       Int
+  email       String
+  order_notes String?
+}
+
 model Product {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   title       String          @unique
@@ -140,7 +152,7 @@ model CartItem {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@unique([productId, customerId])
+  @@unique([productId, customerId, price])
 }
 
 model OrderItem {
@@ -148,6 +160,7 @@ model OrderItem {
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String   @db.ObjectId
   count     Int
+  price     Float
   order     Order    @relation(fields: [orderId], references: [id])
   orderId   String   @db.ObjectId
   createdAt DateTime @default(now())
@@ -155,21 +168,35 @@ model OrderItem {
 }
 
 model Order {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  orderNo    Int
-  items      OrderItem[]
-  customer   Customer    @relation(fields: [customerId], references: [id])
-  customerId String      @db.ObjectId
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  orderNo         Int
+  items           OrderItem[]
+  customer        Customer        @relation(fields: [customerId], references: [id])
+  customerId      String          @db.ObjectId
+  shippingAddress ShippingAddress
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
 
 model Customer {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  profile   Profile    @relation(fields: [profileId], references: [id])
-  profileId String     @unique @db.ObjectId
-  cart      CartItem[]
-  orders    Order[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  profile         Profile          @relation(fields: [profileId], references: [id])
+  profileId       String           @unique @db.ObjectId
+  cart            CartItem[]
+  orders          Order[]
+  shippingAddress ShippingAddress?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Reservation {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  phone     Int
+  people    Int
+  email     String?
+  time      String
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

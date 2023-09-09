@@ -1,5 +1,6 @@
 import { Role } from "@prisma/client";
 import type { ActionArgs } from "@remix-run/node";
+import invariant from "invariant";
 import { requireUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
 
@@ -8,8 +9,21 @@ export async function action({ request, params }: ActionArgs) {
     throw new Error("Bad Request");
   }
 
-  const session = await requireUserSession(request, [Role.CUSTOMER]);
   const { id } = params;
+  const session = await requireUserSession(
+    request,
+    [Role.CUSTOMER],
+    `/shop/${id}`
+  );
+
+  const formData = await request.formData();
+  const price = formData.get("price");
+
+  invariant(
+    !!price && typeof price === "string",
+    "Invalid request, price missing"
+  );
+
   try {
     const product = await prisma.product.findUniqueOrThrow({
       where: {
@@ -27,9 +41,10 @@ export async function action({ request, params }: ActionArgs) {
 
     await prisma.cartItem.delete({
       where: {
-        productId_customerId: {
+        productId_customerId_price: {
           productId: product.id,
           customerId: user.id,
+          price: +price,
         },
       },
     });
