@@ -1,7 +1,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import type { Prisma } from "@prisma/client";
 import { MenuCategory } from "@prisma/client";
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import {
+  redirect,
+  type LoaderArgs,
+  type V2_MetaFunction,
+} from "@remix-run/node";
 import { Form, Link, useNavigate, useSearchParams } from "@remix-run/react";
 import ReactPaginate from "react-paginate";
 import { useTypedLoaderData } from "remix-typedjson";
@@ -196,84 +200,87 @@ const Shop = () => {
 };
 
 export default Shop;
-export async function loader({ request }: LoaderArgs) {
-  const searchParams = new URL(request.url).searchParams;
-  const { m, mcat, s } = Object.fromEntries(searchParams);
-  const pageNumber = searchParams.get("page");
-  const page = pageNumber ? +pageNumber : 0;
-  try {
-    const productWhere: Prisma.ProductWhereInput = {
-      title: { contains: s, mode: "insensitive" },
-      subMenu: {
-        menu: {
-          id: m,
-          category: mcat as any,
-        },
-      },
-    };
-    const count = await prisma.product.count({ where: productWhere });
-    const products = await prisma.product.findMany({
-      where: productWhere,
-      skip: page * 8,
-      take: 8,
-    });
-
-    // AGGREGATES
-    /* By menu category */
-    const breakfastCount = await prisma.product.count({
-      where: {
-        subMenu: {
-          menu: {
-            category: MenuCategory.BREAKFAST,
-          },
-        },
-      },
-    });
-    const lunchCount = await prisma.product.count({
-      where: {
-        subMenu: {
-          menu: {
-            category: MenuCategory.FOOD,
-          },
-        },
-      },
-    });
-
-    const bakeryCount = await prisma.product.count({
-      where: {
-        subMenu: {
-          menu: {
-            category: MenuCategory.BAKERY,
-          },
-        },
-      },
-    });
-    const beverageCount = await prisma.product.count({
-      where: {
-        subMenu: {
-          menu: {
-            category: MenuCategory.BEVARAGE,
-          },
-        },
-      },
-    });
-    /* All menu */
-    const menuList = await prisma.menu.findMany({
-      select: {
-        id: true,
-        title: true,
-      },
-    });
-    return {
-      products,
-      count,
-      breakfastCount,
-      lunchCount,
-      bakeryCount,
-      beverageCount,
-      menuList,
-    };
-  } catch (error) {
-    throw new Error("Something went wrong.");
-  }
+export function loader() {
+  return redirect("/coming");
 }
+// export async function loader({ request }: LoaderArgs) {
+//   const searchParams = new URL(request.url).searchParams;
+//   const { m, mcat, s } = Object.fromEntries(searchParams);
+//   const pageNumber = searchParams.get("page");
+//   const page = pageNumber ? +pageNumber : 0;
+//   try {
+//     const productWhere: Prisma.ProductWhereInput = {
+//       title: { contains: s, mode: "insensitive" },
+//       subMenu: {
+//         menu: {
+//           id: m,
+//           category: mcat as any,
+//         },
+//       },
+//     };
+//     const count = await prisma.product.count({ where: productWhere });
+//     const products = await prisma.product.findMany({
+//       where: productWhere,
+//       skip: page * 8,
+//       take: 8,
+//     });
+
+//     // AGGREGATES
+//     /* By menu category */
+//     const breakfastCount = await prisma.product.count({
+//       where: {
+//         subMenu: {
+//           menu: {
+//             category: MenuCategory.BREAKFAST,
+//           },
+//         },
+//       },
+//     });
+//     const lunchCount = await prisma.product.count({
+//       where: {
+//         subMenu: {
+//           menu: {
+//             category: MenuCategory.FOOD,
+//           },
+//         },
+//       },
+//     });
+
+//     const bakeryCount = await prisma.product.count({
+//       where: {
+//         subMenu: {
+//           menu: {
+//             category: MenuCategory.BAKERY,
+//           },
+//         },
+//       },
+//     });
+//     const beverageCount = await prisma.product.count({
+//       where: {
+//         subMenu: {
+//           menu: {
+//             category: MenuCategory.BEVARAGE,
+//           },
+//         },
+//       },
+//     });
+//     /* All menu */
+//     const menuList = await prisma.menu.findMany({
+//       select: {
+//         id: true,
+//         title: true,
+//       },
+//     });
+//     return {
+//       products,
+//       count,
+//       breakfastCount,
+//       lunchCount,
+//       bakeryCount,
+//       beverageCount,
+//       menuList,
+//     };
+//   } catch (error) {
+//     throw new Error("Something went wrong.");
+//   }
+// }

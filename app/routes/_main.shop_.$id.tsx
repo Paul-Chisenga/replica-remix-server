@@ -5,7 +5,7 @@ import type { V2_MetaFunction } from "@remix-run/react";
 import { Form, Link } from "@remix-run/react";
 import invariant from "invariant";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
+import { redirect, useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import SwiperCore, {
   Autoplay,
   EffectFade,
@@ -576,37 +576,40 @@ function ShopDetails() {
 }
 
 export default ShopDetails;
-export async function loader({ request, params }: LoaderArgs) {
-  const productId = params.id;
-  invariant(typeof productId === "string", "Invalid Request");
-
-  const session = await getUserSession(request);
-  try {
-    const product = await prisma.product.findUniqueOrThrow({
-      where: { id: productId },
-      include: {
-        subMenu: {
-          include: {
-            menu: true,
-          },
-        },
-        reviews: true,
-      },
-    });
-
-    if (session) {
-      const cartItem = await prisma.cartItem.findFirst({
-        where: {
-          productId: product.id,
-          customer: {
-            profileId: session.profileId,
-          },
-        },
-      });
-      return { product, cartCount: cartItem?.count };
-    }
-    return { product };
-  } catch (error) {
-    throw new Error("Something went wrong.");
-  }
+export function loader() {
+  return redirect("/coming");
 }
+// export async function loader({ request, params }: LoaderArgs) {
+//   const productId = params.id;
+//   invariant(typeof productId === "string", "Invalid Request");
+
+//   const session = await getUserSession(request);
+//   try {
+//     const product = await prisma.product.findUniqueOrThrow({
+//       where: { id: productId },
+//       include: {
+//         subMenu: {
+//           include: {
+//             menu: true,
+//           },
+//         },
+//         reviews: true,
+//       },
+//     });
+
+//     if (session) {
+//       const cartItem = await prisma.cartItem.findFirst({
+//         where: {
+//           productId: product.id,
+//           customer: {
+//             profileId: session.profileId,
+//           },
+//         },
+//       });
+//       return { product, cartCount: cartItem?.count };
+//     }
+//     return { product };
+//   } catch (error) {
+//     throw new Error("Something went wrong.");
+//   }
+// }

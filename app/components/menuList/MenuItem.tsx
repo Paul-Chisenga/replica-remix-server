@@ -12,7 +12,7 @@ const MenuItem: FC<Props> = ({ product, image }) => {
     <li key={product.id}>
       <div className="item-name">
         <div className="item-img">
-          <img src={"/images/bg/" + image} alt="" />
+          {/* <img src={"/images/bg/" + image} alt="" /> */}
         </div>
         <div className="content">
           <h3>

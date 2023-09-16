@@ -56,22 +56,26 @@ function Footer() {
                 <div className="footer-social">
                   <ul className="social-link d-flex align-items-center justify-content-center">
                     <li>
-                      <a href="https://www.facebook.com/">
+                      <a href="https://www.facebook.com/replicabakery">
                         <i className="bx bxl-facebook" />
                       </a>
                     </li>
                     <li>
-                      <a href="https://www.instagram.com/">
+                      <a
+                        href="https://www.instagram.com/replicabakeryandcafe"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <i className="bx bxl-instagram-alt" />
                       </a>
                     </li>
+
                     <li>
-                      <a href="https://www.pinterest.com/">
-                        <i className="bx bxl-linkedin" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="https://twitter.com/">
+                      <a
+                        href="https://twitter.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <i className="bx bxl-twitter" />
                       </a>
                     </li>
@@ -123,14 +127,14 @@ function Footer() {
                 <p>@Copyright by Replica -2023, All Right Reserved.</p>
               </div>
             </div>
-            <div className="col-md-4 d-flex justify-content-md-end justify-content-center">
+            {/* <div className="col-md-4 d-flex justify-content-md-end justify-content-center">
               <div className="privacy-policy">
                 <p>
                   <Link to="#">Privacy &amp; Policy</Link> |
                   <a href="#">Terms and Conditions</a>
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

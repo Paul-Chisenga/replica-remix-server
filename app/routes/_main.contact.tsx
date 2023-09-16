@@ -4,13 +4,12 @@ import ContactAddress from "~/components/contact/ContactAddress";
 import ContactForm from "~/components/contact/ContactForm";
 import ContactMap from "~/components/contact/ContactMap";
 import { sendEmail } from "~/services/email.server";
-import prisma from "~/services/prisma.server";
 import {
   invariantValidate,
   requiredFieldValidate,
   hasErrors,
 } from "~/utils/helpers";
-import { MyObject } from "~/utils/types";
+import type { MyObject } from "~/utils/types";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -56,7 +55,7 @@ export async function action({ request }: ActionArgs) {
         name: process.env.ADMIN_NAME as string,
         email: process.env.ADMIN_EMAIL as string,
       },
-      subject: "CONATCT FORM REPLICA",
+      subject: "CONTACT FORM REPLICA",
       message: `
         <p>Name : ${data.name}</p>
         <p>Message : <br /> ${data.message}</p>
@@ -64,7 +63,6 @@ export async function action({ request }: ActionArgs) {
     });
     return { success: true };
   } catch (error) {
-    console.log(error);
     throw new Error("Something went wrong");
   }
 }

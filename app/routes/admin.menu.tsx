@@ -1,5 +1,7 @@
 import type { LoaderArgs } from "@remix-run/node";
+import { Form } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
+import Button2 from "~/components/Button/Button2";
 import LinkButton2 from "~/components/Button/LinkButton2";
 import { getMenuList } from "~/controllers/admin.server";
 import { parseMenuCategory } from "~/utils/helpers";
@@ -9,9 +11,17 @@ const MenuList = () => {
 
   return (
     <div>
-      <LinkButton2 to="new" className="tw-text-white">
-        Add menu
-      </LinkButton2>
+      <div className="tw-flex tw-gap-5">
+        <LinkButton2 to="new" className="tw-text-white">
+          Add menu
+        </LinkButton2>
+        <Form action="all" method="POST">
+          <Button2 className="tw-text-white !tw-bg-yellow-500">Migrate</Button2>
+        </Form>
+        <Form action="clear" method="POST">
+          <Button2 className="tw-text-white !tw-bg-red-500">Clear menu</Button2>
+        </Form>
+      </div>
 
       <div className="tw-py-6 tw-grid tw-grid-cols-2 tw-gap-6">
         {menu.map((item) => (

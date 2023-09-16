@@ -1,0 +1,393 @@
+[
+  {
+    "_id": {
+      "$oid": "64c1849295e31a3bb6a81de2"
+    },
+    "category": "FOOD",
+    "title": "mains",
+    "subtitle": "includes 2 side item",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:39:46.647Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:39:46.647Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c184d65936dd89c245d28d"
+    },
+    "category": "FOOD",
+    "title": "mains",
+    "subtitle": "served with choice of bread",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:40:53.315Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:40:53.315Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c184f15936dd89c245d28e"
+    },
+    "category": "FOOD",
+    "title": "desserts",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:41:21.821Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:41:21.821Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c184f75936dd89c245d28f"
+    },
+    "category": "FOOD",
+    "title": "sides",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:41:27.092Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:41:27.092Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185165936dd89c245d290"
+    },
+    "category": "FOOD",
+    "title": "appetizers",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:41:58.202Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:41:58.202Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185235936dd89c245d291"
+    },
+    "category": "FOOD",
+    "title": "soup & salad",
+    "subtitle": "served with choice of bread",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:42:11.638Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:42:11.638Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185355936dd89c245d292"
+    },
+    "category": "FOOD",
+    "title": "burgers",
+    "subtitle": "includes a side item",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:42:29.124Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:42:29.124Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185455936dd89c245d293"
+    },
+    "category": "FOOD",
+    "title": "sandwiches",
+    "subtitle": "includes a side item",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:42:45.617Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:42:45.617Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185715936dd89c245d294"
+    },
+    "category": "BREAKFAST",
+    "title": "healthier side",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:43:29.489Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:43:29.489Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185805936dd89c245d295"
+    },
+    "category": "BREAKFAST",
+    "title": "a la carte",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:43:44.365Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:43:44.365Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c1858f5936dd89c245d296"
+    },
+    "category": "BREAKFAST",
+    "title": "combinations",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:43:58.933Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:43:58.933Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185975936dd89c245d297"
+    },
+    "category": "BREAKFAST",
+    "title": "omelettes",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:44:07.586Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:44:07.586Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185a65936dd89c245d298"
+    },
+    "category": "BREAKFAST",
+    "title": "sandwiches",
+    "subtitle": "includes a side item",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:44:22.522Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:44:22.522Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185ec5936dd89c245d299"
+    },
+    "category": "BEVARAGE",
+    "title": "coffee & tea",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:45:32.405Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:45:32.405Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c185f65936dd89c245d29a"
+    },
+    "category": "BEVARAGE",
+    "title": "fresh juice",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:45:42.774Z"
+    },
+    "updatedAt": {
+      "$date": "2023-08-03T13:31:43.181Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c186095936dd89c245d29b"
+    },
+    "category": "BEVARAGE",
+    "title": "beer",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:46:01.562Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:46:01.562Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c1860f5936dd89c245d29c"
+    },
+    "category": "BEVARAGE",
+    "title": "wine",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:46:07.453Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:46:07.453Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c186215936dd89c245d29d"
+    },
+    "category": "BEVARAGE",
+    "title": "additional beverages",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:46:25.263Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:46:25.263Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c186425936dd89c245d29e"
+    },
+    "category": "BAKERY",
+    "title": "pastries",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:46:58.712Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:46:58.712Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c186505936dd89c245d29f"
+    },
+    "category": "BAKERY",
+    "title": "cakes & cupcakes",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:47:11.971Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:47:11.971Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64c1866b5936dd89c245d2a0"
+    },
+    "category": "BAKERY",
+    "title": "bread",
+    "subtitle": "",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-07-26T20:47:39.090Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-26T20:47:39.090Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64d1fc6f95bafd4a3a5c3df7"
+    },
+    "category": "BREAKFAST",
+    "title": "kids breakfast",
+    "subtitle": "7am - 11am",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-08-08T08:27:27.151Z"
+    },
+    "updatedAt": {
+      "$date": "2023-08-08T08:27:27.151Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "64d1fca095bafd4a3a5c3df8"
+    },
+    "category": "FOOD",
+    "title": "kids lunch/dinner",
+    "subtitle": "11am - 10pm",
+    "adminId": {
+      "$oid": "64c0e90125dfc52870564f33"
+    },
+    "createdAt": {
+      "$date": "2023-08-08T08:28:16.016Z"
+    },
+    "updatedAt": {
+      "$date": "2023-08-08T08:28:16.016Z"
+    }
+  }
+]

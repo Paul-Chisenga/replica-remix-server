@@ -29,7 +29,7 @@ const About2 = () => {
             <div className="into-left-img magnetic-wrap">
               <img
                 className="img-fluid magnetic-item"
-                src="/images/bg/h1-intro-left-img.png"
+                src="/images/replica-02.jpeg"
                 alt="h1-intro-left-img"
               />
             </div>

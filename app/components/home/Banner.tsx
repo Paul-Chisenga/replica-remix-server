@@ -6,32 +6,40 @@ const Banner = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultPlaybackRate = 0.5;
-      videoRef.current.playbackRate = 0.5;
-    }
+    // if (videoRef.current) {
+    //   videoRef.current.defaultPlaybackRate = 0.5;
+    //   videoRef.current.playbackRate = 0.5;
+    // }
   }, []);
   return (
     <div className="home3-banner">
       <div className="social-area">
         <ul>
           <li>
-            <a href="https://www.facebook.com/">
+            <a
+              href="https://www.facebook.com/replicabakery"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <i className="bx bxl-facebook" />
             </a>
           </li>
           <li>
-            <a href="https://www.instagram.com/">
+            <a
+              href="https://www.instagram.com/replicabakeryandcafe"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <i className="bx bxl-instagram-alt" />
             </a>
           </li>
+
           <li>
-            <a href="https://www.pinterest.com/">
-              <i className="bx bxl-linkedin" />
-            </a>
-          </li>
-          <li>
-            <a href="https://twitter.com/">
+            <a
+              href="https://twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <i className="bx bxl-twitter" />
             </a>
           </li>
@@ -57,7 +65,7 @@ const Banner = () => {
       </div>
       <div className="video-wrap d-flex align-items-center justify-content-center">
         <video autoPlay loop muted preload="auto" ref={videoRef}>
-          <source src="/video/v2.webm" type="video/mp4" />
+          <source src="/video/v1.mp4" type="video/mp4" />
         </video>
         <div className="banner-content text-center">
           <span>

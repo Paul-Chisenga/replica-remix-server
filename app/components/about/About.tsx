@@ -70,7 +70,7 @@ const About = () => {
             <div className="h3-into-img-big">
               <img
                 className="img-fluid"
-                src="/images/bg/h3-intro-big.png"
+                src="/images/replica-02.jpeg"
                 alt="h3-intro-big"
               />
               {/* <div className="h3-into-img-sm magnetic-wrap">

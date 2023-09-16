@@ -5466,9 +5466,10 @@ header.style-3 .main-menu ul li.menu-item-has-children > i {
 =======================================*/
 footer {
   background-image: linear-gradient(rgba(9, 22, 29, 0.9), rgba(9, 22, 29, 0.9)),
-    url(../images/bg/footer-bg.png);
+    url(../../../public/images/replica-01.jpeg);
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   position: relative;
 }
 footer .footer-top {

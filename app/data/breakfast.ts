@@ -146,15 +146,15 @@ export const A_LA_CARTE: SEED[] = [
   },
   {
     title: "apple cinnamon muffin",
-    prices: 300,
+    prices: 270,
   },
   {
     title: "banana nut muffin",
-    prices: 300,
+    prices: 270,
   },
   {
     title: "chocolate chip muffin",
-    prices: 300,
+    prices: 270,
   },
   {
     title: "english muffin & topping",

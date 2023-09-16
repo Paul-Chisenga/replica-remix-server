@@ -8,7 +8,11 @@ const ContactAddress = () => {
           <div className="col-xxl-6 col-xl-4 col-lg-5 col-md-6 col-sm-8">
             <div className="contact-wrap">
               <div className="contact-img">
-                <img src="/images/bg/contact-img-02.png" alt="contact-img-01" />
+                <img
+                  src="/images/replica-04.jpeg"
+                  alt="contact-img-01"
+                  className="tw-h-[400px] tw-object-cover"
+                />
               </div>
               <div className="contact-content">
                 <h3>Rosslyn Branch</h3>

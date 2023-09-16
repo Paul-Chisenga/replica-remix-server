@@ -41,6 +41,14 @@ export const YEAST_DONUTS: SEED[] = [
     title: "dark chocolate",
     prices: 200,
   },
+  {
+    title: "passion",
+    prices: 200,
+  },
+  {
+    title: "plain",
+    prices: 200,
+  },
 ];
 
 export const SPECIAL_DONUTS: SEED[] = [
@@ -53,7 +61,7 @@ export const SPECIAL_DONUTS: SEED[] = [
     prices: 250,
   },
   {
-    title: "jelly",
+    title: "strawberry filled",
     prices: 250,
   },
   {
@@ -65,7 +73,7 @@ export const SPECIAL_DONUTS: SEED[] = [
     prices: 250,
   },
   {
-    title: "nutella with oreos",
+    title: "vanilla with oreos",
     prices: 250,
   },
   {
@@ -126,7 +134,7 @@ export const CAKES_CUPCAKES: SEED[] = [
     title: "carrot cake",
     prices: [
       ["", 600],
-      ["", 5650],
+      ["", 5700],
     ],
   },
   {
@@ -218,101 +226,63 @@ export const BREAD: SEED[] = [
 export const COFFE_TEA: SEED[] = [
   {
     title: "americano",
-    prices: [
-      ["S", 220],
-      ["D", 260],
-    ],
+    prices: 220,
   },
   {
     title: "espresso",
-    prices: [
-      ["S", 210],
-      ["D", 240],
-    ],
+    prices: 210,
   },
   {
     title: "macchiato",
-    prices: [
-      ["S", 230],
-      ["D", 260],
-    ],
+    prices: 230,
   },
   {
     title: "mocca",
-    prices: [
-      ["S", 350],
-      ["D", 390],
-    ],
+    prices: 350,
   },
   {
     title: "iced mocca",
-    prices: [
-      ["S", 0],
-      ["D", 390],
-    ],
+    prices: 390,
   },
   {
     title: "flavored latte",
-    prices: [
-      ["S", 320],
-      ["D", 360],
-    ],
+    prices: 320,
   },
   {
     title: "caffe latte",
-    prices: [
-      ["S", 280],
-      ["D", 320],
-    ],
+    prices: 280,
   },
   {
     title: "iced latte",
-    prices: [
-      ["S", 0],
-      ["D", 340],
-    ],
+    prices: 340,
   },
   {
     title: "caramel macchiato",
-    prices: [
-      ["S", 250],
-      ["D", 280],
-    ],
+    prices: 250,
   },
   {
     title: "cappucino",
-    prices: [
-      ["S", 270],
-      ["D", 320],
-    ],
+    prices: 270,
   },
   {
     title: "black tea",
-    prices: [
-      ["S", 220],
-      ["D", 0],
-    ],
+    prices: 220,
   },
   {
     title: "kenyan tea",
-    prices: [
-      ["S", 230],
-      ["D", 0],
-    ],
+    prices: 230,
   },
   {
     title: "herbal tea",
-    prices: [
-      ["S", 250],
-      ["D", 0],
-    ],
+    prices: 250,
   },
   {
     title: "dawa tea",
-    prices: [
-      ["S", 320],
-      ["D", 0],
-    ],
+    prices: 320,
+  },
+  {
+    title: "extra shot",
+    prices: 40,
   },
 ];
 
@@ -326,50 +296,71 @@ export const BEER: SEED[] = [
     prices: 650,
   },
   {
-    title: "tusker lite (Local)",
+    title: "tusker lite",
     prices: 450,
   },
   {
-    title: "tusker (Local)",
+    title: "tusker larger",
     prices: 450,
   },
   {
-    title: "chez guerilla (Local)",
+    title: "chez guerilla",
     prices: 550,
   },
   {
-    title: "bila shaka ipa (Local)",
+    title: "bila shaka ipa",
     prices: 550,
   },
 ];
 
 export const WINE: SEED[] = [
   {
-    title: "description 1-2 line",
+    title: "namaqua sweet white",
     prices: [
-      ["", 250],
-      ["", 1050],
+      ["", 650],
+      ["", 3000],
     ],
   },
   {
-    title: "fish hoek merlot",
+    title: "robertson white",
     prices: [
-      ["", 250],
-      ["", 1050],
+      ["", 650],
+      ["", 3000],
     ],
   },
   {
-    title: "simonsig mr. Borio's shiraz",
+    title: "cinzano white",
     prices: [
-      ["", 250],
-      ["", 1050],
+      ["", 700],
+      ["", 3300],
     ],
   },
   {
-    title: "graham's late port",
+    title: "robertson red",
     prices: [
-      ["", 250],
-      ["", 1050],
+      ["", 650],
+      ["", 3000],
+    ],
+  },
+  {
+    title: "muchomas black edition",
+    prices: [
+      ["", 1080],
+      ["", 5200],
+    ],
+  },
+  {
+    title: "simonsig mr. borios",
+    prices: [
+      ["", 1800],
+      ["", 8600],
+    ],
+  },
+  {
+    title: "sandeman tawny port",
+    prices: [
+      ["", 1200],
+      ["", 5800],
     ],
   },
 ];
@@ -377,7 +368,7 @@ export const WINE: SEED[] = [
 export const ADDITIONAL_BEV: SEED[] = [
   {
     title: "soda",
-    prices: 220,
+    prices: 200,
   },
   {
     title: "water (still & sparkling)",
@@ -393,7 +384,7 @@ export const ADDITIONAL_BEV: SEED[] = [
   },
   {
     title: "orange juice",
-    prices: 650,
+    prices: 550,
   },
   {
     title: "passion juice",
@@ -420,7 +411,7 @@ export const FRECH_JUICE: SEED[] = [
   },
   {
     title: ["tropical splash", "passion and orange juice with a tropical mix"],
-    prices: 500,
+    prices: 550,
   },
 
   {

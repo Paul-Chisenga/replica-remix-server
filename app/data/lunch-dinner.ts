@@ -216,7 +216,7 @@ export const MAINS_1: SEED[] = [
       "wings",
       "six crispy wings tossed in your choice of sauce (traditional buffalo, and homemade bbq sauce)",
     ],
-    prices: 1500,
+    prices: 1550,
   },
   {
     title: [
@@ -254,14 +254,14 @@ export const MAINS_2: SEED[] = [
       "penne gorgonzola",
       "gorgonzola sauce with bacon, chicken, and sundried tomatoes tossed with penne pasta",
     ],
-    prices: 1450,
+    prices: 1500,
   },
   {
     title: [
       "vegitarian gorgonzola",
       "our penne gorgonzola dish minus the meat, add the walnuts",
     ],
-    prices: 1550,
+    prices: 1600,
   },
   {
     title: [

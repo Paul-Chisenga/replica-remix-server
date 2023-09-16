@@ -62,7 +62,7 @@ const Menu1: FC<Props> = ({ menu, category }) => {
                 >
                   <div className="row">
                     <div className="col-lg-6 p-0">
-                      <div className="menu2-left-img md:tw-max-h-[670px] md:tw-sticky md:tw-top-44">
+                      <div className="menu2-left-img md:tw-max-h-[670px] md:tw-sticky md:tw-top-44 tw-hidden lg:tw-block">
                         <img src="/images/bg/menu2-left-img-01.png" alt="" />
                         <div className="overlay">
                           <div className="vec-left">
