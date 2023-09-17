@@ -21,7 +21,7 @@ function Footer() {
                       <Link to="/reservation">Private Event</Link>
                     </li>
                     <li>
-                      <Link to="/menu/special#italian">Contact us</Link>
+                      <Link to="/contact">Contact us</Link>
                     </li>
                     <li>
                       <Link to="/shop">Shop now</Link>
@@ -98,8 +98,8 @@ function Footer() {
                   <div className="single-contact">
                     <span className="title">Email:</span>
                     <span className="content">
-                      <a href="mailto:Replicabakery@gmail.com">
-                        Replicabakery@gmail.com
+                      <a href="mailto:replicabakery@gmail.com">
+                        replicabakery@gmail.com
                       </a>
                     </span>
                   </div>

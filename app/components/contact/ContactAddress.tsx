@@ -42,7 +42,7 @@ const ContactAddress = () => {
                       <img src="/images/icon/envlope.svg" alt="envlope" />
                     </div>
                     <div className="content">
-                      <a href="#">Replicabakery@gmail.com</a>
+                      <a href="#">replicabakery@gmail.com</a>
                     </div>
                   </li>
                 </ul>

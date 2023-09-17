@@ -16,8 +16,8 @@ function Topbar() {
             <div className="contact-info">
               <ul>
                 <li>
-                  <a href="mailto:info@example.com">
-                    <i className="bi bi-envelope" /> Replicabakery@gmail.com
+                  <a href="mailto:replicabakery@gmail.com">
+                    <i className="bi bi-envelope" /> replicabakery@gmail.com
                   </a>
                 </li>
                 <li>
