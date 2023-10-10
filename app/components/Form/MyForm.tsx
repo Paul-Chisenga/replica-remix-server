@@ -209,29 +209,31 @@ const MyForm: FormObj = {
     };
 
     return (
-      <div className="flex flex-col-reverse p-4 bg-gray-100 border border-dashed rounded-lg border-primary-500 ">
+      <div className="tw-flex tw-flex-col-reverse tw-p-4 tw-bg-gray-100 tw-border tw-border-dashed tw-rounded-lg tw-border-primary-500 ">
         {props.errormessage && (
-          <div className="px-2 text-xs text-red-500 ">{props.errormessage}</div>
+          <div className="tw-px-2 tw-text-xs tw-text-red-500 ">
+            {props.errormessage}
+          </div>
         )}
         <input
           type={"file"}
           ref={fileRef}
           {...props}
-          className={`hidden`}
+          className={`tw-hidden`}
           onChange={handleChange}
         />
         {/* custom input Control */}
-        <div className="flex flex-col items-center justify-center overflow-hidden ">
+        <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-overflow-hidden ">
           <button
             type="button"
-            className="btn-fill-primary min-w-[30%] block rounded-none"
+            className="btn-fill-primary tw-min-w-[30%] tw-block tw-rounded-none"
             onClick={handleClick}
           >
             Select
           </button>
         </div>
         {/* File previews */}
-        <div className="flex flex-wrap p-4">
+        <div className="tw-flex tw-flex-wrap tw-p-4">
           {files.map((item, idx) => {
             let url = URL.createObjectURL(item);
             let assetLogo = "";
@@ -240,13 +242,13 @@ const MyForm: FormObj = {
             return (
               <div
                 key={idx}
-                className="flex flex-col mb-2 mr-2 items-center justify-center p-4 w-full max-w-[200px] text-center bg-gray-100 rounded-lg"
+                className="tw-flex tw-flex-col tw-mb-2 tw-mr-2 tw-items-center tw-justify-center tw-p-4 tw-w-full tw-max-w-[200px] tw-text-center tw-bg-gray-100 tw-rounded-lg"
               >
                 {url && (
                   <img
                     src={url}
                     alt=""
-                    className="block object-cover w-full mb-2 max-h-[250px]"
+                    className="tw-block tw-object-cover tw-w-full tw-mb-2 tw-max-h-[250px]"
                   />
                 )}
                 {!url && (
@@ -254,12 +256,12 @@ const MyForm: FormObj = {
                     <img
                       src={assetLogo}
                       alt=""
-                      className="inline-block object-contain h-12 mb-4"
+                      className="tw-inline-block tw-object-contain tw-h-12 tw-mb-4"
                     />
-                    <h5 className="text-xs font-bold text-black break-words break-all md:text-sm">
+                    <h5 className="tw-text-xs tw-font-bold tw-text-black tw-break-words tw-break-all md:tw-text-sm">
                       {item.name}
                     </h5>
-                    <h6 className="text-xs font-bold break-words break-all md:text-sm">
+                    <h6 className="tw-text-xs tw-font-bold tw-break-words tw-break-all md:tw-text-sm">
                       {size} kb
                     </h6>
                   </>

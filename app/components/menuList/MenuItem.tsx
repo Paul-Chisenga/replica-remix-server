@@ -24,7 +24,12 @@ const MenuItem: FC<Props> = ({ product, image }) => {
               {product.title}
             </Link>
           </h3>
-          <p>Special Breakfast to make for our customer.</p>
+          {/* <p>Special Breakfast to make for our customer.</p> */}
+          {/* <p>We love food, we want you to love it too</p> */}
+          <p className="first-letter:tw-capitalize">
+            {product.subtitle?.slice(0, 40)}
+            {product.subtitle && product.subtitle?.length > 40 && "..."}
+          </p>
         </div>
       </div>
       <div className="divider">

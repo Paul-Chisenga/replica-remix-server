@@ -20,7 +20,7 @@ const BakeryMenu = () => {
   return (
     <>
       <Breadcrumb pageName="bakery" pageTitle="Bakery Menu" />
-      <Menu1 category={MenuCategory.BAKERY} menu={menu} />
+      <Menu1 category={MenuCategory.BAKERY} menu={menu} image="bakery.png" />
     </>
   );
 };

@@ -7,7 +7,7 @@ export interface AuthSession {
   role: Role;
 }
 export type MyObject<V> = { [key: string]: V };
-export interface PicturePayload {
+export interface AttachmentPayload {
   ext: string;
   key: string;
   name: string;

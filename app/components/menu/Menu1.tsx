@@ -19,9 +19,10 @@ type MenuWithProducts = Prisma.MenuGetPayload<typeof menuWithProducst>;
 interface Props {
   menu: MenuWithProducts[];
   category: MenuCategory;
+  image: string;
 }
 
-const Menu1: FC<Props> = ({ menu, category }) => {
+const Menu1: FC<Props> = ({ menu, category, image }) => {
   return (
     <div className="menu2-area pt-120 mb-120">
       <div className="container">
@@ -63,7 +64,8 @@ const Menu1: FC<Props> = ({ menu, category }) => {
                   <div className="row">
                     <div className="col-lg-6 p-0">
                       <div className="menu2-left-img md:tw-max-h-[670px] md:tw-sticky md:tw-top-44 tw-hidden lg:tw-block">
-                        <img src="/images/bg/menu2-left-img-01.png" alt="" />
+                        {/* <img src="/images/bg/menu2-left-img-01.png" alt="" /> */}
+                        <img src={`/images/bg/${image}`} alt="" />
                         <div className="overlay">
                           <div className="vec-left">
                             <img src="/images/icon/menu1-left-vec.svg" alt="" />

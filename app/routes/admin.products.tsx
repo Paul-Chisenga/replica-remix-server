@@ -1,5 +1,5 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, Link, Outlet } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import Button2 from "~/components/Button/Button2";
 import LinkButton2 from "~/components/Button/LinkButton2";
@@ -39,7 +39,7 @@ const Products = () => {
   const menu = useTypedLoaderData<typeof loader>();
 
   return (
-    <div>
+    <>
       <div className="tw-flex tw-gap-4">
         <LinkButton2 to="new" className="tw-text-white tw-mb-6">
           Add product
@@ -110,6 +110,21 @@ const Products = () => {
                               ))}
                             </div>
                           </div>
+                          <br />
+                          <div className="tw-flex tw-justify-between tw-flex-wrap tw-gap-2 tw-pb-8">
+                            <Link
+                              to={`new?pId=${prod.id}`}
+                              className="primary-btn8 lg--btn btn-primary-fill"
+                            >
+                              Edit
+                            </Link>
+                            <Link
+                              to={`new?pId=${prod.id}`}
+                              className="primary-btn8 btn tw-bg-red-500"
+                            >
+                              Delete
+                            </Link>
+                          </div>
                         </li>
                       ))}
                     </ul>
@@ -120,7 +135,9 @@ const Products = () => {
           ))}
         </div>
       </div>
-    </div>
+
+      <Outlet />
+    </>
   );
 };
 

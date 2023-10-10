@@ -21,7 +21,11 @@ const LunchDinnerMenu = () => {
   return (
     <>
       <Breadcrumb pageName="lunch-dinner" pageTitle="Lunch/Dinner Menu" />
-      <Menu1 category={MenuCategory.FOOD} menu={menu} />
+      <Menu1
+        category={MenuCategory.FOOD}
+        menu={menu}
+        image="lunch_dinner.png"
+      />
     </>
   );
 };

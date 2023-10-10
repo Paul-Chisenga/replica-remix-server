@@ -1,7 +1,9 @@
 import { Role } from "@prisma/client";
 import { hashPassword } from "~/services/bcrypt.server";
+import { deleteFiles, uploadFile } from "~/services/files.server";
 import prisma from "~/services/prisma.server";
 import { parseCustomError } from "~/utils/helpers";
+import type { AttachmentPayload } from "~/utils/types";
 
 // ADMIN USERS
 export async function createAdmin(payload: {
@@ -86,29 +88,29 @@ export async function getMenuList() {
 }
 
 // PRODUCTS
+type ProductPayload = {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  prices: number[];
+  menu: string;
+  submenu: string;
+  submenuTitle?: string;
+  images: File[];
+};
 export async function createProduct(
   adminProfileId: string,
-  payload: {
-    title: string;
-    subtitle?: string;
-    description?: string;
-    prices: number[];
-    menu: string;
-    submenu: string;
-    submenuTitle?: string;
-  }
+  payload: ProductPayload
 ) {
-  const product = await prisma.product.findUnique({
-    where: { title: payload.title },
-  });
-
-  if (product) {
-    throw parseCustomError(
-      "A simular product is found, use another title",
-      422
-    );
-  }
-
+  // const product = await prisma.product.findUnique({
+  //   where: { title: payload.title },
+  // });
+  // if (product) {
+  //   throw parseCustomError(
+  //     "A simular product is found, use another title",
+  //     422
+  //   );
+  // }
   // await prisma.product.create({
   //   data: {
   //     title: payload.title,
@@ -142,6 +144,36 @@ export async function createProduct(
   //     },
   //   },
   // });
+}
+export async function updateProduct(
+  productId: string,
+  payload: ProductPayload
+) {
+  const images: AttachmentPayload[] = [];
+  for (let i = 0; i < payload.images.length; i++) {
+    const file = payload.images[i];
+    if (file.size <= 0) continue;
+    const key = await uploadFile(file);
+    images.push({
+      ext: file.type,
+      key,
+      name: file.name,
+      size: file.size,
+    });
+  }
+
+  try {
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        title: payload.title,
+        pictures: { create: images },
+      },
+    });
+  } catch (error) {
+    deleteFiles(images.map((item) => item.key)).catch(() => {});
+    throw error;
+  }
 }
 export async function getProducts() {
   // await prisma.subMenu.deleteMany();

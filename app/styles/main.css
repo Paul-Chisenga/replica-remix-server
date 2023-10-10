@@ -46,8 +46,12 @@
     @apply tw-font-semibold tw-text-base tw-text-[#00152b] tw-inline-block tw-mb-0;
   }
 
-  .btn-primary-fill {
+  .btn {
     @apply tw-py-3 tw-px-16 tw-text-lg tw-font-bold tw-font-jost;
+  }
+
+  .btn-primary-fill {
+    @apply btn;
   }
   .menu2-area .menu2-left-img img {
     @apply tw-object-cover;
