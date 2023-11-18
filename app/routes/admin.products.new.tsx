@@ -224,7 +224,9 @@ export async function action({ request }: ActionArgs) {
   );
   const data = Object.fromEntries(formData) as MyObject<string>;
   const images = formData.getAll("images") as File[];
+  console.log(images);
 
+  return null;
   // Invariant validation
   invariantValidate(data, ["images"]);
   // Required input validation

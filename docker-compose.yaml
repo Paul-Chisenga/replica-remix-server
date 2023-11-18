@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  app:
+    build: ./
+    volumes:
+      - ./:/app
+      - /app/.next
+      - /app/prisma
+    ports:
+      - "5000:3000"
+    env_file:
+      - ./.env
+    command: [ "yarn", "dev" ]
+  yarn:
+    image: node:21
+    working_dir: /app
+    entrypoint: yarn
+    volumes:
+      - ./:/app
