@@ -1,0 +1,113 @@
+[
+  {
+    "id": "1",
+    "title": "Goat Cheese Bruschetta",
+    "description": "Toasted baguettes topped with goat cheese, sundried tomatoes, and our lemon garlic sauce.",
+    "price": 1250,
+    "choices": [],
+    "vegeterian": true
+  },
+  {
+    "id": "2",
+    "title": "Crispy Vegetable Rounds",
+    "description": "Lightly battered and fried vegetable rounds served with two delicious homemade sauces.",
+    "price": 980,
+    "choices": [],
+    "vegeterian": true
+  },
+  {
+    "id": "3",
+    "title": "Wings",
+    "description": "Eight crispy wings tossed in your choice of sauce traditional buffalo or homemade BBQ.",
+    "price": 1400,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Wing Sauce",
+        "options": ["Traditional Buffalo", "BBQ"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Chips, Veggies, and Dip",
+    "description": "Tortilla chips and vegetables with our homemade creamy cilantro ranch dip and guacamole.",
+    "price": 980,
+    "choices": [],
+    "vegeterian": true
+  },
+
+  {
+    "id": "5",
+    "title": "Goat Cheese Chicken",
+    "description": "Grilled chicken breast topped with goat cheese, basil, sundried tomatoes, and our lemon garlic sauce. Includes 2 side items.",
+    "price": 2180,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Mexican Street Corn",
+          "Roasted Broccoli",
+          "Sauteen Green Beans",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 2
+      }
+    ],
+    "vegeterian": false
+  },
+
+  {
+    "id": "6",
+    "title": "The Classic",
+    "description": "2 eggs your way, choice of bacon or sausage, choice of potatoes, salad, or fruit cup & choice of bread.",
+    "price": 950,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Bread Choice",
+        "options": [
+          "Plain Bagel",
+          "Raisin Bagel",
+          "Everything Bagel",
+          "White Bread",
+          "Wheat Bread",
+          "English Muffin",
+          "Gluten Free"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Meat Choice",
+        "options": ["Bacon", "Beef Sausage", "Pork Sausage"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

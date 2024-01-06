@@ -1,34 +1,38 @@
-import type { Product } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import type { FC } from "react";
+import { parseProdImageUrl } from "~/utils/helpers";
+import type { ProductWithImages } from "~/utils/types";
 
 interface Props {
-  product: Product;
-  image: string;
+  product: ProductWithImages;
 }
 
-const MenuItem: FC<Props> = ({ product, image }) => {
+const MenuItem: FC<Props> = ({ product }) => {
   return (
     <li key={product.id}>
       <div className="item-name">
-        <div className="">
-          {/* <div className="item-img"> */}
-          {/* <img src={"/images/bg/" + image} alt="" /> */}
+        <div className="item-img">
+          <img
+            src={parseProdImageUrl(product.images)}
+            alt=""
+            style={{ width: 68, height: 68 }}
+            className="tw-object-contain"
+          />
         </div>
         <div className="content">
           <h3>
             <Link
               to={`/shop/${product.id}`}
-              className="tw-text-inherit hover:tw-text-emerald-500 hover:tw-underline tw-capitalize"
+              className="tw-text-inherit hover:tw-text-emerald-500 hover:tw-underline"
             >
               {product.title}
             </Link>
           </h3>
           {/* <p>Special Breakfast to make for our customer.</p> */}
           {/* <p>We love food, we want you to love it too</p> */}
-          <p className="first-letter:tw-capitalize">
-            {product.subtitle?.slice(0, 40)}
-            {product.subtitle && product.subtitle?.length > 40 && "..."}
+          <p>
+            {product.description?.slice(0, 40)}
+            {product.description && product.description?.length > 40 && "..."}
           </p>
         </div>
       </div>
@@ -38,7 +42,7 @@ const MenuItem: FC<Props> = ({ product, image }) => {
       <Link to={`/shop/${product.id}`} className="link">
         <div className="price">
           <span className="tw-relative">
-            {product.prices[0].value}
+            {product.price}
             {/* <i className="tw-text-xs tw-absolute tw-left-0">ksh</i> */}
           </span>
         </div>

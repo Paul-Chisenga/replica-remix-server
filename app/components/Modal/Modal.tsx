@@ -1,4 +1,5 @@
 import React from "react";
+import DualRingLoader from "../indicators/DualRingLoader";
 
 interface WrapperProps {
   children: React.ReactElement | Iterable<React.ReactElement> | null;
@@ -15,6 +16,7 @@ interface WrapperProps {
 interface HeaderProps {
   children?: any;
   className?: string;
+  onClose?: () => void;
 }
 interface BodyProps {
   children?: any;
@@ -30,20 +32,38 @@ const Portal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 type ModalObj = {
+  Wrapper: React.FC<WrapperProps>;
   Header: React.FC<HeaderProps>;
   Body: React.FC<BodyProps>;
   Footer: React.FC<FooterProps>;
-  Wrapper: React.FC<WrapperProps>;
 };
 
 const Modal: ModalObj = {
   // Header
-  Header({ children, className }) {
-    return <div className={`${className}`}>{children}</div>;
+  Header({ children, className, onClose }) {
+    return (
+      <div
+        className={`tw-flex tw-justify-between tw-tracking-wider tw-items-center tw-font-jost tw-text-white tw-px-4 tw-py-4 tw-font-semibold tw-text-lg  tw-bg-primary ${className}`}
+      >
+        <span>{children}</span>
+        <button
+          type="button"
+          className="tw-bg-transparent  tw-shrink-0 hover:tw-text-white tw-transition-all tw-duration-200"
+          onClick={onClose}
+          style={{ color: "rgba(255,255,255,.90)" }}
+        >
+          <i className="bi bi-x-circle"></i>
+        </button>
+      </div>
+    );
   },
   // Body
   Body({ children, className }) {
-    return <div className={className}>{children}</div>;
+    return (
+      <div className={`tw-px-4 md:tw-px-5 tw-py-5 ${className}`}>
+        {children}
+      </div>
+    );
   },
   // Footer
   Footer({ children, className }) {
@@ -124,35 +144,21 @@ const Modal: ModalObj = {
         >
           <div
             className={`tw-absolute tw-inset-0 tw-bg-transparent tw-transition-colors tw-duration-200 tw-ease-linear 
-            ${show && "tw-bg-black/20"}
-            ${blur && "tw-backdrop-blur-xl"}
+            ${show && "tw-bg-gray-200/70"}
+            ${blur && "tw-backdrop-blur-sm"}
             `}
             onClick={onDismiss}
           />
-          <div className="tw-absolute tw-inset-0 tw-z-10 tw-flex tw-flex-col tw-items-center tw-justify-center">
+          <div className="tw-absolute tw-inset-0 tw-z-10 tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-4">
             <div
-              className={`tw-w-full tw-max-h-full tw-overflow-hidden tw-transition-all tw-duration-200 tw-ease-in-out tw-flex tw-flex-col tw-justify-between tw-mx-auto tw-shadow-xl tw-bg-white tw-border-primary
+              style={{ border: "1px solid" }}
+              className={`tw-w-full tw-max-h-full tw-rounded-sm tw-border-gray-200 tw-overflow-hidden tw-transition-all tw-duration-200 tw-ease-in-out tw-flex tw-flex-col tw-justify-between tw-mx-auto tw-drop-shadow-sm tw-bg-white
               ${show && "tw-scale-100"}
-              ${
-                size === "sm" &&
-                "tw-max-w-screen-sm sm:tw-rounded-lg sm:tw-my-4 sm:tw-border"
-              } 
-              ${
-                size === "md" &&
-                "tw-max-w-screen-md md:tw-rounded-lg md:tw-my-4 md:tw-border"
-              } 
-              ${
-                size === "lg" &&
-                "tw-max-w-screen-lg lg:tw-rounded-lg lg:tw-my-4 lg:tw-border"
-              } 
-              ${
-                size === "xl" &&
-                "tw-max-w-screen-xl xl:tw-rounded-lg xl:tw-my-4 xl:tw-border"
-              } 
-              ${
-                size === "2xl" &&
-                "tw-max-w-screen-2xl 2xl:tw-rounded-lg 2xl:tw-my-4 2xl:tw-border"
-              }
+              ${size === "sm" && "tw-max-w-screen-sm sm:tw-my-4 "} 
+              ${size === "md" && "tw-max-w-screen-md md:tw-my-4"} 
+              ${size === "lg" && "tw-max-w-screen-lg lg:tw-my-4"} 
+              ${size === "xl" && "tw-max-w-screen-xl xl:tw-my-4 "} 
+              ${size === "2xl" && "tw-max-w-screen-2xl 2xl:tw-my-4"}
               ${className}`}
             >
               {/* Header */}
@@ -162,11 +168,14 @@ const Modal: ModalObj = {
                 {BodyComponent}
               </div>
               {/* Footer */}
-              {/* {!FooterComponent && !hideFooter && (
-                <div className="tw-flex tw-items-center tw-justify-between tw-px-8 tw-py-5 tw-border-t tw-border-black/10">
+              {!FooterComponent && !hideFooter && (
+                <div
+                  className="tw-flex tw-items-center tw-justify-center tw-px-4 tw-py-5 tw-border-black/10 tw-bg-gray-100 tw-border-gray-200 tw-gap-4"
+                  style={{ borderTop: "2px solid" }}
+                >
                   <button
                     type="button"
-                    className="dashboard_btn_text"
+                    className="my-btn outline dark semi-rounded tw-border-gray-400"
                     onClick={onDismiss}
                     disabled={loading}
                   >
@@ -174,16 +183,17 @@ const Modal: ModalObj = {
                   </button>
                   <div>
                     <button
-                      className={confirm ? "remove-btn" : "dashboard_btn_fill"}
+                      className="my-btn outline primary semi-rounded"
                       onClick={onSubmit}
                       disabled={loading}
                       type="submit"
                     >
-                      {confirm ? "Confirm" : "Submit"}
+                      <span>Submit</span>
+                      {loading && <DualRingLoader size={15} />}
                     </button>
                   </div>
                 </div>
-              )} */}
+              )}
               {FooterComponent && FooterComponent}
             </div>
           </div>

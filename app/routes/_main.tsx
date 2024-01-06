@@ -1,4 +1,3 @@
-import { Role } from "@prisma/client";
 import { redirect, type LoaderArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { useContext, useEffect } from "react";
@@ -59,7 +58,7 @@ export async function loader({ request }: LoaderArgs) {
     return {
       name: user.firstname,
       email: user.email,
-      admin: session.role === Role.ADMIN,
+      role: session.role,
       cartItems,
     };
   }

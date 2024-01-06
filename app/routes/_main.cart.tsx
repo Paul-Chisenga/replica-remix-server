@@ -9,7 +9,7 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import { requireUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
 import { CartContext } from "~/context/CartContext";
-import { randomNumber } from "~/utils/helpers";
+import { parseProdImageUrl } from "~/utils/helpers";
 import type { action } from "./_main.cart.$id.increment";
 import { ClipLoader } from "react-spinners";
 import LinkButton2 from "~/components/Button/LinkButton2";
@@ -24,8 +24,6 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-const IMAGES = ["cart-01.png", "cart-02.png", "cart-03.png"];
-
 function Cart() {
   const cart = useTypedLoaderData<typeof loader>();
   const [items, setItems] = useState(cart);
@@ -33,43 +31,28 @@ function Cart() {
   const cartContext = useContext(CartContext);
 
   const cartTotal = cart.reduce((prev, cur) => {
-    const sum = cur.count * cur.price;
+    const sum = cur.count * cur.product.price;
     return prev + sum;
   }, 0);
 
-  const increment = (itemId: string, price: number) => {
-    fetcher.submit(
-      {
-        price,
-      },
-      {
-        action: `${itemId}/increment`,
-        method: "POST",
-      }
-    );
+  const increment = (itemId: string) => {
+    fetcher.submit(null, {
+      action: `${itemId}/increment`,
+      method: "POST",
+    });
   };
 
-  const decrement = (itemId: string, price: number) => {
-    fetcher.submit(
-      {
-        price,
-      },
-      {
-        action: `${itemId}/decrement`,
-        method: "POST",
-      }
-    );
+  const decrement = (itemId: string) => {
+    fetcher.submit(null, {
+      action: `${itemId}/decrement`,
+      method: "POST",
+    });
   };
-  const handleDelete = (itemId: string, price: number) => {
-    fetcher.submit(
-      {
-        price,
-      },
-      {
-        action: `${itemId}/remove`,
-        method: "DELETE",
-      }
-    );
+  const handleDelete = (itemId: string) => {
+    fetcher.submit(null, {
+      action: `${itemId}/remove`,
+      method: "DELETE",
+    });
   };
 
   useEffect(() => {
@@ -106,77 +89,89 @@ function Cart() {
                           <th>Delete</th>
                           <th>Image</th>
                           <th>Food Name</th>
-                          <th>Unite Price</th>
-                          <th>Discount Price</th>
+                          {/* <th>Unite Price</th> */}
+                          <th>Price</th>
+                          {/* <th>Discount Price</th> */}
                           <th>Quantity</th>
                           <th>Subtotal</th>
                         </tr>
                       </thead>
                       <tbody>
                         {items.map((item) => {
-                          let variationLabel = "";
-                          const price = item.product.prices.find(
-                            (price) => price.value === item.price
-                          );
-
-                          if (price && price.label !== "std") {
-                            variationLabel = price.label;
-                          }
                           return (
                             <tr key={item.id}>
                               <td data-label="Delete">
                                 <div
                                   className="delete-icon"
-                                  onClick={() =>
-                                    handleDelete(item.id, item.price)
-                                  }
+                                  onClick={() => handleDelete(item.id)}
                                 >
                                   <i className="bi bi-x" />
                                 </div>
                               </td>
                               <td data-label="Image">
                                 <img
-                                  src={
-                                    "/images/bg/" + IMAGES[randomNumber(0, 2)]
-                                  }
+                                  src={parseProdImageUrl(item.product.images)}
                                   alt=""
+                                  className="tw-object-cover tw-object-top tw-rounded"
+                                  style={{ width: 80, height: 70 }}
                                 />
                               </td>
-                              <td data-label="Food Name">
+                              <td data-label="Food Name" className="tw-pl-8">
                                 <Link
                                   to={`/shop/${item.productId}`}
-                                  className="tw-capitalize"
+                                  className="tw-text-xl"
                                 >
                                   {item.product.title}
-                                  {variationLabel && ` ( ${variationLabel} ) `}
                                 </Link>
+                                {item.choices.length > 0 && (
+                                  <div className="tw-text-sm   tw-text-left md:tw-text-center">
+                                    You chose :
+                                    {item.choices.map((ch) => (
+                                      <div
+                                        key={ch.id}
+                                        className="tw-flex tw-gap-1 md:tw-justify-center"
+                                      >
+                                        <span className=" tw-shrink-0">
+                                          {ch.selector} -{" "}
+                                        </span>
+                                        <div className="tw-space-y-4 tw-font-medium">
+                                          {ch.options.map((option) => (
+                                            <span key={option.id}>
+                                              {option.label} (x{option.count})
+                                            </span>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </td>
-                              <td data-label="Unite Price">
+                              {/* <td data-label="Unite Price">
                                 <del>
                                   <span className="tw-text-xs">ksh</span>
-                                  <span>{item.price}</span>
+                                  <span>{item.product.price}</span>
                                 </del>
-                              </td>
-                              <td data-label="Discount Price">
+                              </td> */}
+                              {/* <td data-label="Discount Price">
                                 <span className="tw-text-xs">ksh</span>
-                                <span>{item.price}</span>
+                                <span>{item.product.price}</span>
+                              </td> */}
+                              <td data-label="Price">
+                                <span className="tw-text-xs">ksh</span>
+                                <span>{item.product.price}</span>
                               </td>
                               <td data-label="Quantity">
                                 <div className="quantity d-flex align-items-center">
                                   <div className="quantity-nav nice-number d-flex align-items-center">
                                     <button
-                                      onClick={() =>
-                                        decrement(item.id, item.price)
-                                      }
+                                      onClick={() => decrement(item.id)}
                                       type="button"
                                     >
                                       <i className="bi bi-dash"></i>
                                     </button>
                                     <div>{item.count}</div>
                                     <button
-                                      onClick={() =>
-                                        increment(item.id, item.price)
-                                      }
+                                      onClick={() => increment(item.id)}
                                       type="button"
                                     >
                                       <i className="bi bi-plus"></i>
@@ -186,7 +181,7 @@ function Cart() {
                               </td>
                               <td data-label="Subtotal">
                                 <span className="tw-text-xs">ksh</span>
-                                <span>{item.price * item.count}</span>
+                                <span>{item.product.price * item.count}</span>
                               </td>
                             </tr>
                           );
@@ -299,7 +294,11 @@ export async function loader({ request }: LoaderArgs) {
         },
       },
       include: {
-        product: true,
+        product: {
+          include: {
+            images: true,
+          },
+        },
       },
     });
 

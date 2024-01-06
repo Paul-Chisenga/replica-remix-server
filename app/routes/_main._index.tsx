@@ -12,7 +12,7 @@ import { randomNumber } from "~/utils/helpers";
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { title: "Replica - The classic restaurant" },
+    { title: "Replica - Home" },
     { name: "description", content: "Welcome to Replica!" },
   ];
 };
@@ -47,57 +47,61 @@ export async function loader() {
   };
 
   const breakfastWhere: Prisma.ProductWhereInput = {
-    subMenu: {
-      menu: {
-        category: MenuCategory.BREAKFAST,
-      },
+    menuItem: {
+      category: MenuCategory.BREAKFAST,
     },
   };
   const breakfastCount = await prisma.product.count({ where: breakfastWhere });
   const breakfast = await prisma.product.findMany({
     where: breakfastWhere,
+    include: {
+      images: true,
+    },
     skip: random(breakfastCount),
     take: 4,
   });
 
   const lunchWhere: Prisma.ProductWhereInput = {
-    subMenu: {
-      menu: {
-        category: MenuCategory.FOOD,
-      },
+    menuItem: {
+      category: MenuCategory.FOOD,
     },
   };
   const lunchCount = await prisma.product.count({ where: lunchWhere });
   const lunchDinner = await prisma.product.findMany({
     where: lunchWhere,
+    include: {
+      images: true,
+    },
     skip: random(lunchCount),
     take: 4,
   });
 
   const bakeryWhere: Prisma.ProductWhereInput = {
-    subMenu: {
-      menu: {
-        category: MenuCategory.BAKERY,
-      },
+    menuItem: {
+      category: MenuCategory.BAKERY,
     },
   };
   const bakeryCount = await prisma.product.count({ where: bakeryWhere });
   const bakery = await prisma.product.findMany({
     where: bakeryWhere,
+    include: {
+      images: true,
+    },
     skip: random(bakeryCount),
     take: 4,
   });
 
   const beverageWhere: Prisma.ProductWhereInput = {
-    subMenu: {
-      menu: {
-        category: MenuCategory.BEVARAGE,
-      },
+    menuItem: {
+      category: MenuCategory.BEVARAGE,
     },
   };
   const beverageCount = await prisma.product.count({ where: beverageWhere });
   const beverages = await prisma.product.findMany({
     where: beverageWhere,
+    include: {
+      images: true,
+    },
     skip: random(beverageCount),
     take: 4,
   });

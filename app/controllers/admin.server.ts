@@ -3,7 +3,7 @@ import { hashPassword } from "~/services/bcrypt.server";
 import { deleteFiles, uploadFile } from "~/services/files.server";
 import prisma from "~/services/prisma.server";
 import { parseCustomError } from "~/utils/helpers";
-import type { AttachmentPayload } from "~/utils/types";
+import type { AttachmentPayload, ProductPayload } from "~/utils/types";
 
 // ADMIN USERS
 export async function createAdmin(payload: {
@@ -46,15 +46,13 @@ export async function createMenu(
   adminProfileId: string,
   payload: {
     title: string;
-    subtitle: string;
     category: string;
   }
 ) {
-  const menu = await prisma.menu.findUnique({
+  const menu = await prisma.menuItem.findUnique({
     where: {
-      title_category_subtitle: {
+      title_category: {
         title: payload.title,
-        subtitle: payload.subtitle,
         category: payload.category as any,
       },
     },
@@ -64,91 +62,41 @@ export async function createMenu(
     throw parseCustomError("A simular menu exists", 422);
   }
 
-  await prisma.menu.create({
+  await prisma.menuItem.create({
     data: {
       title: payload.title,
-      subtitle: payload.subtitle,
       category: payload.category as any,
-      createdBy: {
-        connect: {
-          profileId: adminProfileId,
-        },
-      },
+      meta: { createdBy: adminProfileId },
     },
   });
 }
 export async function getMenuList() {
-  const list = await prisma.menu.findMany({
-    orderBy: { title: "asc" },
+  const list = await prisma.menuItem.findMany({
+    // orderBy: { title: "asc" },
+    orderBy: {
+      createdAt: "desc",
+    },
     include: {
-      submenu: true,
+      products: true,
     },
   });
   return list;
 }
 
-// PRODUCTS
-type ProductPayload = {
-  title: string;
-  subtitle?: string;
-  description?: string;
-  prices: number[];
-  menu: string;
-  submenu: string;
-  submenuTitle?: string;
-  images: File[];
-};
 export async function createProduct(
   adminProfileId: string,
   payload: ProductPayload
 ) {
-  // const product = await prisma.product.findUnique({
-  //   where: { title: payload.title },
-  // });
-  // if (product) {
-  //   throw parseCustomError(
-  //     "A simular product is found, use another title",
-  //     422
-  //   );
-  // }
-  // await prisma.product.create({
-  //   data: {
-  //     title: payload.title,
-  //     subtitle: payload.subtitle,
-  //     description:
-  //       payload.description ??
-  //       "Nulla facilisi. In lacinia eu odio ut iaculis. Vivamus cursus commodo libero vel porttitor.",
-  //     prices: payload.prices,
-  //     subMenu: {
-  //       connectOrCreate: {
-  //         where: {
-  //           id:
-  //             payload.submenu !== "other" && payload.submenu !== "none"
-  //               ? payload.submenu
-  //               : ObjectID().toHexString(),
-  //         },
-  //         create: {
-  //           title: payload.submenuTitle,
-  //           menu: {
-  //             connect: {
-  //               id: payload.menu,
-  //             },
-  //           },
-  //         },
-  //       },
-  //     },
-  //     createdBy: {
-  //       connect: {
-  //         profileId: adminProfileId,
-  //       },
-  //     },
-  //   },
-  // });
-}
-export async function updateProduct(
-  productId: string,
-  payload: ProductPayload
-) {
+  const product = await prisma.product.findUnique({
+    where: { title: payload.title },
+  });
+  if (product) {
+    throw parseCustomError(
+      "A product with title is found, use another title",
+      422
+    );
+  }
+
   const images: AttachmentPayload[] = [];
   for (let i = 0; i < payload.images.length; i++) {
     const file = payload.images[i];
@@ -163,11 +111,18 @@ export async function updateProduct(
   }
 
   try {
-    await prisma.product.update({
-      where: { id: productId },
+    await prisma.product.create({
       data: {
         title: payload.title,
-        pictures: { create: images },
+        description: payload.description,
+        price: payload.price,
+        menuItemId: payload.menuId,
+        choices: payload.choices,
+        images: { create: images },
+        meta: {
+          createdBy: adminProfileId,
+          vegeterian: !!payload.isVegeterian,
+        },
       },
     });
   } catch (error) {
@@ -175,19 +130,71 @@ export async function updateProduct(
     throw error;
   }
 }
+export async function updateProduct(
+  adminProfileId: string,
+  productId: string,
+  payload: ProductPayload
+) {
+  const product = await prisma.product.findUniqueOrThrow({
+    where: {
+      id: productId,
+    },
+    include: {
+      images: true,
+    },
+  });
+
+  const images: AttachmentPayload[] = [];
+  for (let i = 0; i < payload.images.length; i++) {
+    const file = payload.images[i];
+    if (file.size <= 0) continue;
+    const key = await uploadFile(file);
+    images.push({
+      ext: file.type,
+      key,
+      name: file.name,
+      size: file.size,
+    });
+  }
+  try {
+    await prisma.product.update({
+      where: { id: productId },
+      data: {
+        title: payload.title,
+        description: payload.description,
+        price: payload.price,
+        menuItemId: payload.menuId,
+        choices: payload.choices,
+        images:
+          images.length > 0 ? { deleteMany: {}, create: images } : undefined,
+        meta: {
+          ...(product.meta as any),
+          updatedBy: adminProfileId,
+          vegeterian: !!payload.isVegeterian,
+        },
+      },
+    });
+    if (images.length > 0) {
+      deleteFiles(product.images.map((im) => im.key)).catch(() => {});
+    }
+  } catch (error) {
+    deleteFiles(images.map((item) => item.key)).catch(() => {});
+    throw error;
+  }
+}
+export async function deleteProduct(adminProfileId: string, productId: string) {
+  const deletedProd = await prisma.product.delete({
+    where: { id: productId },
+    include: { images: true },
+  });
+  if (deletedProd.images.length > 0) {
+    deleteFiles(deletedProd.images.map((item) => item.key)).catch(() => {});
+  }
+}
 export async function getProducts() {
-  // await prisma.subMenu.deleteMany();
-  // await prisma.product.deleteMany();
   const products = await prisma.product.findMany({
     orderBy: {
       createdAt: "desc",
-    },
-    include: {
-      subMenu: {
-        include: {
-          menu: true,
-        },
-      },
     },
   });
 

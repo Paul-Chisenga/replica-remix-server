@@ -63,29 +63,33 @@ export async function loader({ request, params }: LoaderArgs) {
     throw new Error("Invalid link");
   }
 
-  const user = await prisma.profile.findUnique({
-    where: { email: registrationPayload.email },
-  });
+  try {
+    const user = await prisma.profile.findUnique({
+      where: { email: registrationPayload.email },
+    });
 
-  if (user) {
-    return redirect("/login");
-  }
+    if (user) {
+      return redirect("/login");
+    }
 
-  const password = await hashPassword(registrationPayload.password);
-  await prisma.customer.create({
-    data: {
-      profile: {
-        create: {
-          role: Role.CUSTOMER,
-          firstname: registrationPayload.firstname,
-          lastname: registrationPayload.lastname,
-          email: registrationPayload.email,
-          password,
-          phone: +registrationPayload.phone,
+    const password = await hashPassword(registrationPayload.password);
+    await prisma.customer.create({
+      data: {
+        profile: {
+          create: {
+            role: Role.CUSTOMER,
+            firstname: registrationPayload.firstname,
+            lastname: registrationPayload.lastname,
+            email: registrationPayload.email,
+            password,
+            phone: +registrationPayload.phone,
+          },
         },
       },
-    },
-  });
+    });
 
-  return null;
+    return null;
+  } catch (error) {
+    throw new Error("Something went wrong.");
+  }
 }

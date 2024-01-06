@@ -1,11 +1,12 @@
-import { Role } from "@prisma/client";
+import { OrderStatus, Role } from "@prisma/client";
 import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import LinkButton2 from "~/components/Button/LinkButton2";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import { requireUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
-import { formatDate, randomNumber } from "~/utils/helpers";
+import { formatDate } from "~/utils/helpers";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -17,8 +18,6 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-const IMAGES = ["cart-01.png", "cart-02.png", "cart-03.png"];
-
 const Orders = () => {
   const orders = useTypedLoaderData<typeof loader>();
 
@@ -29,17 +28,23 @@ const Orders = () => {
         <div className="container-fluid">
           <div className="row g-lg-5 gy-5">
             <div className="col-lg-5">
-              <div className="faq-left-img">
+              <div className="faq-left-img tw-hidden sm:tw-block">
                 <img
-                  className="img-fluid"
-                  src="/images/bg/faq-big-img.png"
-                  alt="faq-big-img"
+                  // className="img-fluid"
+                  src="/images/bg/order-bg-01.jpg"
+                  alt=""
+                  width={587}
+                  height={650}
+                  className="tw-object-cover img-fluid"
                 />
                 <div className="sm-img">
                   <img
-                    className="img-fluid"
-                    src="/images/bg/faq-sm-img.png"
+                    // className="img-fluid"
+                    src="/images/bg/order-bg-02.jpg"
                     alt="faq-sm-img"
+                    width={512}
+                    height={281}
+                    className="tw-object-cover img-fluid"
                   />
                 </div>
               </div>
@@ -78,9 +83,9 @@ const Orders = () => {
                           aria-expanded="false"
                           aria-controls={`collapse${idx}`}
                         >
-                          <div className="tw-flex tw-w-full tw-justify-between">
+                          <div className="tw-flex tw-w-full tw-justify-between tw-gap-4">
                             <div>
-                              <div>Replica-{order.orderNo}</div>
+                              <div>orderNo-{order.orderNo}</div>
                               <div className="tw-text-xs tw-font-jost tw-font-normal ">
                                 No of items : {order.items.length}
                               </div>
@@ -88,18 +93,44 @@ const Orders = () => {
                                 {formatDate(order.createdAt)}
                               </div>
                             </div>
-                            <div>
-                              <span className="tw-text-dark tw-font-bold tw-lowercase tw-text-sm">
-                                ksh
-                              </span>
-                              <span className="tw-text-dark tw-font-bold">
-                                {order.items.reduce(
-                                  (prev, cur) =>
-                                    prev +
-                                    cur.count * cur.product.prices[0].value,
-                                  0
-                                )}
-                              </span>
+                            <div className="tw-shrink-0">
+                              <div className="tw-text-xs sm:tw-text-sm tw-font-normal tw-text-center tw-lowercase tw-font-jost">
+                                Status :{" "}
+                                <span
+                                  className={`tw-inline-block ${
+                                    order.status === OrderStatus.delivered &&
+                                    "tw-text-gray-500"
+                                  } ${
+                                    order.status === OrderStatus.shipping &&
+                                    "tw-text-yellow-500"
+                                  } ${
+                                    order.status === OrderStatus.recieved &&
+                                    "tw-text-emerald-700"
+                                  }`}
+                                >
+                                  {order.status}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="tw-text-dark tw-font-bold tw-lowercase tw-text-sm">
+                                  ksh
+                                </span>
+                                <span className="tw-text-dark tw-font-bold">
+                                  {order.items.reduce(
+                                    (prev, cur) =>
+                                      prev + cur.count * cur.product.price,
+                                    0
+                                  )}
+                                </span>
+                              </div>
+                              {order.status !== OrderStatus.shipping && (
+                                <Link
+                                  to={`/track/${order.id}`}
+                                  className="tw-block tw-px-4 tw-py-1 tw-bg-white tw-rounded-full tw-transition-all tw-duration-200 tw-border-gray-50 hover:tw-bg-gray-50 tw-text-black tw-text-base"
+                                >
+                                  Track
+                                </Link>
+                              )}
                             </div>
                           </div>
                         </button>
@@ -111,25 +142,52 @@ const Orders = () => {
                         data-bs-parent="#accordionExample"
                       >
                         <div className="accordion-body tw-pt-10 tw-px-2">
-                          {order.items.map((item) => (
+                          {order.items.map((item, idx) => (
                             <div
-                              key={item.id}
-                              className="tw-flex tw-items-center tw-mb-6 tw-relative border p-2 tw-border-[#eee] "
+                              key={idx}
+                              className="tw-flex tw-items-center tw-mb-6 tw-relative border p-2 tw-border-[#eee] tw-rounded-md tw-bg-gray-50"
                             >
                               <div className="tw-pr-4 sm:tw-pr-6">
-                                <img
-                                  src={
-                                    "/images/bg/" + IMAGES[randomNumber(0, 2)]
-                                  }
-                                  alt=""
-                                  className="tw-min-w-[90px] tw-h-[100px] tw-object-cover"
-                                />
+                                {item.product.imageUrl && (
+                                  <img
+                                    src={`/product/${item.product.imageUrl}`}
+                                    alt=""
+                                    className=" tw-object-cover rounded tw-object-top"
+                                    width={100}
+                                    height={90}
+                                  />
+                                )}
                               </div>
                               <div className="product-info tw-flex-1 ">
                                 <h5 className="tw-text-xl tw-items-start tw-flex tw-justify-between tw-leading-3 tw-font-black tw-font-cormorant tw-text-dark tw-transition-all tw-duration-300 tw-capitalize">
-                                  <div>{item.product.title}</div>
-                                  <div className="tw-text-2xl">
-                                    {item.count * item.product.prices[0].value}
+                                  <div>
+                                    <div>{item.product.name}</div>
+                                    {item.product.choices.length > 0 && (
+                                      <div className="tw-text-sm">
+                                        {/* <div>You chose :</div> */}
+                                        {item.product.choices.map((ch) => (
+                                          <div
+                                            key={ch.id}
+                                            className="tw-flex tw-gap-1 md:tw-justify-center tw-font-jost tw-flex-wrap"
+                                          >
+                                            <div className="tw-font-normal tw-shrink-0">
+                                              {ch.selector} -{" "}
+                                            </div>
+                                            <div className="tw-gap-y-4 tw-font-medium">
+                                              {ch.options.map((option) => (
+                                                <div key={option.id}>
+                                                  {option.label} (x
+                                                  {option.count})
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="tw-text-2xl tw-shrink-0">
+                                    {item.count * item.product.price}
                                   </div>
                                 </h5>
                                 <div className="product-total d-flex align-items-center">
@@ -150,7 +208,7 @@ const Orders = () => {
                                     <span className="tw-text-dark tw-font-normal tw-text-lg tw-font-jost">
                                       <div className="tw-inline">ksh</div>
                                       <div className="tw-inline">
-                                        {item.product.prices[0].value}
+                                        {item.product.price}
                                       </div>
                                     </span>
                                   </strong>
@@ -179,22 +237,18 @@ export default Orders;
 export async function loader({ request }: LoaderArgs) {
   const session = await requireUserSession(request, [Role.CUSTOMER]);
   try {
+    const customer = await prisma.customer.findUniqueOrThrow({
+      where: { profileId: session.profileId },
+    });
     const orders = await prisma.order.findMany({
-      where: {
-        customer: {
-          profileId: session.profileId,
-        },
-      },
-      include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
+      where: { customer: { is: { id: customer.id } } },
+      orderBy: {
+        createdAt: "desc",
       },
     });
     return orders;
   } catch (error) {
+    console.log(error);
     throw new Error("Something went wrong");
   }
 }

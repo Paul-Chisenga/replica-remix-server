@@ -1,9 +1,10 @@
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, Link, useSearchParams } from "@remix-run/react";
+import { Form, Link, useNavigation, useSearchParams } from "@remix-run/react";
 import invariant from "invariant";
 import { useTypedActionData } from "remix-typedjson";
 import MyForm from "~/components/Form/MyForm";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
 import { getUserSession, login } from "~/controllers/auth.server";
 
 export const meta: V2_MetaFunction = () => {
@@ -20,6 +21,7 @@ const Authentication = () => {
   const actionData = useTypedActionData();
   const [searchParams] = useSearchParams();
   const next = searchParams.get("next");
+  const navigation = useNavigation();
 
   return (
     <div className="container">
@@ -61,7 +63,8 @@ const Authentication = () => {
             type="submit"
             className="primary-btn8 lg--btn btn-primary-fill tw-block tw-w-full"
           >
-            Login
+            <span>Login</span>
+            {navigation.state === "submitting" && <DualRingLoader size={15} />}
           </button>
           <div className="tw-text-center tw-my-6 tw-text-sm tw-font-medium tw-font-jost">
             <span className="tw-text-emerald-600">Not registered ?</span>

@@ -13,11 +13,15 @@ export async function action({ request, params }: ActionArgs) {
 
   const { id } = params;
   try {
-    await prisma.cartItem.delete({
-      where: {
-        id,
-      },
-    });
+    const item = await prisma.cartItem.findUnique({ where: { id } });
+
+    if (item) {
+      await prisma.cartItem.delete({
+        where: {
+          id,
+        },
+      });
+    }
 
     const cartItemWhere: Prisma.CartItemWhereInput = {
       customer: {
@@ -32,7 +36,11 @@ export async function action({ request, params }: ActionArgs) {
     const items = await prisma.cartItem.findMany({
       where: cartItemWhere,
       include: {
-        product: true,
+        product: {
+          include: {
+            images: true,
+          },
+        },
       },
     });
 

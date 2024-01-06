@@ -2,25 +2,27 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import type { LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/react";
-import { Form, Link } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import invariant from "invariant";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { redirect, useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
+import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import SwiperCore, {
   Autoplay,
   EffectFade,
   Navigation,
   Pagination,
 } from "swiper";
-// import { Swiper, SwiperSlide } from "swiper/react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import { getUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
-import { formatDate, parseMenuCategory } from "~/utils/helpers";
+import { parseMenuCategory, parseProdImageUrl } from "~/utils/helpers";
 import type { action } from "./_main.shop_.$id.add-to-cart";
 import { ClipLoader } from "react-spinners";
 import { CartContext } from "~/context/CartContext";
-import MyForm from "~/components/Form/MyForm";
+import ProductChoice from "~/components/shop/ProductChoice";
+import type { HandledChoices, HandledOptions } from "~/utils/types";
+import { SelectedChoice } from "@prisma/client";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
 
 SwiperCore.use([Navigation, Pagination, Autoplay, EffectFade]);
 
@@ -36,46 +38,110 @@ export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   ];
 };
 
+function parseHandledChoices(
+  choices: SelectedChoice[] | undefined
+): HandledChoices {
+  if (!choices) {
+    return {};
+  }
+  const choicesMap: HandledChoices = {};
+  choices.forEach((ch) => {
+    const optionsMap: HandledOptions = {};
+    ch.options.forEach((opt) => {
+      optionsMap[opt.id] = { count: opt.count };
+    });
+
+    choicesMap[ch.id] = optionsMap;
+  });
+  return choicesMap;
+}
+
 function ShopDetails() {
-  const { product, cartCount } = useTypedLoaderData<typeof loader>();
+  const {
+    product,
+    cartCount,
+    selectedChoices: cartChoices,
+  } = useTypedLoaderData<typeof loader>();
+  const [handledChoices, setHandledChoices] = useState<HandledChoices>(
+    parseHandledChoices(cartChoices)
+  );
   const [count, setCount] = useState(cartCount ?? 0);
-  const [selectedPrice, setSelectedPrice] = useState("0");
+  const [selectedChoices, setSelectedChoices] = useState<
+    SelectedChoice[] | undefined
+  >(cartChoices);
+
+  const [hasSelectedRequiredChoices, setHasSelectedRequiredChoices] =
+    useState(false);
 
   const fetcher = useTypedFetcher<typeof action>();
   const cartContext = useContext(CartContext);
 
   const increment = useCallback(() => {
-    fetcher.submit(
-      {
-        price: product.prices[+selectedPrice].value,
-      },
-      {
-        action: `add-to-cart`,
-        method: "POST",
-      }
-    );
-  }, [selectedPrice]);
-
-  const decrement = useCallback(() => {
-    if (count > 0) {
+    if (hasSelectedRequiredChoices) {
       fetcher.submit(
         {
-          price: product.prices[+selectedPrice].value,
+          choices: JSON.stringify(handledChoices),
         },
         {
-          action: `remove-from-cart`,
+          action: `add-to-cart`,
           method: "POST",
         }
       );
+    } else {
+      alert("Select all required options");
     }
-  }, [selectedPrice]);
+  }, [hasSelectedRequiredChoices]);
+
+  const decrement = useCallback(() => {
+    if (count > 0) {
+      fetcher.submit(null, {
+        action: `remove-from-cart`,
+        method: "POST",
+      });
+    }
+  }, []);
+
+  const handleChoiceChange = useCallback(
+    (selectedChoices: HandledOptions, idx: number) => {
+      const cpy = { ...handledChoices };
+      const cur = cpy[idx];
+      if (cur) {
+        Object.entries(selectedChoices).forEach(([optionId, option]) => {
+          cur[optionId] = option;
+        });
+      } else {
+        cpy[idx] = selectedChoices;
+      }
+
+      setHandledChoices(cpy);
+    },
+    [handledChoices]
+  );
 
   useEffect(() => {
     if (fetcher.data) {
       cartContext.updateCart(fetcher.data.totalUserCartItems);
       setCount(fetcher.data.totalProductCartItems);
+      setSelectedChoices(fetcher.data.choices);
     }
   }, [fetcher.data]);
+
+  useEffect(() => {
+    let valid = true;
+    const prodChoices = product.choices;
+    prodChoices.forEach((ch, idx) => {
+      const isValid =
+        handledChoices[idx] &&
+        ch.requiredOptions ===
+          Object.values(handledChoices[idx]).reduce(
+            (prev, cur) => prev + cur.count,
+            0
+          );
+
+      valid &&= isValid;
+    });
+    setHasSelectedRequiredChoices(valid);
+  }, [handledChoices, product.choices]);
 
   return (
     <>
@@ -84,57 +150,27 @@ function ShopDetails() {
         <div className="container">
           <div className="row g-lg-5 gy-5">
             <div className="col-lg-6">
-              <div className="tab-content tab-content1" id="v-pills-tabContent">
-                <div
-                  className="tab-pane fade active show"
-                  id="v-pills-img1"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-img1-tab"
-                >
-                  <div className="gallery-big-image">
-                    <img
-                      className="img-fluid"
-                      src="/images/bg/card-big-01.png"
-                      alt=""
-                    />
+              <div
+                className="tab-content tab-content1 tw-block tw-bg-emerald-50"
+                id="v-pills-tabContent"
+              >
+                {product.images.map((image, idx) => (
+                  <div
+                    key={image.key}
+                    className={`tab-pane fade ${idx === 0 && "active show"}`}
+                    id={image.key}
+                    role="tabpanel"
+                    aria-labelledby={`${image.key}-tab`}
+                  >
+                    <div className="gallery-big-image">
+                      <img
+                        className="tw-w-full tw-object-cover tw-object-top tw-max-h-[400px] tw-rounded"
+                        src={parseProdImageUrl([image])}
+                        alt=""
+                      />
+                    </div>
                   </div>
-                </div>
-                <div
-                  className="tab-pane fade"
-                  id="v-pills-img2"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-img2-tab"
-                >
-                  <img
-                    className="img-fluid"
-                    src="/images/bg/card-big-02.png"
-                    alt=""
-                  />
-                </div>
-                <div
-                  className="tab-pane fade"
-                  id="v-pills-img3"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-img3-tab"
-                >
-                  <img
-                    className="img-fluid"
-                    src="/images/bg/card-big-03.png"
-                    alt=""
-                  />
-                </div>
-                <div
-                  className="tab-pane fade"
-                  id="v-pills-img4"
-                  role="tabpanel"
-                  aria-labelledby="v-pills-img4-tab"
-                >
-                  <img
-                    className="img-fluid"
-                    src="/images/bg/card-big-04.png"
-                    alt=""
-                  />
-                </div>
+                ))}
               </div>
               <div
                 className="nav nav1 nav-pills"
@@ -142,59 +178,32 @@ function ShopDetails() {
                 role="tablist"
                 aria-orientation="vertical"
               >
-                <button
-                  className="nav-link active"
-                  id="v-pills-img1-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-img1"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-img1"
-                  aria-selected="true"
-                >
-                  <img src="/images/bg/card-sm-01.png" alt="" />
-                </button>
-                <button
-                  className="nav-link"
-                  id="v-pills-img2-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-img2"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-img2"
-                  aria-selected="false"
-                >
-                  <img src="/images/bg/card-sm-02.png" alt="" />
-                </button>
-                <button
-                  className="nav-link"
-                  id="v-pills-img3-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-img3"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-img3"
-                  aria-selected="false"
-                >
-                  <img src="/images/bg/card-sm-03.png" alt="" />
-                </button>
-                <button
-                  className="nav-link"
-                  id="v-pills-img4-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#v-pills-img4"
-                  type="button"
-                  role="tab"
-                  aria-controls="v-pills-img4"
-                  aria-selected="false"
-                >
-                  <img src="/images/bg/card-sm-04.png" alt="" />
-                </button>
+                {product.images.length > 1 &&
+                  product.images.map((image, idx) => (
+                    <button
+                      key={image.key}
+                      className={`nav-link ${idx === 0 && "active"}`}
+                      id={`${image.key}-tab`}
+                      data-bs-toggle="pill"
+                      data-bs-target={`#${image.key}`}
+                      type="button"
+                      role="tab"
+                      aria-controls={image.key}
+                      aria-selected={idx === 0}
+                    >
+                      <img
+                        src={parseProdImageUrl([image])}
+                        alt=""
+                        style={{ width: 104, height: 104 }}
+                      />
+                    </button>
+                  ))}
               </div>
             </div>
             <div className="col-lg-6">
               <div className="prod-details-content">
-                <ul className="product-review2 d-flex flex-row align-items-center mb-25">
+                {/* REVIEWS */}
+                {/* <ul className="product-review2 d-flex flex-row align-items-center mb-25">
                   <li>
                     <i className="bi bi-star-fill" />
                   </li>
@@ -214,98 +223,100 @@ function ShopDetails() {
                     <a href="#" className="review-no" />(
                     {product.reviews.length} Review)
                   </li>
-                </ul>
+                </ul> */}
                 <h2 className="tw-capitalize">{product.title}</h2>
-                <div className="tw-inline-block tw-w-auto">
-                  {product.prices.length > 1 && (
-                    <MyForm.Select.Wrapper
-                      id="price-selector"
-                      value={selectedPrice}
-                      onChange={(e) => {
-                        setSelectedPrice(e.target.value);
-                      }}
-                      className="tw-capitalize hover:tw-cursor-pointer"
-                    >
-                      {product.prices.map((item, idx) => (
-                        <MyForm.Select.Option key={idx} value={idx}>
-                          {item.label}
-                        </MyForm.Select.Option>
-                      ))}
-                    </MyForm.Select.Wrapper>
-                  )}
-                </div>
                 <div className="price-tag tw-flex tw-items-center tw-gap-2">
                   <h4>
                     <span className="tw-text-sm">ksh</span>
-                    <span>{product.prices[+selectedPrice].value}</span>
+                    <span>{product.price}</span>
                   </h4>
                 </div>
-                <p className="tw-capitalize">{product.subtitle}</p>
-                <div className="prod-quantity d-flex align-items-center justify-content-start mb-20">
-                  <div className="quantity d-flex align-items-center">
-                    <div className="quantity-nav nice-number d-flex align-items-center">
-                      <button
-                        onClick={decrement}
-                        type="button"
-                        disabled={fetcher.state === "submitting"}
-                      >
-                        <i className="bi bi-dash"></i>
-                      </button>
-                      <span style={{ margin: "0 8px" }}>
-                        {fetcher.state === "submitting" ? (
-                          <ClipLoader size={15} />
-                        ) : (
-                          count
-                        )}
-                      </span>
-                      <button
-                        onClick={increment}
-                        type="button"
-                        disabled={fetcher.state === "submitting"}
-                      >
-                        <i className="bi bi-plus"></i>
-                      </button>
-                    </div>
+                <p className="tw-capitalize">{product.description}</p>
+                {product.choices.length > 0 && (
+                  <div className=" tw-py-8">
+                    {product.choices.map((ch, idx) => (
+                      <ProductChoice
+                        key={idx}
+                        choice={ch}
+                        selectedOptions={
+                          selectedChoices?.find((slch) => slch.id === "" + idx)
+                            ?.options
+                        }
+                        onChange={(e) => handleChoiceChange(e, idx)}
+                      />
+                    ))}
                   </div>
-                  <button
-                    type="submit"
-                    className="primary-btn3 "
-                    onClick={increment}
-                    disabled={fetcher.state === "submitting"}
-                  >
-                    Add to cart
-                  </button>
+                )}
+                <div className="prod-quantity d-flex align-items-center justify-content-start mb-20">
+                  {count > 0 && (
+                    <div className="quantity d-flex align-items-center">
+                      <div className="quantity-nav nice-number d-flex align-items-center">
+                        <button
+                          onClick={decrement}
+                          type="button"
+                          disabled={
+                            fetcher.state === "submitting" ||
+                            !hasSelectedRequiredChoices
+                          }
+                          className="disabled:tw-opacity-50"
+                        >
+                          <i className="bi bi-dash"></i>
+                        </button>
+                        <span style={{ margin: "0 8px" }}>
+                          {fetcher.state === "submitting" ? (
+                            <ClipLoader size={15} />
+                          ) : (
+                            count
+                          )}
+                        </span>
+                        <button
+                          onClick={increment}
+                          type="button"
+                          disabled={
+                            fetcher.state === "submitting" ||
+                            !hasSelectedRequiredChoices
+                          }
+                          className="disabled:tw-opacity-50"
+                        >
+                          <i className="bi bi-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  {count <= 0 && (
+                    <button
+                      type="submit"
+                      className="primary-btn3 disabled:tw-opacity-50 "
+                      onClick={increment}
+                      disabled={
+                        fetcher.state === "submitting" ||
+                        !hasSelectedRequiredChoices
+                      }
+                    >
+                      <span>Add to cart</span>
+                      {fetcher.state === "submitting" && (
+                        <DualRingLoader size={15} className="tw-ml-2" />
+                      )}
+                    </button>
+                  )}
                 </div>
                 <div className="category-tag">
                   <ul>
                     <li>Category:</li>
                     <li>
                       <Link
-                        to={`/shop?m=${product.subMenu.menu.id}`}
+                        to={`/shop?m=${product.menuItemId}`}
                         className="tw-capitalize"
                       >
-                        {product.subMenu.menu.title},
+                        {product.menuItem.title},
                       </Link>
                     </li>
-                    {product.subMenu.title !== product.subMenu.menu.title && (
-                      <li>
-                        <Link
-                          to={`/shop?m=${product.subMenu.menu.id}&sm=${product.subMenu.id}`}
-                          className="tw-capitalize"
-                        >
-                          {product.subMenu.title},
-                        </Link>
-                      </li>
-                    )}
-                  </ul>
-                  <ul>
-                    <li>Menu:</li>
                     <li>
                       <Link
-                        to={`/shop?mcat=${product.subMenu.menu.category}`}
+                        to={`/shop?mcat=${product.menuItem.category}`}
                         className="tw-capitalize"
                       >
-                        {parseMenuCategory(product.subMenu.menu.category)},
+                        {parseMenuCategory(product.menuItem.category)},
                       </Link>
                     </li>
                   </ul>
@@ -313,10 +324,11 @@ function ShopDetails() {
               </div>
             </div>
           </div>
-          <div className="row g-4 pt-50">
+          {/* Reviews And Feedback */}
+          {/* <div className="row g-4 pt-50">
             <div className="col-lg-12 mb-25">
               <h2 className="item-details-tt"></h2>
-              {/* <h2 className="item-details-tt">Product Details</h2> */}
+              <h2 className="item-details-tt">Product Details</h2>
             </div>
             <div className="row g-4">
               <div className="col-lg-3">
@@ -326,7 +338,7 @@ function ShopDetails() {
                   role="tablist"
                   aria-orientation="vertical"
                 >
-                  {/* <button
+                  <button
                     className="nav-link btn--lg "
                     id="v-pills-home-tab"
                     data-bs-toggle="pill"
@@ -337,7 +349,7 @@ function ShopDetails() {
                     aria-selected="false"
                   >
                     Details
-                  </button> */}
+                  </button>
                   <button
                     className="nav-link active"
                     id="v-pills-profile-tab"
@@ -532,84 +544,47 @@ function ShopDetails() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
-      {/* <div className="related-items-area mb-120">
-        <div className="container">
-          <div className="row mb-50">
-            <div className="col-lg-12">
-              <h2 className="item-details-tt">Related Products</h2>
-            </div>
-          </div>
-          <div className="row">
-            <Swiper
-              {...(relatedproduceSlider as any)}
-              className="swiper related-item-sliders"
-              autoplay={{
-                pauseOnMouseEnter: true,
-                disableOnInteraction: false,
-              }}
-            >
-              <div className="swiper-wrapper">
-                {relatedProducts.map((prod, idx) => {
-                  const IMAGES = [
-                    "h2-food-item-2.png",
-                    "h2-food-item-4.png",
-                    "h2-food-item-5.png",
-                    "h2-food-item-6.png",
-                    "h2-food-item-8.png",
-                  ];
-                  return (
-                    <SwiperSlide key={prod.id} className="swiper-slide">
-                      <ShopItem product={prod} image={IMAGES[idx]} />
-                    </SwiperSlide>
-                  );
-                })}
-              </div>
-            </Swiper>
-          </div>
-        </div>
-      </div> */}
     </>
   );
 }
 
 export default ShopDetails;
-export function loader() {
-  return redirect("/coming");
+
+export async function loader({ request, params }: LoaderArgs) {
+  const productId = params.id;
+  invariant(typeof productId === "string", "Invalid Request");
+
+  const session = await getUserSession(request);
+  try {
+    const product = await prisma.product.findUniqueOrThrow({
+      where: { id: productId },
+      include: {
+        menuItem: true,
+        images: true,
+        reviews: true,
+      },
+    });
+
+    if (session) {
+      const cartItem = await prisma.cartItem.findFirst({
+        where: {
+          productId: product.id,
+          customer: {
+            profileId: session.profileId,
+          },
+        },
+      });
+      return {
+        product,
+        cartCount: cartItem?.count,
+        selectedChoices: cartItem?.choices,
+      };
+    }
+    return { product };
+  } catch (error) {
+    throw new Error("Something went wrong.");
+  }
 }
-// export async function loader({ request, params }: LoaderArgs) {
-//   const productId = params.id;
-//   invariant(typeof productId === "string", "Invalid Request");
-
-//   const session = await getUserSession(request);
-//   try {
-//     const product = await prisma.product.findUniqueOrThrow({
-//       where: { id: productId },
-//       include: {
-//         subMenu: {
-//           include: {
-//             menu: true,
-//           },
-//         },
-//         reviews: true,
-//       },
-//     });
-
-//     if (session) {
-//       const cartItem = await prisma.cartItem.findFirst({
-//         where: {
-//           productId: product.id,
-//           customer: {
-//             profileId: session.profileId,
-//           },
-//         },
-//       });
-//       return { product, cartCount: cartItem?.count };
-//     }
-//     return { product };
-//   } catch (error) {
-//     throw new Error("Something went wrong.");
-//   }
-// }

@@ -18,15 +18,14 @@ const AddMenu = () => {
   const navigation = useNavigation();
 
   return (
-    <>
-      <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-screen-sm">
+    <div>
+      <div className="tw-rounded-md tw-p-10 box--shadow ">
         <h4 className="mb-20 tw-text-3xl title">Add Menu</h4>
         <FormError message={actionData?.error} />
         <br />
         <Form action="" method="POST">
           <MyForm.Group disabled={navigation.state === "submitting"}>
             <MyForm.Input type="text" label="Title" required name="title" />
-            <MyForm.Input type="text" label="Subtitle" name="subtitle" />
             <MyForm.Misc>
               <MyForm.Label required>Category</MyForm.Label>
               <MyForm.Input
@@ -59,10 +58,12 @@ const AddMenu = () => {
               />
             </MyForm.Misc>
           </MyForm.Group>
-          <Button2>Add Menu</Button2>
+          <Button2>
+            {navigation.state === "submitting" ? "Adding ..." : "Add Menu"}
+          </Button2>
         </Form>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -84,12 +85,11 @@ export async function action({ request }: ActionArgs) {
   }
   try {
     await createMenu(session.profileId, {
-      title: data.title.toLowerCase(),
-      subtitle: data.subtitle.toLowerCase(),
-      category: data.category,
+      title: data.title.trim(),
+      category: data.category.trim(),
     });
-    // return redirect("/admin/menu");
-    return null;
+
+    return { success: true };
   } catch (error: any) {
     if (error.status === 422) {
       return { error: error.message };

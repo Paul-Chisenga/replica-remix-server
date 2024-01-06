@@ -9,7 +9,7 @@ import {
 const BUCKET = process.env.AWS_BUCKET as string;
 
 export const uploadFile = async (file: File) => {
-  const key = awsUploadFile({ bucket: BUCKET, file });
+  const key = await awsUploadFile({ bucket: BUCKET, file });
   return key;
 };
 

@@ -12,16 +12,11 @@ export async function action({ request }: ActionArgs) {
   const session = await requireUserSession(request, [Role.ADMIN]);
   await prisma.$transaction(
     menuData.map((menu) =>
-      prisma.menu.create({
+      prisma.menuItem.create({
         data: {
           title: menu.title,
-          subtitle: menu.subtitle,
           category: menu.category as any,
-          createdBy: {
-            connect: {
-              profileId: session.profileId,
-            },
-          },
+          meta: { createdBy: session.profileId },
         },
       })
     )

@@ -1,16 +1,15 @@
-import type { Product } from "@prisma/client";
 import type { FC } from "react";
 import MenuItem from "./MenuItem";
 import LinkButton3 from "../Button/LinkButton3";
+import type { ProductWithImages } from "~/utils/types";
 
 interface Props {
   title: string;
-  products: Product[];
-  images: string[];
+  products: ProductWithImages[];
   page: string;
 }
 
-const Menu: FC<Props> = ({ title, images, products, page }) => {
+const Menu: FC<Props> = ({ title, products, page }) => {
   return (
     <div className="home3-menu-wrap">
       <div className="left-vector">
@@ -25,7 +24,7 @@ const Menu: FC<Props> = ({ title, images, products, page }) => {
       </div>
       <ul>
         {products.map((prod, idx) => (
-          <MenuItem key={prod.id} image={images[idx]} product={prod} />
+          <MenuItem key={prod.id} product={prod} />
         ))}
       </ul>
 

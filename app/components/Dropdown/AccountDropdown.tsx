@@ -2,12 +2,13 @@
 import { Link } from "@remix-run/react";
 import LinkButton1 from "../Button/LinkButton1";
 import type { FC } from "react";
+import { Role } from "@prisma/client";
 
 interface Props {
   user?: {
     name: string;
     email: string;
-    admin?: boolean;
+    role: Role;
   };
 }
 
@@ -28,9 +29,9 @@ const AccountDropdown: FC<Props> = ({ user }) => {
           opacity: 0,
           transform: "translateY(20px)",
         }}
-        className={`tw-absolute tw-right-0 tw-top-auto tw-m-0 tw-p-3 tw-min-w-[220px] tw-bg-[#0b0f14] tw-z-50 tw-text-left tw-transition-all group-hover:tw-visible group-hover:tw-opacity-100 group-hover:tw-translate-y-0`}
+        className={`tw-absolute tw-right-0 tw-top-auto tw-delay-75 tw-m-0 tw-p-3 tw-min-w-[220px] tw-bg-[#0b0f14] tw-z-50 tw-text-left tw-transition-all group-hover:tw-visible group-hover:tw-opacity-100 group-hover:tw-translate-y-0`}
       >
-        <div className="tw-p-0 tw-block tw-relative">
+        <div className="tw-p-0 tw-block tw-relative tw-scale-0 group-hover:tw-scale-100 tw-translate-x-0">
           <div className="tw-block tw-px-2 tw-pt-2 tw-text-center  ">
             <div className=" tw-text-white  tw-uppercase tw-text-sm  tw-font-medium">
               {user ? user.name : "My Account"}
@@ -40,7 +41,7 @@ const AccountDropdown: FC<Props> = ({ user }) => {
             )}
           </div>
           <hr />
-          {user && !user.admin && (
+          {user && user.role === Role.CUSTOMER && (
             <div>
               <div className="tw-space-y-4">
                 <Link
@@ -79,12 +80,20 @@ const AccountDropdown: FC<Props> = ({ user }) => {
               Login
             </LinkButton1>
           )}
-          {user && user.admin && (
+          {user && user.role === Role.ADMIN && (
             <LinkButton1
               to="/admin"
               className="tw-block tw-text-dark tw-visible"
             >
               Admin console
+            </LinkButton1>
+          )}
+          {user && user.role === Role.RIDER && (
+            <LinkButton1
+              to="/rider"
+              className="tw-block tw-text-dark tw-visible"
+            >
+              My dashboard
             </LinkButton1>
           )}
         </div>

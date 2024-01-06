@@ -47,16 +47,13 @@ const AdminHeader: FC<Props> = ({ user }) => {
   return (
     <header ref={headerRef} className={"header-area style-1 bg-color2 sticky"}>
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        <div className="header-logo">
+        <div className="header-logo tw-flex tw-items-center tw-gap-3">
           <Link to="/">
             <a>
-              <img
-                alt=""
-                className="img-fluid tw-h-20"
-                src="/images/white-logo.png"
-              />
+              <img alt="" className=" tw-h-12" src="/images/white-logo.png" />
             </a>
           </Link>
+          <span className="tw-inline-block tw-text-gray-300">Dashboard</span>
         </div>
         <div
           className={

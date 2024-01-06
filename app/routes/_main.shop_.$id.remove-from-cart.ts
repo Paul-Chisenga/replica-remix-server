@@ -1,6 +1,5 @@
-import { Role } from "@prisma/client";
+import { Role, SelectedChoice } from "@prisma/client";
 import type { ActionArgs } from "@remix-run/node";
-import invariant from "invariant";
 import { requireUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";
 
@@ -14,14 +13,6 @@ export async function action({ request, params }: ActionArgs) {
     request,
     [Role.CUSTOMER],
     `/shop/${id}`
-  );
-
-  const formData = await request.formData();
-  const price = formData.get("price");
-
-  invariant(
-    !!price && typeof price === "string",
-    "Invalid request, price missing"
   );
 
   try {
@@ -38,13 +29,13 @@ export async function action({ request, params }: ActionArgs) {
     });
 
     let totalProductCartItems = 0;
+    let choices: SelectedChoice[] = [];
 
     const cartItem = await prisma.cartItem.findUnique({
       where: {
-        productId_customerId_price: {
+        productId_customerId: {
           productId: product.id,
           customerId: user.id,
-          price: +price,
         },
       },
     });
@@ -60,11 +51,13 @@ export async function action({ request, params }: ActionArgs) {
           },
         });
         totalProductCartItems = updatedCartItem.count;
+        choices = updatedCartItem.choices;
       } else {
         await prisma.cartItem.delete({ where: { id: cartItem.id } });
       }
     } else if (cartItem) {
       totalProductCartItems = cartItem.count;
+      choices = cartItem.choices;
     }
 
     const totalUserCartItems = await prisma.cartItem.count({
@@ -73,7 +66,7 @@ export async function action({ request, params }: ActionArgs) {
       },
     });
 
-    return { totalProductCartItems, totalUserCartItems };
+    return { totalProductCartItems, totalUserCartItems, choices };
   } catch (error) {
     throw new Error("Something went wrong");
   }

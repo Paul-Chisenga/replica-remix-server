@@ -1,6 +1,8 @@
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
+import FormError from "~/components/common/FormError";
+import FormSuccess from "~/components/common/FormSuccess";
 import MyForm from "~/components/Form/MyForm";
 import { getUserSession } from "~/controllers/auth.server";
 import { sendEmail } from "~/services/email.server";
@@ -31,17 +33,13 @@ const Register = () => {
     <div className="container">
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-screen-sm tw-mx-auto">
         <h4 className="mb-20 tw-text-3xl title">Create an account</h4>
-        {actionData?.error && (
-          <div className="tw-px-2 tw-text-sm tw-text-red-500 tw-font-jost">
-            {actionData?.error}
-          </div>
-        )}
+        <FormError>{actionData?.error}</FormError>
         {actionData?.success && (
-          <div className="tw-px-2 tw-text-sm tw-text-emerald-500 tw-font-jost">
+          <FormSuccess>
             Success, Verification email sent,
             <br />
             Use the link sent to your email to complete your registration
-          </div>
+          </FormSuccess>
         )}
         <br />
         <Form action="" method="POST">
@@ -129,88 +127,86 @@ export async function loader({ request }: LoaderArgs) {
   }
   return null;
 }
-export function action() {
-  return redirect("/coming");
+
+export async function action({ request }: ActionArgs) {
+  const data = Object.fromEntries(await request.formData()) as MyObject<string>;
+  // Invariant Validation
+  invariantValidate(data);
+
+  // Custom form errors
+  const errors = requiredFieldValidate(data, [
+    "firstname",
+    "lastname",
+    "email",
+    "phone",
+    "password",
+  ]);
+  if (hasErrors(errors)) {
+    return { errors };
+  }
+
+  if (`${+data.phone}`.length !== 9) {
+    return {
+      errors: {
+        phone: "Invalid phone number",
+      },
+    };
+  }
+
+  try {
+    // await createAdmin({
+    //   firstname: data.firstname,
+    //   lastname: data.lastname,
+    //   email: data.email,
+    //   password: data.password,
+    //   phone: +data.phone,
+    // });
+    const user = await prisma.profile.findUnique({
+      where: { email: data.email },
+    });
+
+    if (user) {
+      throw parseCustomError(
+        "A User with this email exists already, choose another email address",
+        422
+      );
+    }
+
+    // send verification email
+    const token = generateToken(
+      {
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        password: data.password,
+        phone: +data.phone,
+      },
+      process.env.ACCOUNT_NEW as string
+    );
+
+    await sendEmail({
+      to: {
+        name: data.firstname,
+        email: data.email,
+      },
+      subject: "WELECOME TO REPLICA",
+      message: `
+      Hey ${data.firstname},
+
+      Thank you for registering on replica,
+
+      Click <a href="${process.env.HOST_URL}/register/${token}" target="_blank" rel="noopener noreferrer">here</a> to verify your email address.
+      You can ignore this email if you did not initiate this request.
+    `,
+    });
+
+    return { success: true };
+  } catch (error: any) {
+    if (error.status === 422) {
+      return {
+        error: error.message,
+      };
+    }
+    throw new Error("Something went wrong.");
+  }
 }
-// export async function action({ request }: ActionArgs) {
-//   const data = Object.fromEntries(await request.formData()) as MyObject<string>;
-//   // Invariant Validation
-//   invariantValidate(data);
-
-//   // Custom form errors
-//   const errors = requiredFieldValidate(data, [
-//     "firstname",
-//     "lastname",
-//     "email",
-//     "phone",
-//     "password",
-//   ]);
-//   if (hasErrors(errors)) {
-//     return { errors };
-//   }
-
-//   if (`${+data.phone}`.length !== 9) {
-//     return {
-//       errors: {
-//         phone: "Invalid phone number",
-//       },
-//     };
-//   }
-
-//   try {
-//     // await createAdmin({
-//     //   firstname: data.firstname,
-//     //   lastname: data.lastname,
-//     //   email: data.email,
-//     //   password: data.password,
-//     //   phone: +data.phone,
-//     // });
-//     const user = await prisma.profile.findUnique({
-//       where: { email: data.email },
-//     });
-
-//     if (user) {
-//       throw parseCustomError(
-//         "A User with this email exists already, choose another email address",
-//         422
-//       );
-//     }
-
-//     // send verification email
-//     const token = generateToken(
-//       {
-//         firstname: data.firstname,
-//         lastname: data.lastname,
-//         email: data.email,
-//         password: data.password,
-//         phone: +data.phone,
-//       },
-//       process.env.ACCOUNT_NEW as string
-//     );
-
-//     await sendEmail({
-//       to: {
-//         name: data.firstname,
-//         email: data.email,
-//       },
-//       subject: "WELECOME TO REPLICA",
-//       message: `
-//       Hey ${data.firstname},
-
-//       Thank you for registering on replica,
-
-//       Click <a href="${process.env.HOST_URL}/register/${token}" target="_blank" rel="noopener noreferrer">here</a> to verify your email address.
-//       You can ignore this email if you did not initiate this request.
-//     `,
-//     });
-
-//     return { success: true };
-//   } catch (error: any) {
-//     if (error.status === 422) {
-//       return {
-//         error: error.message,
-//       };
-//     }
-//     throw new Error("Something went wrong.");
-//   }
-// }

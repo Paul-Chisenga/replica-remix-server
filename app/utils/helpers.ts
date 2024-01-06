@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { MyObject } from "./types";
-import { MenuCategory, ProductPrice } from "@prisma/client";
+import { Attachment, MenuCategory } from "@prisma/client";
 import prisma from "~/services/prisma.server";
 import { format } from "date-fns";
 
@@ -41,15 +41,21 @@ export function invariantValidate(
       invariant(typeof element === "string", "Invalid Request");
     }
   }
+
+  return data as MyObject<string>;
 }
 export function requiredFieldValidate(
   data: MyObject<string>,
-  fields: string[]
+  fields: string[],
+  ...customValidators: (() => MyObject<null | string>)[]
 ) {
-  const errors: MyObject<string | null> = {};
+  let errors: MyObject<string | null> = {};
 
   fields.forEach((field) => {
     errors[field] = data[field] ? null : "This field is required";
+  });
+  customValidators.forEach((validator) => {
+    errors = { ...errors, ...validator() };
   });
 
   return errors;
@@ -74,11 +80,21 @@ export function parseMenuCategory(cat: MenuCategory) {
   }
 }
 
-// misc
-export function parseProductVariation(
-  prices: ProductPrice[],
-  selectedPrice: number
-) {
+// MISC
+export class MyFormData {
+  formData: FormData;
+  constructor(formData: FormData) {
+    this.formData = formData;
+  }
+
+  get(field: string) {
+    return this.formData.get(field) as string;
+  }
+  getAll(field: string) {
+    return this.formData.getAll(field) as string[];
+  }
+}
+export function parseProductVariation(prices: any[], selectedPrice: number) {
   let variationLabel = "";
   const price = prices.find((price) => price.value === selectedPrice);
 
@@ -92,20 +108,20 @@ export function parseProductVariation(
 // COMMON DB OP
 export async function menuLoader(category: MenuCategory) {
   try {
-    const menu = await prisma.menu.findMany({
+    const menu = await prisma.menuItem.findMany({
       where: {
         category,
-      },
-      include: {
-        submenu: {
-          include: {
-            products: true,
-          },
-        },
       },
     });
     return menu;
   } catch (error) {
     throw new Error("Something went wrong.");
   }
+}
+// PRODUCTS
+export function parseProdImageUrl(images: Attachment[]) {
+  if (images.length > 0) {
+    return `/product/${images[0].key}`;
+  }
+  return "/images/dark-logo.png";
 }

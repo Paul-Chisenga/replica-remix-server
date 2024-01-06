@@ -1,9 +1,10 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { Form, Link, Outlet } from "@remix-run/react";
+import { Form, Link, Outlet, useNavigation } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import Button2 from "~/components/Button/Button2";
 import LinkButton2 from "~/components/Button/LinkButton2";
 import prisma from "~/services/prisma.server";
+import { parseProdImageUrl } from "~/utils/helpers";
 
 const MENU_TITLES = [
   "YEAST_DONUTS",
@@ -37,6 +38,7 @@ const MENU_TITLES = [
 
 const Products = () => {
   const menu = useTypedLoaderData<typeof loader>();
+  const navigation = useNavigation();
 
   return (
     <>
@@ -69,65 +71,47 @@ const Products = () => {
               <h1 className="tw-font-cormorant tw-font-bold tw-text-dark tw-capitalize">
                 {item.title}
               </h1>
-              {item.subtitle && (
-                <p className="tw-text-dark tw-uppercase tw-tracking-wide">
-                  ({item.subtitle})
-                </p>
-              )}
               <div className="border tw-border-[#eee] tw-rounded-md tw-p-8 tw-bg-white">
-                {item.submenu.map((sub) => (
-                  <div key={sub.id} className="mb-5">
-                    {sub.title !== item.title && (
-                      <p className="tw-text-dark tw-uppercase tw-tracking-wide">
-                        {sub.title}
-                      </p>
-                    )}
-                    <ul
-                      className={`tw-m-0 tw-p-0 ${
-                        sub.title === item.title ? "tw-list-none" : "tw-p-5"
-                      }`}
-                    >
-                      {sub.products.map((prod) => (
-                        <li key={prod.id}>
-                          <div className="tw-flex tw-justify-between tw-flex-nowrap">
-                            <div>
-                              <h4 className="tw-font-cormorant tw-font-bold tw-text-dark tw-capitalize">
-                                {prod.title}
-                              </h4>
-                              <h5 className="tw-font-jost tw-font-normal">
-                                {prod.subtitle}
-                              </h5>
-                            </div>
-                            <div className="tw-flex tw-gap-4">
-                              {prod.prices.map((price, idx) => (
-                                <h5
-                                  key={idx}
-                                  className="tw-font-bold tw-text-dark tw-flex-shrink-0 "
-                                >
-                                  {price.value}
-                                  {/* <p className="tw-text-base tw-text-right">ksh</p> */}
-                                </h5>
-                              ))}
-                            </div>
-                          </div>
-                          <br />
-                          <div className="tw-flex tw-justify-between tw-flex-wrap tw-gap-2 tw-pb-8">
-                            <Link
-                              to={`new?pId=${prod.id}`}
-                              className="primary-btn8 lg--btn btn-primary-fill"
-                            >
-                              Edit
-                            </Link>
-                            <Link
-                              to={`new?pId=${prod.id}`}
-                              className="primary-btn8 btn tw-bg-red-500"
-                            >
-                              Delete
-                            </Link>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
+                {item.products.map((prod) => (
+                  <div key={prod.id}>
+                    {prod.images.map((image) => (
+                      <img
+                        key={image.key}
+                        src={parseProdImageUrl([image])}
+                        alt=""
+                        style={{ maxWidth: 200, maxHeight: 100 }}
+                        className="tw-rounded tw-object-contain"
+                      />
+                    ))}
+                    <div className="tw-flex tw-justify-between tw-flex-nowrap">
+                      <div>
+                        <h4 className="tw-font-cormorant tw-font-bold tw-text-dark tw-capitalize">
+                          {prod.title}
+                        </h4>
+                        <h5 className="tw-font-jost tw-font-normal">
+                          {prod.description}
+                        </h5>
+                      </div>
+                      <h5 className="tw-font-bold tw-text-dark tw-flex-shrink-0 ">
+                        {prod.price}
+                      </h5>
+                    </div>
+                    <br />
+                    <div className="tw-flex tw-justify-between tw-flex-wrap tw-gap-2 tw-pb-8">
+                      <Link
+                        to={`new?pId=${prod.id}`}
+                        className="primary-btn8 lg--btn btn-primary-fill"
+                      >
+                        Edit
+                      </Link>
+                      <Form action={`${prod.id}`} method="DELETE">
+                        <button className="primary-btn8 btn tw-bg-red-500 hover:tw-text-white">
+                          {navigation.state === "submitting"
+                            ? "Deletting.."
+                            : "Delete"}
+                        </button>
+                      </Form>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -144,11 +128,11 @@ const Products = () => {
 export default Products;
 
 export async function loader({ request }: LoaderArgs) {
-  const menu = await prisma.menu.findMany({
+  const menu = await prisma.menuItem.findMany({
     include: {
-      submenu: {
+      products: {
         include: {
-          products: true,
+          images: true,
         },
       },
     },

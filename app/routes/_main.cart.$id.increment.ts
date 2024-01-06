@@ -35,7 +35,11 @@ export async function action({ request, params }: ActionArgs) {
     const items = await prisma.cartItem.findMany({
       where: cartItemWhere,
       include: {
-        product: true,
+        product: {
+          include: {
+            images: true,
+          },
+        },
       },
     });
 

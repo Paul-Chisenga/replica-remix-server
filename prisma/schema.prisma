@@ -28,6 +28,7 @@ enum AdminPriviledge {
 enum Role {
   ADMIN
   CUSTOMER
+  RIDER
 }
 
 model Attachment {
@@ -42,70 +43,51 @@ model Attachment {
   createdAt DateTime @updatedAt
 }
 
-model SubMenu {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  products  Product[]
-  menu      Menu      @relation(fields: [menuId], references: [id])
-  menuId    String    @db.ObjectId
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  @@unique([title, menuId])
-}
-
-model Menu {
+model MenuItem {
   id        String       @id @default(auto()) @map("_id") @db.ObjectId
-  category  MenuCategory
   title     String
-  subtitle  String?
-  submenu   SubMenu[]
-  createdBy Admin        @relation(fields: [adminId], references: [id])
-  adminId   String       @db.ObjectId
+  category  MenuCategory
+  products  Product[]
+  meta      Json
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
-  @@unique([title, category, subtitle])
-}
-
-type ProductPrice {
-  label String
-  value Float
+  @@unique([title, category])
 }
 
 type ShippingAddress {
-  firstname   String
-  lastname    String
-  country     String
-  city        String
-  town        String
-  street      String
-  phone       Int
-  email       String
-  order_notes String?
+  lat       Float
+  lng       Float
+  name      String
+  extraInfo String?
+}
+
+type ProductChoice {
+  required        Boolean
+  selector        String
+  options         String[]
+  requiredOptions Int
 }
 
 model Product {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   title       String          @unique
-  subtitle    String?
   description String?
-  prices      ProductPrice[]
-  subMenu     SubMenu         @relation(fields: [subMenuId], references: [id], onDelete: Cascade)
-  subMenuId   String          @db.ObjectId
-  createdBy   Admin           @relation(fields: [adminId], references: [id])
-  adminId     String          @db.ObjectId
-  pictures    Attachment[]
+  price       Float
+  choices     ProductChoice[]
+  meta        Json
+  images      Attachment[]
   reviews     ProductReview[]
+  cartItem    CartItem[]
+  menuItem    MenuItem        @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  menuItemId  String          @db.ObjectId
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-  cartItem    CartItem[]
-  orderItem   OrderItem[]
 }
 
 model ProductReview {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String   @db.ObjectId
   name      String
   rating    Int
@@ -126,67 +108,112 @@ model Profile {
   active    Boolean   @default(true)
   admin     Admin?
   customer  Customer?
+  rider     Rider?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
 
 model Admin {
   id          String            @id @default(auto()) @map("_id") @db.ObjectId
-  profile     Profile           @relation(fields: [profileId], references: [id])
+  profile     Profile           @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId   String            @unique @db.ObjectId
   priviledges AdminPriviledge[]
-  menu        Menu[]
-  product     Product[]
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 }
 
-model CartItem {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  String   @db.ObjectId
-  price      Float
-  count      Int
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId String   @db.ObjectId
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([productId, customerId, price])
+type SelectedChoiceOption {
+  id    String
+  label String
+  count Int
 }
 
-model OrderItem {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String   @db.ObjectId
-  count     Int
-  price     Float
-  order     Order    @relation(fields: [orderId], references: [id])
-  orderId   String   @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+type SelectedChoice {
+  id       String
+  selector String
+  options  SelectedChoiceOption[]
+}
+
+model CartItem {
+  id         String           @id @default(auto()) @map("_id") @db.ObjectId
+  product    Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String           @db.ObjectId
+  count      Int
+  choices    SelectedChoice[]
+  meta       Json?
+  customer   Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId String           @db.ObjectId
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@unique([productId, customerId])
+}
+
+type OrderItemProduct {
+  id           String
+  name         String
+  description  String?
+  price        Float
+  choices      SelectedChoice[]
+  imageUrl     String
+  meta         Json?
+  menuCategory MenuCategory
+  menuItem     String
+}
+
+type OrderItem {
+  product OrderItemProduct
+  count   Int
+}
+
+type OrderCustomer {
+  id              String
+  firstname       String
+  lastname        String
+  email           String
+  phone           Int
+  shippingAddress ShippingAddress
+}
+
+enum OrderStatus {
+  recieved
+  preparing
+  shipping
+  delivered
 }
 
 model Order {
-  id              String          @id @default(auto()) @map("_id") @db.ObjectId
-  orderNo         Int
-  items           OrderItem[]
-  customer        Customer        @relation(fields: [customerId], references: [id])
-  customerId      String          @db.ObjectId
-  shippingAddress ShippingAddress
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  orderNo      Int
+  items        OrderItem[]
+  customer     OrderCustomer
+  rider        Rider?        @relation(fields: [riderId], references: [id])
+  meta         Json?
+  riderId      String?       @db.ObjectId
+  status       OrderStatus   @default(recieved)
+  deliveryCode Int
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model Customer {
   id              String           @id @default(auto()) @map("_id") @db.ObjectId
-  profile         Profile          @relation(fields: [profileId], references: [id])
+  profile         Profile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId       String           @unique @db.ObjectId
   cart            CartItem[]
-  orders          Order[]
   shippingAddress ShippingAddress?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+}
+
+model Rider {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  profile   Profile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profileId String           @unique @db.ObjectId
+  location  ShippingAddress?
+  order     Order[]
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
 }
 
 model Reservation {
