@@ -65,7 +65,7 @@ const StartTrip = () => {
     <fetcher.Form action="start-trip" method="POST">
       <button
         type="submit"
-        className="my-btn fill dark tw-block tw-w-full tw-rounded tw-py-4"
+        className="my-btn fill dark tw-block tw-w-full tw-rounded tw-py-4 tw-px-8"
       >
         <i className="bi bi-truck"></i>
         Start trip
@@ -127,7 +127,7 @@ const EndTrip = () => {
       )}
       <button
         type="button"
-        className="my-btn fill primary tw-block tw-w-full tw-rounded tw-py-4"
+        className="my-btn fill primary tw-block tw-w-full tw-rounded tw-py-4 tw-px-8"
         onClick={() => setEnd(true)}
       >
         <i className="bi bi-check-circle"></i>
@@ -163,10 +163,11 @@ export default function OrderShipping() {
             center={REPLICA_POSITION}
             disableDefaultUI={true}
             fullscreenControl
+            fullscreenControlOptions={{ position: ControlPosition.TOP_CENTER }}
             mapId={MAP_ID}
           >
             <MapControl position={ControlPosition.TOP_CENTER}>
-              <div className="mt-20 tw-w-screen tw-max-w-sm">
+              <div className="tw-mt-1 sm:tw-w-screen tw-max-w-sm tw-flex-1">
                 {order.status === OrderStatus.preparing && <StartTrip />}
                 {order.status === OrderStatus.shipping && <EndTrip />}
               </div>

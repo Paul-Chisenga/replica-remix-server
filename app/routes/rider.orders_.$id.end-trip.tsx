@@ -22,9 +22,9 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
 
     // check if code match
-    // if (code !== order.verificationCode) {
-    //   return { error: "Invalid verification code" };
-    // }
+    if (code !== order.verificationCode) {
+      return { error: "Invalid verification code" };
+    }
 
     if (order.status === OrderStatus.shipping) {
       await prisma.order.update({
