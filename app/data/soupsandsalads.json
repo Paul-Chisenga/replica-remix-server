@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "title": "Berry Salad",
+    "description": "Mixed lettuce with berries, walnuts, feta cheese, red onion and our homemade sweet & tangy vinaigrette. Served with a choice of bread.",
+    "price": 1450,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "2",
+    "title": "Cobb Salad",
+    "description": "Chopped romaine with bacon, tomatoes, egg, blue cheese, and our homemade blue cheese dressing. Topped with fried onions. Served with a choice of bread.",
+    "price": 1450,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "3",
+    "title": "Caesar Salad",
+    "description": "Traditional caesar salad tossed in our homemade caesar dressing. Topped with parmesan cheese and garlic croutons. Served with a choice of bread.",
+    "price": 1280,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "4",
+    "title": "House Sala",
+    "description": "Mixed lettuce with croutons, bacon, cheddar cheese, tomatoes, cucumbers, and our homemade honey mustard. Served with a choice of bread.",
+    "price": 1150,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "5",
+    "title": "Tamato Bisque (Bowl)",
+    "description": "Tomato bisque topped with goat cheese and croutons. Served with choice of bread.",
+    "price": 1500,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "6",
+    "title": "Tamato Bisque (Cup)",
+    "description": "Tomato bisque topped with goat cheese and croutons. Served with choice of bread.",
+    "price": 900,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "7",
+    "title": "Chilli (Bowl)",
+    "description": "Classic american chilli recipe with minced beef, tomatoes, beans and an array of spices. Served with a choice of bread.",
+    "price": 1100,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "8",
+    "title": "Chilli (Cup)",
+    "description": "Classic american chilli recipe with minced beef, tomatoes, beans and an array of spices. Served with a choice of bread.",
+    "price": 600,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Gluten free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  }
+]

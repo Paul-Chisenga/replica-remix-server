@@ -1,13 +1,13 @@
+import type { Product } from "@prisma/client";
 import type { FC } from "react";
-import type { ProductWithImages } from "~/utils/types";
 import Menu from "./Menu";
 
 interface Props {
   products: {
-    breakfast: ProductWithImages[];
-    lunchDinner: ProductWithImages[];
-    bakery: ProductWithImages[];
-    beverages: ProductWithImages[];
+    breakfast: Product[];
+    lunchDinner: Product[];
+    bakery: Product[];
+    beverages: Product[];
   };
 }
 

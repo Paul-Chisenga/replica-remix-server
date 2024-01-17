@@ -1,6 +1,6 @@
 import invariant from "invariant";
 import type { MyObject } from "./types";
-import { Attachment, MenuCategory } from "@prisma/client";
+import { MenuCategory } from "@prisma/client";
 import prisma from "~/services/prisma.server";
 import { format } from "date-fns";
 
@@ -69,7 +69,7 @@ export function parseMenuCategory(cat: MenuCategory) {
   switch (cat) {
     case MenuCategory.BAKERY:
       return "Bakery";
-    case MenuCategory.BEVARAGE:
+    case MenuCategory.BEVERAGE:
       return "Beverage";
     case MenuCategory.BREAKFAST:
       return "Breakfast";
@@ -104,6 +104,9 @@ export function parseProductVariation(prices: any[], selectedPrice: number) {
 
   return variationLabel;
 }
+export function generateVerificationCode() {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+}
 
 // COMMON DB OP
 export async function menuLoader(category: MenuCategory) {
@@ -112,6 +115,9 @@ export async function menuLoader(category: MenuCategory) {
       where: {
         category,
       },
+      include: {
+        products: true,
+      },
     });
     return menu;
   } catch (error) {
@@ -119,9 +125,9 @@ export async function menuLoader(category: MenuCategory) {
   }
 }
 // PRODUCTS
-export function parseProdImageUrl(images: Attachment[]) {
-  if (images.length > 0) {
-    return `/product/${images[0].key}`;
+export function parseProdImageUrl(imageKey: string | null) {
+  if (imageKey) {
+    return `/product/${imageKey}`;
   }
   return "/images/dark-logo.png";
 }

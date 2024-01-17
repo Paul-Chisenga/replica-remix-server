@@ -1,0 +1,41 @@
+[
+  {
+    "id": "1",
+    "title": "Lava Cake & Ice cream",
+    "description": "Our homemade chocolate lava cakes paired with vanilla ice cream.",
+    "price": 850,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Salted Caramel Brownie",
+    "description": "Our chocolate brownie paired with salted caramel ice cream and topped with caramel sauce.",
+    "price": 1150,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Chocolate Chip Cookie",
+    "description": "Chocolate chip cookie heated and paired with vanilla ice cream and topped with chocolate syrup.",
+    "price": 850,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Cake Slice",
+    "description": "Choose 1 of our homemade cake slices carrot, chocolate, caramel.",
+    "price": 850,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Cake Choice",
+        "options": ["Carrot cake", "Caramel", "Chocolate Cake"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

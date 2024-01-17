@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1",
+    "title": "Cinnamon Roll",
+    "description": "",
+    "price": 300,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Apple Cinnamon Muffin",
+    "description": "",
+    "price": 280,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Banana Nut Muffin",
+    "description": "",
+    "price": 280,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Chocolate Chip Muffin",
+    "description": "",
+    "price": 280,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Brownies",
+    "description": "",
+    "price": 500,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Chocolate Chip Cookie",
+    "description": "",
+    "price": 300,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Peanut Butter Bar",
+    "description": "",
+    "price": 300,
+    "choices": [],
+    "vegeterian": false
+  }
+]

@@ -21,17 +21,6 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-// const PRODUCT_IMAGES = [
-//   "h2-food-item-1.png",
-//   "h2-food-item-2.png",
-//   "h2-food-item-3.png",
-//   "h2-food-item-4.png",
-//   "h2-food-item-5.png",
-//   "h2-food-item-6.png",
-//   "h2-food-item-7.png",
-//   "h2-food-item-8.png",
-// ];
-
 const Shop = () => {
   const {
     breakfastCount,
@@ -110,8 +99,8 @@ const Shop = () => {
                     </li>
                     <li>
                       <CategoryItem
-                        to={`?mcat=${MenuCategory.BEVARAGE}`}
-                        mCategory={MenuCategory.BEVARAGE}
+                        to={`?mcat=${MenuCategory.BEVERAGE}`}
+                        mCategory={MenuCategory.BEVERAGE}
                         curQuery={mcat as any}
                         count={beverageCount}
                       />
@@ -213,9 +202,6 @@ export async function loader({ request }: LoaderArgs) {
     const count = await prisma.product.count({ where: productWhere });
     const products = await prisma.product.findMany({
       where: productWhere,
-      include: {
-        images: true,
-      },
       skip: page * 8,
       take: 8,
     });
@@ -246,7 +232,7 @@ export async function loader({ request }: LoaderArgs) {
     const beverageCount = await prisma.product.count({
       where: {
         menuItem: {
-          category: MenuCategory.BEVARAGE,
+          category: MenuCategory.BEVERAGE,
         },
       },
     });

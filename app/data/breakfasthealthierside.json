@@ -1,0 +1,61 @@
+[
+  {
+    "id": "1",
+    "title": "Yorgurt Parfait",
+    "description": "Vanilla greek yogurt topped with our homemade granola, berries. Served with a homemade muffin.",
+    "price": 1400,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Muffin Choice",
+        "options": [
+          "Apple Cinnamon Muffin",
+          "Banana Nut Muffin",
+          "Chocolate Chip Muffin"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "2",
+    "title": "Avocado Toast",
+    "description": "Whole wheat bread topped with avocado, sundried tomatoes, olive oil. Served with two eggs your way.",
+    "price": 800,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Oatmeanl Berries",
+    "description": "Oatmeal topped with berries, brown sugar and milk on the side. Served with a homemade muffin.",
+    "price": 800,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Muffin Choice",
+        "options": [
+          "Apple Cinnamon Muffin",
+          "Banana Nut Muffin",
+          "Chocolate Chip Muffin"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  }
+]

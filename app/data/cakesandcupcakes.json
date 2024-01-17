@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1",
+    "title": "Lava Cakes",
+    "description": "",
+    "price": 400,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Caramel Cupcake",
+    "description": "",
+    "price": 300,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Chocolate Cupcake",
+    "description": "",
+    "price": 300,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Carrot Cupcake",
+    "description": "",
+    "price": 300,
+    "choices": [],
+    "vegeterian": false
+  }
+]

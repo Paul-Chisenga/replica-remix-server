@@ -1,16 +1,47 @@
+import { ActionFunction } from "@remix-run/node";
+import { Form, useNavigation } from "@remix-run/react";
+import Accordion from "~/components/Accordion/Accordion";
 import Button2 from "~/components/Button/Button2";
 import Button3 from "~/components/Button/Button3";
 import Button4 from "~/components/Button/Button4";
 import LinkButton1 from "~/components/Button/LinkButton1";
 import LinkButton2 from "~/components/Button/LinkButton2";
-import LinkButton3 from "~/components/Button/LinkButton3";
+import DynamicFieldWrapper from "~/components/Form/DynamicFieldWrapper";
 import MyForm from "~/components/Form/MyForm";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
 import Modal from "~/components/Modal/Modal";
 
 const Demo = () => {
+  const navigation = useNavigation();
   return (
-    <div className="tw-max-w-screen-md tw-mx-auto tw-p-20 tw-mt-20 tw-space-y-4">
-      <Modal.Wrapper show size="md">
+    <div className="container tw-p-20 tw-mt-20 tw-space-y-4">
+      <DynamicFieldWrapper
+        count={0}
+        onAdd={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+        onRemove={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      >
+        <p>this is the content</p>
+      </DynamicFieldWrapper>
+      <br />
+
+      <Accordion.Wrapper id="exmaple" className="tw-mb-10">
+        <Accordion.Item.Wrapper>
+          <Accordion.Item.Header id="some">
+            This is a header
+          </Accordion.Item.Header>
+          <Accordion.Item.Content headerId="some" accordionId="exmaple">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+            Consequatur in, animi at ipsam nisi dolore, autem nostrum cum
+            recusandae totam neque quae facere eligendi asperiores voluptatibus
+            vero alias quam magni?
+          </Accordion.Item.Content>
+        </Accordion.Item.Wrapper>
+      </Accordion.Wrapper>
+      <Modal.Wrapper show={false} size="md">
         <Modal.Header>Create new task</Modal.Header>
         <Modal.Body>
           <MyForm.Input label="Some label" />
@@ -29,9 +60,7 @@ const Demo = () => {
       <LinkButton2 to="" className="">
         Link Button 2
       </LinkButton2>
-      <LinkButton3 to="" className="">
-        Link Button 3
-      </LinkButton3>
+
       <div className="tw-space-x-4">
         <button className="my-btn outline primary">
           <i className="bi bi-plus-lg"></i> Primary button
@@ -95,3 +124,13 @@ export async function loader() {
 
   return null;
 }
+
+export const action: ActionFunction = async ({ request }) => {
+  await new Promise((res) => {
+    setTimeout(() => {
+      res("");
+    }, 3000);
+  });
+
+  return null;
+};

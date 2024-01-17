@@ -2,7 +2,7 @@ import { MenuCategory } from "@prisma/client";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { useTypedLoaderData } from "remix-typedjson";
 import Breadcrumb from "~/components/common/Breadcrumb";
-import Menu1 from "~/components/menu/Menu1";
+import Menu2 from "~/components/menu/Menu2";
 import { menuLoader } from "~/utils/helpers";
 
 export const meta: V2_MetaFunction = () => {
@@ -20,7 +20,8 @@ const BakeryMenu = () => {
   return (
     <>
       <Breadcrumb pageName="bakery" pageTitle="Bakery Menu" />
-      <Menu1 category={MenuCategory.BAKERY} menu={menu} image="bakery.png" />
+      <Menu2 menu={menu} />
+      {/* <Menu1 category={MenuCategory.BAKERY} menu={menu} image="bakery.png" /> */}
     </>
   );
 };

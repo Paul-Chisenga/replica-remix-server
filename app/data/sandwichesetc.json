@@ -1,0 +1,221 @@
+[
+  {
+    "id": "1",
+    "title": "BLT Sandwich",
+    "description": "Classic sandwich with bacon, lettuce and tomatos on white or wheat bread. Includes a side item.",
+    "price": 950,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Sandwich Bread Choice",
+        "options": ["Wheat Bread", "White Bread", "Focaccia"],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Club Sandwich",
+    "description": "White, wheat, or focaccia bread with chicken, bacon, tomatoes, cheese, avocados and our signature sauce. Includes a side item.",
+    "price": 1150,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Sandwich Bread Choice",
+        "options": ["Wheat Bread", "White Bread", "Focaccia"],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Quesadillas",
+    "description": "A classic mexican dish with chicken, vegetables, cheese and our homemade mexican sauce. Includes a side item.",
+    "price": 1200,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Steak Sandwich",
+    "description": "Tender marinated steak slices with a Worcestershire mayo sauce, caramelized onions, cheese and rocket. Includes a side item.",
+    "price": 1550,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Vegeterian Sandwich",
+    "description": "Toasted whole wheat sandwich with roasted vegetables, cheese, and pesto. Includes a side item.",
+    "price": 1000,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "6",
+    "title": "Chicken Taco",
+    "description": "Chicken, vegetables, cheese, our homemade mexican sauce, and pico de gallo. Includes a side item.",
+    "price": 1000,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Beef Taco",
+    "description": "Steak, street corn, feta cheese, and our creamy cilantro ranch sauce. Includes a side item.",
+    "price": 1300,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Carnitas (Pork)",
+    "description": "Pork tacos with pico de gallo and creamy cilantro ranch sauce. Includes a side item.",
+    "price": 1050,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Vegeterian Taco",
+    "description": "Vegetables, avocados, pico de gallo and our mexican sauce. Includes a side item.",
+    "price": 900,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  }
+]

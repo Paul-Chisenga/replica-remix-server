@@ -1,5 +1,5 @@
 import { Role } from "@prisma/client";
-import { LoaderArgs } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { Link, Outlet } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
 import DashboardPageHeader from "~/components/common/DashboardPageHeader";

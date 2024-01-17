@@ -3,7 +3,7 @@ import { Role } from "@prisma/client";
 import type { LoaderArgs } from "@remix-run/node";
 import type { V2_MetaFunction } from "@remix-run/react";
 import { Link } from "@remix-run/react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { useTypedFetcher, useTypedLoaderData } from "remix-typedjson";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import { requireUserSession } from "~/controllers/auth.server";
@@ -11,8 +11,8 @@ import prisma from "~/services/prisma.server";
 import { CartContext } from "~/context/CartContext";
 import { parseProdImageUrl } from "~/utils/helpers";
 import type { action } from "./_main.cart.$id.increment";
-import { ClipLoader } from "react-spinners";
 import LinkButton2 from "~/components/Button/LinkButton2";
+import FullPageLoader from "~/components/indicators/FullPageLoader";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -26,7 +26,6 @@ export const meta: V2_MetaFunction = () => {
 
 function Cart() {
   const cart = useTypedLoaderData<typeof loader>();
-  const [items, setItems] = useState(cart);
   const fetcher = useTypedFetcher<typeof action>();
   const cartContext = useContext(CartContext);
 
@@ -38,14 +37,14 @@ function Cart() {
   const increment = (itemId: string) => {
     fetcher.submit(null, {
       action: `${itemId}/increment`,
-      method: "POST",
+      method: "PATCH",
     });
   };
 
   const decrement = (itemId: string) => {
     fetcher.submit(null, {
       action: `${itemId}/decrement`,
-      method: "POST",
+      method: "PATCH",
     });
   };
   const handleDelete = (itemId: string) => {
@@ -56,26 +55,19 @@ function Cart() {
   };
 
   useEffect(() => {
-    if (fetcher.data) {
-      cartContext.updateCart(fetcher.data.count);
-      setItems(fetcher.data.items);
-    }
-  }, [fetcher.data]);
+    cartContext.updateCart(cart.length);
+  }, [cart.length]);
 
   return (
     <>
       <Breadcrumb pageName="Cart" pageTitle="Cart" />
       <div className="cart-section pt-120 pb-120">
         <div className="container">
-          {fetcher.state === "submitting" && (
-            <div className="tw-fixed tw-inset-0 tw-z-10 tw-flex tw-items-center tw-justify-center tw-bg-white/5">
-              <ClipLoader />
-            </div>
-          )}
+          {fetcher.state === "submitting" && <FullPageLoader />}
           {cart.length === 0 && (
             <div className="tw-p-5 tw-text-center">
               <p className="">There is nothing to see</p>
-              <LinkButton2 to="/shop">Go shopping</LinkButton2>
+              <LinkButton2 to="/menu/lunch-dinner">Go shopping</LinkButton2>
             </div>
           )}
           {cart.length > 0 && (
@@ -97,7 +89,7 @@ function Cart() {
                         </tr>
                       </thead>
                       <tbody>
-                        {items.map((item) => {
+                        {cart.map((item) => {
                           return (
                             <tr key={item.id}>
                               <td data-label="Delete">
@@ -110,7 +102,7 @@ function Cart() {
                               </td>
                               <td data-label="Image">
                                 <img
-                                  src={parseProdImageUrl(item.product.images)}
+                                  src={parseProdImageUrl(item.product.image)}
                                   alt=""
                                   className="tw-object-cover tw-object-top tw-rounded"
                                   style={{ width: 80, height: 70 }}
@@ -264,7 +256,7 @@ function Cart() {
                     </tbody>
                   </table>
                   <div className="cart-btn-group">
-                    <Link to="/shop">
+                    <Link to="/menu/lunch-dinner">
                       <a className="primary-btn3 btn-lg">
                         Continue to shopping
                       </a>
@@ -294,11 +286,7 @@ export async function loader({ request }: LoaderArgs) {
         },
       },
       include: {
-        product: {
-          include: {
-            images: true,
-          },
-        },
+        product: true,
       },
     });
 

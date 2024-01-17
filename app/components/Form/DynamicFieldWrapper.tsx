@@ -15,26 +15,26 @@ const DynamicFieldWrapper: FC<Props> = ({
   className,
 }) => {
   return (
-    <div className={`tw-flex tw-items-end tw-gap-1 ${className}`}>
-      <div className="tw-flex tw-flex-col tw-gap-4 tw-items-center tw-justify-end tw-bg-primary tw-rounded-tl-xl tw-rounded-br-xl">
+    <div className={`${className}`}>
+      <>{children}</>
+      <div className="tw-flex tw-items-center tw-gap-4">
         <button
           type={"button"}
-          className="tw-bg-transparent tw-rounded-tl-xl tw-rounded-br-xl tw-border-solid tw-border tw-border-white/30 tw-text-white tw-block tw-px-2"
+          className="tw-h-8 tw-w-8 tw-flex tw-items-center tw-justify-center hover:tw-opacity-90 tw-bg-primary tw-rounded-full tw-text-white"
           onClick={onRemove}
         >
-          <i className="bi bi-dash tw-text-lg"></i>
+          <i className="bi bi-dash tw-text-2xl tw-leading-none"></i>
         </button>
 
-        <div className="tw-text-white">{count}</div>
+        <div className="tw-text-dark tw-text-xl">{count}</div>
         <button
           type={"button"}
-          className="tw-bg-transparent tw-rounded-tl-xl tw-rounded-br-xl tw-border-solid tw-border tw-border-white/30 tw-text-white tw-block tw-px-2"
+          className="tw-h-8 tw-w-8 tw-flex tw-items-center tw-justify-center hover:tw-opacity-90 tw-bg-primary tw-rounded-full tw-text-white"
           onClick={onAdd}
         >
-          <i className="bi bi-plus tw-text-lg"></i>
+          <i className="bi bi-plus tw-text-2xl tw-leading-none"></i>
         </button>
       </div>
-      <div className="tw-flex-1">{children}</div>
     </div>
   );
 };

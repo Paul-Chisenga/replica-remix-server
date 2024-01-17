@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1",
+    "title": "Passionate Mango Juice",
+    "description": "Passion, mango and a splash of orange juice.",
+    "price": 650,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Pineapple Bliss Juice",
+    "description": "Pineapple, passion and coconut water.",
+    "price": 550,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Tropical Splash Juice",
+    "description": "Passion and orange juice with a tropical mix.",
+    "price": 550,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Minty Delight Juice",
+    "description": "Lemon, lime and pineapple mint.",
+    "price": 600,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Orange Juice",
+    "description": "",
+    "price": 650,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Passion Juice",
+    "description": "",
+    "price": 550,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Pineapple Juice",
+    "description": "",
+    "price": 550,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Mango Juice",
+    "description": "",
+    "price": 550,
+    "choices": [],
+    "vegeterian": false
+  }
+]

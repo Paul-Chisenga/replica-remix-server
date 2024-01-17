@@ -1,9 +1,10 @@
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
+import { Form, Link, useNavigation } from "@remix-run/react";
 import invariant from "invariant";
 import { useTypedActionData } from "remix-typedjson";
 import MyForm from "~/components/Form/MyForm";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
 import { getUserSession } from "~/controllers/auth.server";
 import { sendEmail } from "~/services/email.server";
 import { generateToken } from "~/services/jwt";
@@ -21,6 +22,7 @@ export const meta: V2_MetaFunction = () => {
 
 const LostPWD = () => {
   const actionData = useTypedActionData();
+  const navigation = useNavigation();
   return (
     <div className="container">
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-md tw-mx-auto">
@@ -63,6 +65,7 @@ const LostPWD = () => {
             className="primary-btn8 lg--btn btn-primary-fill tw-block tw-w-full"
           >
             Submit
+            {navigation.state === "submitting" && <DualRingLoader size={15} />}
           </button>
         </Form>
       </div>

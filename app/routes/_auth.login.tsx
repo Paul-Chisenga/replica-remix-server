@@ -3,6 +3,7 @@ import { redirect } from "@remix-run/node";
 import { Form, Link, useNavigation, useSearchParams } from "@remix-run/react";
 import invariant from "invariant";
 import { useTypedActionData } from "remix-typedjson";
+import FormError from "~/components/common/FormError";
 import MyForm from "~/components/Form/MyForm";
 import DualRingLoader from "~/components/indicators/DualRingLoader";
 import { getUserSession, login } from "~/controllers/auth.server";
@@ -24,14 +25,9 @@ const Authentication = () => {
   const navigation = useNavigation();
 
   return (
-    <div className="container">
+    <div className="container tw-pb-32">
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-md tw-mx-auto">
         <h4 className="mb-20 tw-text-3xl title">Login</h4>
-        {actionData?.error && (
-          <div className="tw-px-2 tw-text-sm tw-text-red-500 tw-font-jost">
-            {actionData?.error}
-          </div>
-        )}
         <br />
         <Form action="" method="POST">
           <input type="hidden" name="next" value={next ?? ""} />
@@ -50,6 +46,11 @@ const Authentication = () => {
               required
               name="password"
             />
+          </MyForm.Group>
+          <MyForm.Group>
+            <FormError>
+              {actionData?.error ?? searchParams.get("error")}
+            </FormError>
           </MyForm.Group>
           <div className="tw-text-right tw-mb-6">
             <Link
@@ -73,6 +74,19 @@ const Authentication = () => {
               className="tw-text-secondary tw-underline hover:tw-text-black tw-inline-block tw-mx-1"
             >
               Create an account!
+            </Link>
+          </div>
+          {/* SOCIAL MEDIA LOGIN */}
+          <div
+            className=" tw-pt-4 tw-border-gray-100"
+            style={{ borderTop: "1px solid" }}
+          >
+            <Link
+              to={"google"}
+              className="my-btn outline rounded dark tw-w-full tw-text-center tw-block"
+            >
+              <i className="bi bi-google"></i>
+              Sign in with google
             </Link>
           </div>
         </Form>

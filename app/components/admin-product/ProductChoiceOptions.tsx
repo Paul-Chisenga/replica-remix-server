@@ -29,6 +29,7 @@ const ProductChoiceOptions: FC<Props> = ({ name, errors, options }) => {
             name={name}
             required
             defaultValue={options ? options[index] : ""}
+            value={options ? options[index] : ""}
           />
         ))}
       </DynamicFieldWrapper>

@@ -11,7 +11,7 @@ datasource db {
 }
 
 enum MenuCategory {
-  BEVARAGE
+  BEVERAGE
   BAKERY
   BREAKFAST
   FOOD
@@ -37,8 +37,6 @@ model Attachment {
   name      String
   key       String
   size      Int
-  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
-  productId String?  @db.ObjectId
   updatedAt DateTime @default(now())
   createdAt DateTime @updatedAt
 }
@@ -48,7 +46,7 @@ model MenuItem {
   title     String
   category  MenuCategory
   products  Product[]
-  meta      Json
+  meta      Json?
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
@@ -71,18 +69,21 @@ type ProductChoice {
 
 model Product {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  title       String          @unique
+  title       String
   description String?
   price       Float
   choices     ProductChoice[]
   meta        Json
-  images      Attachment[]
+  image       String?
+  sold_out    Boolean?        @default(false)
   reviews     ProductReview[]
   cartItem    CartItem[]
   menuItem    MenuItem        @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
   menuItemId  String          @db.ObjectId
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+
+  @@unique([title, menuItemId])
 }
 
 model ProductReview {
@@ -99,6 +100,7 @@ model ProductReview {
 
 model Profile {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  picture   String?
   firstname String
   lastname  String
   email     String    @unique
@@ -109,6 +111,7 @@ model Profile {
   admin     Admin?
   customer  Customer?
   rider     Rider?
+  meta      Json?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -155,7 +158,7 @@ type OrderItemProduct {
   description  String?
   price        Float
   choices      SelectedChoice[]
-  imageUrl     String
+  imageUrl     String?
   meta         Json?
   menuCategory MenuCategory
   menuItem     String
@@ -166,15 +169,6 @@ type OrderItem {
   count   Int
 }
 
-type OrderCustomer {
-  id              String
-  firstname       String
-  lastname        String
-  email           String
-  phone           Int
-  shippingAddress ShippingAddress
-}
-
 enum OrderStatus {
   recieved
   preparing
@@ -183,17 +177,18 @@ enum OrderStatus {
 }
 
 model Order {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  orderNo      Int
-  items        OrderItem[]
-  customer     OrderCustomer
-  rider        Rider?        @relation(fields: [riderId], references: [id])
-  meta         Json?
-  riderId      String?       @db.ObjectId
-  status       OrderStatus   @default(recieved)
-  deliveryCode Int
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderNo          Int
+  items            OrderItem[]
+  customer         Customer    @relation(fields: [customerId], references: [id])
+  customerId       String      @db.ObjectId
+  rider            Rider?      @relation(fields: [riderId], references: [id])
+  riderId          String?     @db.ObjectId
+  meta             Json?
+  status           OrderStatus @default(recieved)
+  verificationCode String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
 }
 
 model Customer {
@@ -201,6 +196,7 @@ model Customer {
   profile         Profile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
   profileId       String           @unique @db.ObjectId
   cart            CartItem[]
+  order           Order[]
   shippingAddress ShippingAddress?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt

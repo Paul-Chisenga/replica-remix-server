@@ -50,22 +50,35 @@ export type HandledChoices = {
 export interface ProductPayload
   extends Pick<Product, "choices" | "title" | "price" | "description"> {
   menuId: string;
-  images: File[];
+  image?: File;
   isVegeterian?: boolean;
 }
+export type RegistrationPayload = {
+  role: Role;
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  phone: number;
+  provider?: "google";
+  code: string;
+  picture?: string;
+};
 
 // PRISMA TYPES
-const productWithImages = Prisma.validator<Prisma.ProductArgs>()({
-  include: {
-    images: true,
-  },
-});
-export type ProductWithImages = Prisma.ProductGetPayload<
-  typeof productWithImages
->;
 const riderWithProfile = Prisma.validator<Prisma.RiderDefaultArgs>()({
   include: {
     profile: true,
   },
 });
 export type RiderWithProfile = Prisma.RiderGetPayload<typeof riderWithProfile>;
+
+const menuWithProducts = Prisma.validator<Prisma.MenuItemDefaultArgs>()({
+  include: {
+    products: true,
+  },
+});
+
+export type MenuWithProducts = Prisma.MenuItemGetPayload<
+  typeof menuWithProducts
+>;

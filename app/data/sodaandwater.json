@@ -1,0 +1,55 @@
+[
+  {
+    "id": "1",
+    "title": "Soda",
+    "description": "",
+    "price": 200,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Soda Choice",
+        "options": [
+          "Fanta Orange",
+          "Fanta Black Current",
+          "Coke",
+          "Sprite",
+          "Coke Zero"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Water (Still 500 ml)",
+    "description": "",
+    "price": 200,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Water (Still 1 Liter)",
+    "description": "",
+    "price": 300,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Water (Sparkling 500 ml)",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Water (Sparkling 1 Liter)",
+    "description": "",
+    "price": 350,
+    "choices": [],
+    "vegeterian": false
+  }
+]

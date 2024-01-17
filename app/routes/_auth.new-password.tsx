@@ -1,9 +1,10 @@
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, useSearchParams } from "@remix-run/react";
+import { Form, useNavigation, useSearchParams } from "@remix-run/react";
 import invariant from "invariant";
 import { useTypedActionData } from "remix-typedjson";
 import MyForm from "~/components/Form/MyForm";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
 import { getUserSession, login } from "~/controllers/auth.server";
 import { hashPassword } from "~/services/bcrypt.server";
 import { verifyToken } from "~/services/jwt";
@@ -23,6 +24,7 @@ const LostPWD = () => {
   const actionData = useTypedActionData();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("t");
+  const navigation = useNavigation();
 
   return (
     <div className="container">
@@ -53,6 +55,7 @@ const LostPWD = () => {
             className="primary-btn8 lg--btn btn-primary-fill tw-block tw-w-full"
           >
             Submit
+            {navigation.state === "submitting" && <DualRingLoader size={15} />}
           </button>
         </Form>
       </div>

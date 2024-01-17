@@ -1,20 +1,8 @@
 import type { MenuCategory } from "@prisma/client";
-import { Prisma } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import type { FC } from "react";
 import { parseMenuCategory } from "~/utils/helpers";
-
-const menuWithProducst = Prisma.validator<Prisma.MenuArgs>()({
-  include: {
-    submenu: {
-      include: {
-        products: true,
-      },
-    },
-  },
-});
-
-type MenuWithProducts = Prisma.MenuGetPayload<typeof menuWithProducst>;
+import type { MenuWithProducts } from "~/utils/types";
 
 interface Props {
   menu: MenuWithProducts[];
@@ -79,10 +67,10 @@ const Menu1: FC<Props> = ({ menu, category, image }) => {
                           <h2 className="tw-capitalize">
                             {parseMenuCategory(category)}
                           </h2>
-                          <h3 className="tw-capitalize">
+                          {/* <h3 className="tw-capitalize">
                             {item.title}
                             <h4 className="tw-opacity-80">{item.subtitle}</h4>
-                          </h3>
+                          </h3> */}
                         </div>
                       </div>
                     </div>
@@ -91,66 +79,35 @@ const Menu1: FC<Props> = ({ menu, category, image }) => {
                         <div className="menu-title tw-p-0">
                           <h2 className="tw-capitalize m-0 ">{item.title}</h2>
                         </div>
-                        {item.subtitle ? (
-                          <p className="tw-text-center tw-uppercase">
-                            ( {item.subtitle} )
-                          </p>
-                        ) : (
-                          <div className="tw-w-24 tw-h-4 tw-bg-primary tw-mx-auto tw-rounded-tl-md tw-rounded-br-md"></div>
-                        )}
-                        {item.submenu.map((sub) => (
-                          <div key={sub.id} className="tw-mt-10">
-                            {item.title !== sub.title && (
-                              <h3 className="tw-italic tw-font-jost tw-capitalize tw-text-primary">
-                                {sub.title}
-                              </h3>
-                            )}
-                            <ul>
-                              {sub.products.map((prod) => (
-                                <li key={prod.id}>
-                                  <Link
-                                    to={`/shop/${prod.id}`}
-                                    className="hover:tw-bg-emerald-400/10 hover:tw-px-4 tw-rounded-tl-2xl tw-rounded-br-2xl tw-py-1 tw-transition-all tw-duration-300 tw-block"
-                                  >
-                                    <div className="single-menu">
-                                      <div className="menu-name">
-                                        <h4 className="tw-capitalize">
-                                          {prod.title}
-                                        </h4>
-                                        <p className="first-letter:tw-capitalize">
-                                          {prod.subtitle}
-                                        </p>
+                        <ul>
+                          {item.products.map((prod) => (
+                            <li key={prod.id}>
+                              <Link
+                                to={`/shop/${prod.id}`}
+                                className="hover:tw-bg-emerald-400/10 hover:tw-px-4 tw-rounded-tl-2xl tw-rounded-br-2xl tw-py-1 tw-transition-all tw-duration-300 tw-block"
+                              >
+                                <div className="single-menu">
+                                  <div className="menu-name">
+                                    <h4 className="tw-capitalize">
+                                      {prod.title}
+                                    </h4>
+                                    <p className="first-letter:tw-capitalize">
+                                      {prod.description}
+                                    </p>
+                                  </div>
+                                  <div key={idx} className="price">
+                                    <span className="tw-relative">
+                                      <div className="tw-inline tw-text-sm tw-font-cormorant tw-right-0 -tw-top-3">
+                                        ksh
                                       </div>
-                                      <div className="tw-flex tw-gap-2">
-                                        {prod.prices.map((price, idx) => (
-                                          <div
-                                            key={idx}
-                                            className={`price ${
-                                              price.value === 0 &&
-                                              "tw-invisible"
-                                            }`}
-                                          >
-                                            {price.label !== "std" && (
-                                              <div className="tw-text-center tw-text-primary tw-capitalize">
-                                                {price.label}
-                                              </div>
-                                            )}
-                                            <span className="tw-relative">
-                                              <div className="tw-inline tw-text-sm tw-font-cormorant tw-right-0 -tw-top-3">
-                                                ksh
-                                              </div>
-                                              {price.value}
-                                            </span>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ))}
+                                      {prod.price}
+                                    </span>
+                                  </div>
+                                </div>
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </div>

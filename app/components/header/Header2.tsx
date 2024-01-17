@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Link, NavLink } from "@remix-run/react";
+import type { Role } from "@prisma/client";
+import { Link, NavLink, useLocation } from "@remix-run/react";
 import type { FC } from "react";
 import { useContext, useEffect, useReducer, useRef } from "react";
 import { CartContext } from "~/context/CartContext";
@@ -43,13 +44,14 @@ interface Props {
   user?: {
     name: string;
     email: string;
+    role: Role;
   };
 }
 
 const Header2: FC<Props> = ({ user }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const headerRef = useRef(null);
-
+  const location = useLocation();
   const ctx = useContext(CartContext);
 
   const handleScroll = () => {
@@ -69,7 +71,9 @@ const Header2: FC<Props> = ({ user }) => {
       ref={headerRef}
       className={
         state.scrollY > 120
-          ? "header-area style-1 bg-color2 sticky"
+          ? `header-area style-1 bg-color2 ${
+              !location.pathname.includes("menu") && "sticky"
+            }`
           : "header-area style-1 bg-color2"
       }
     >
@@ -85,6 +89,15 @@ const Header2: FC<Props> = ({ user }) => {
             </a>
           </Link>
         </div>
+        {state.mobileMenuState == true && (
+          <div
+            className="tw-fixed tw-w-screen tw-h-screen tw-inset-0 tw-z-20"
+            onClick={() =>
+              dispatch({ type: "mobileMenu", isMobileMenu: false })
+            }
+          />
+        )}
+
         <div
           className={
             state.mobileMenuState == true ? "main-menu show-menu" : "main-menu"
@@ -113,10 +126,24 @@ const Header2: FC<Props> = ({ user }) => {
           </div>
           <ul className="menu-list">
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink
+                to="/"
+                onClick={() =>
+                  dispatch({ type: "mobileMenu", isMobileMenu: false })
+                }
+              >
+                Home
+              </NavLink>
             </li>
             <li>
-              <NavLink to="/about">About</NavLink>
+              <NavLink
+                to="/about"
+                onClick={() =>
+                  dispatch({ type: "mobileMenu", isMobileMenu: false })
+                }
+              >
+                About
+              </NavLink>
             </li>
             <li className="menu-item-has-children">
               <NavLink to="/menu" className="drop-down">
@@ -138,25 +165,67 @@ const Header2: FC<Props> = ({ user }) => {
                 }
               >
                 <li>
-                  <NavLink to="/menu/breakfast">Breakfast</NavLink>
+                  <NavLink
+                    to="/menu/breakfast"
+                    onClick={() =>
+                      dispatch({ type: "mobileMenu", isMobileMenu: false })
+                    }
+                  >
+                    Breakfast
+                  </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/menu/lunch-dinner">Lunch/Dinner</NavLink>
+                  <NavLink
+                    to="/menu/lunch-dinner"
+                    onClick={() =>
+                      dispatch({ type: "mobileMenu", isMobileMenu: false })
+                    }
+                  >
+                    Lunch/Dinner
+                  </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/menu/bakery">Bakery</NavLink>
+                  <NavLink
+                    to="/menu/bakery"
+                    onClick={() =>
+                      dispatch({ type: "mobileMenu", isMobileMenu: false })
+                    }
+                  >
+                    Bakery
+                  </NavLink>
                 </li>
                 <li>
-                  <NavLink to="/menu/beverages">Beverages</NavLink>
+                  <NavLink
+                    to="/menu/beverages"
+                    onClick={() =>
+                      dispatch({ type: "mobileMenu", isMobileMenu: false })
+                    }
+                  >
+                    Beverages
+                  </NavLink>
                 </li>
               </ul>
             </li>
             <li>
-              <NavLink to="/reservation">Reservation</NavLink>
+              <NavLink
+                to="/reservation"
+                onClick={() =>
+                  dispatch({ type: "mobileMenu", isMobileMenu: false })
+                }
+              >
+                Reservation
+              </NavLink>
             </li>
 
             <li>
-              <NavLink to="/contact">Contact</NavLink>
+              <NavLink
+                to="/contact"
+                onClick={() =>
+                  dispatch({ type: "mobileMenu", isMobileMenu: false })
+                }
+              >
+                Contact
+              </NavLink>
             </li>
           </ul>
           <div className="hotline d-lg-none d-flex">
@@ -212,7 +281,7 @@ const Header2: FC<Props> = ({ user }) => {
             )}
           </div>
 
-          <Link to="/shop" className="primary-btn btn-md">
+          <Link to="/menu/lunch-dinner" className="primary-btn btn-md">
             Order Now
           </Link>
           <AccountDropdown user={user} />

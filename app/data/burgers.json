@@ -1,0 +1,94 @@
+[
+  {
+    "id": "1",
+    "title": "Classic Burger",
+    "description": "Classic cheeseburger topped with lettuce, tomatoes, cheddar cheese, and ketchup on our homemade brioche bun. Includes a side item.",
+    "price": 1150,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Barbeque Burger",
+    "description": "Our delicious BBQ burger includes fried onion rings, bacon, cheddar cheese, and BBQ sauce on a brioche bun. Includes a side item.",
+    "price": 1450,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Jalepeno Burger",
+    "description": "Our mildly spicy burger topped with jalepenos, cream cheese, and caramelized onions. Includes a side item.",
+    "price": 1350,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Blue Cheese Burger",
+    "description": "Minced beef patty topped with blue cheese sauce and fried onion, hot sauce, and rocket on a brioche bun. Includes a side item.",
+    "price": 1450,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Sides x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

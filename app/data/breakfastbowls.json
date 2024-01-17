@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "title": "The Everything",
+    "description": "Bacon, sausage, grilled onions, avocados, two eggs your way, and cheddar cheese on top of our crispy potatoes.",
+    "price": 950,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Spicy Vegetable",
+    "description": "Mexican spiced vegetable, jalapenos, mexican sauce, chilli and chive cheese, and pico de gallo top this delicious potato breakfast bowl.",
+    "price": 900,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  }
+]

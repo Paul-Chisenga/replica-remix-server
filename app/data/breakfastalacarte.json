@@ -1,0 +1,139 @@
+[
+  {
+    "id": "1",
+    "title": "Plain Pancake",
+    "description": "",
+    "price": 600,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Carrot Pancake",
+    "description": "",
+    "price": 650,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Chocolate Pancake",
+    "description": "",
+    "price": 650,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "French toast",
+    "description": "2 homemade brioche bread slices dipped in a delicious french toast batter.",
+    "price": 1200,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "English Muffin and Topping",
+    "description": "",
+    "price": 200,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Bagel/Muffin Topping",
+        "options": ["Butter", "Cream Cheese", "Strawberry Jam"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Bagel and Topping",
+    "description": "",
+    "price": 200,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Bagel Type",
+        "options": ["Plain Bagel", "Cinnamon Raisin", "Everything Bagel"],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Bagel/Muffin Topping",
+        "options": ["Butter", "Cream Cheese", "Strawberry Jam"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Beef Sausage",
+    "description": "",
+    "price": 400,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Pork Sausage",
+    "description": "",
+    "price": 400,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "9",
+    "title": "Bacon",
+    "description": "",
+    "price": 400,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "10",
+    "title": "Cup of Fruit",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "11",
+    "title": "Salad with Dressing",
+    "description": "",
+    "price": 400,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "12",
+    "title": "Potatoes",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "13",
+    "title": "2 Eggs",
+    "description": "",
+    "price": 180,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

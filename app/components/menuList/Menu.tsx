@@ -1,11 +1,11 @@
 import type { FC } from "react";
 import MenuItem from "./MenuItem";
 import LinkButton3 from "../Button/LinkButton3";
-import type { ProductWithImages } from "~/utils/types";
+import type { Product } from "@prisma/client";
 
 interface Props {
   title: string;
-  products: ProductWithImages[];
+  products: Product[];
   page: string;
 }
 
@@ -23,7 +23,7 @@ const Menu: FC<Props> = ({ title, products, page }) => {
         <img src="/images/icon/h3-menu-tt-bg.svg" alt="h3-menu-tt-bg" />
       </div>
       <ul>
-        {products.map((prod, idx) => (
+        {products.map((prod) => (
           <MenuItem key={prod.id} product={prod} />
         ))}
       </ul>

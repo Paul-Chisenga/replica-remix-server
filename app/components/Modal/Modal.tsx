@@ -152,7 +152,7 @@ const Modal: ModalObj = {
           <div className="tw-absolute tw-inset-0 tw-z-10 tw-flex tw-flex-col tw-items-center tw-justify-center tw-px-4">
             <div
               style={{ border: "1px solid" }}
-              className={`tw-w-full tw-max-h-full tw-rounded-sm tw-border-gray-200 tw-overflow-hidden tw-transition-all tw-duration-200 tw-ease-in-out tw-flex tw-flex-col tw-justify-between tw-mx-auto tw-drop-shadow-sm tw-bg-white
+              className={`tw-w-full tw-max-h-[80vh] tw-rounded-sm tw-border-gray-200 tw-overflow-hidden tw-transition-all tw-duration-200 tw-ease-in-out tw-flex tw-flex-col tw-justify-between tw-mx-auto tw-drop-shadow-sm tw-bg-white
               ${show && "tw-scale-100"}
               ${size === "sm" && "tw-max-w-screen-sm sm:tw-my-4 "} 
               ${size === "md" && "tw-max-w-screen-md md:tw-my-4"} 

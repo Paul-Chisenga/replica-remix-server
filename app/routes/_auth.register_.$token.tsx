@@ -4,11 +4,20 @@ import {
   type LoaderArgs,
   type V2_MetaFunction,
 } from "@remix-run/node";
-import { Link } from "@remix-run/react";
-import { hashPassword } from "~/services/bcrypt.server";
-import { verifyToken } from "~/services/jwt";
+import { Form, Outlet, useActionData, useNavigation } from "@remix-run/react";
+import FormError from "~/components/common/FormError";
+import MyForm from "~/components/Form/MyForm";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
+import { generateToken, verifyToken } from "~/services/jwt";
 import prisma from "~/services/prisma.server";
-import { hasErrors, requiredFieldValidate } from "~/utils/helpers";
+import { sendSMS } from "~/services/twilio.server";
+import {
+  generateVerificationCode,
+  hasErrors,
+  invariantValidate,
+  requiredFieldValidate,
+} from "~/utils/helpers";
+import type { MyObject, RegistrationPayload } from "~/utils/types";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -20,75 +29,138 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-const Register = () => {
+const CompleteRegistration = () => {
+  const actionData = useActionData();
+  const navigation = useNavigation();
+
   return (
-    <div className="container">
+    <div className="container tw-pb-32">
       <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-screen-sm tw-mx-auto">
-        <div className="tw-px-2 tw-text-sm tw-text-emerald-500 tw-font-jost">
-          Email verified{" "}
-          <Link to="/login" className="tw-text-inherit tw-underline">
-            Login
-          </Link>
-        </div>
+        <h4 className="mb-20 tw-text-3xl title">Welcome back!</h4>
+        <p className="tw-px-2 tw-text-sm tw-font-jost">
+          Please complete your registration below.
+        </p>
         <br />
+        <Form action="" method="POST">
+          <MyForm.Group>
+            <MyForm.Input
+              type="text"
+              placeholder="Your first name*"
+              label="First Name"
+              required
+              name="firstname"
+              errormessage={actionData?.firstname}
+            />
+            <MyForm.Input
+              type="text"
+              placeholder="Your last name*"
+              label="Last Name"
+              required
+              name="lastname"
+              errormessage={actionData?.lastname}
+            />
+            <MyForm.Input
+              type="tel"
+              placeholder="eg. 07......"
+              label="Your phone number"
+              required
+              name="phone"
+              minLength={10}
+              maxLength={10}
+              errormessage={actionData?.errors?.phone}
+            />
+          </MyForm.Group>
+          <MyForm.Group>
+            <MyForm.Misc>
+              <FormError>{actionData?.error}</FormError>
+            </MyForm.Misc>
+          </MyForm.Group>
+          <button
+            type="submit"
+            className="primary-btn8 lg--btn btn-primary-fill tw-block tw-w-full"
+          >
+            Submit
+            {navigation.state === "submitting" && <DualRingLoader size={15} />}
+          </button>
+        </Form>
       </div>
+      <Outlet />
     </div>
   );
 };
 
-export default Register;
+export default CompleteRegistration;
 
-export async function loader({ request, params }: LoaderArgs) {
-  const { token } = params;
-
-  if (!token) {
-    throw new Error("Invalid Link");
+export async function action({ request, params }: LoaderArgs) {
+  if (request.method !== "POST") {
+    throw new Error("Bad request.");
   }
 
-  const registrationPayload = verifyToken(
-    token,
-    process.env.ACCOUNT_NEW as string
-  ) as any;
-  if (!registrationPayload) {
-    throw new Error("Invalid link");
-  }
-  const errors = requiredFieldValidate(registrationPayload, [
+  const data = Object.fromEntries(await request.formData()) as MyObject<string>;
+  // Invariant Validation
+  invariantValidate(data);
+
+  // Custom form errors
+  const errors = requiredFieldValidate(data, [
     "firstname",
     "lastname",
-    "email",
     "phone",
-    "password",
   ]);
+
   if (hasErrors(errors)) {
-    throw new Error("Invalid link");
+    return { errors };
+  }
+
+  if (`${+data.phone}`.length !== 9) {
+    return {
+      errors: {
+        phone: "Invalid phone number",
+      },
+    };
+  }
+
+  const basePayload = verifyToken(
+    params.token!,
+    process.env.ACCOUNT_NEW as string
+  ) as { email: string; password: string };
+
+  if (!basePayload) {
+    throw new Error("An error occured.");
   }
 
   try {
     const user = await prisma.profile.findUnique({
-      where: { email: registrationPayload.email },
+      where: { email: basePayload.email },
     });
 
     if (user) {
-      return redirect("/login");
+      return {
+        error:
+          "A User with this email exists already, choose another email address.",
+      };
     }
 
-    const password = await hashPassword(registrationPayload.password);
-    await prisma.customer.create({
-      data: {
-        profile: {
-          create: {
-            role: Role.CUSTOMER,
-            firstname: registrationPayload.firstname,
-            lastname: registrationPayload.lastname,
-            email: registrationPayload.email,
-            password,
-            phone: +registrationPayload.phone,
-          },
-        },
-      },
-    });
+    const verificationCode = generateVerificationCode();
 
-    return null;
+    const registrationPayload: RegistrationPayload = {
+      role: Role.CUSTOMER,
+      firstname: data.firstname,
+      lastname: data.firstname,
+      phone: +data.phone,
+      code: verificationCode,
+      ...basePayload,
+    };
+
+    const verificationToken = generateToken(
+      registrationPayload,
+      process.env.ACCOUNT_NEW!
+    );
+    await sendSMS(
+      `+254${+data.phone}`,
+      `Your verification code from REPLICA is ${verificationCode}`
+    );
+
+    return redirect(`/register/verify/${verificationToken}`);
   } catch (error) {
     throw new Error("Something went wrong.");
   }

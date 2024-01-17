@@ -1,0 +1,222 @@
+[
+  {
+    "id": "1",
+    "title": "Goat Cheese Chicken",
+    "description": "Grilled chicken breast topped with goat cheese, basil, sundried tomatoes, and our lemon garlic sauce. Includes 2 side items.",
+    "price": 2050,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice x 2",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 2
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Wings",
+    "description": "6 crispy wings tossed in your choice of sauce traditional buffalo, and homemade BBQ sauce. Includes 2 side items.",
+    "price": 1650,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice x 2",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 2
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Ribs",
+    "description": "Our fall of the bone pork ribs, lathered in our homemade rib sauce. Includes 2 side items.",
+    "price": 2050,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice x 2",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 2
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Tilapia",
+    "description": "Crispy tilapia fillet topped with a creamy tomato based sauce. Includes 2 side items.",
+    "price": 1950,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice x 2",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 2
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Moms Mac and Cheese",
+    "description": "Our creamy, cheesy, and tasty take on a classic american recipe. Includes one bread choice.",
+    "price": 1500,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Spicy Sausage Penne",
+    "description": "Spicy sausage and creamy tomato sauce tossed with penne pasta. Includes one bread choice.",
+    "price": 1430,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Penne Gorgonzola",
+    "description": "Gorgonzola sauce with bacon, chicken, and sundried tomatoes tossed with penne pasta. Includes one bread choice.",
+    "price": 1600,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Spaguetti",
+    "description": "Classic tomato and minced beef sauce on top of spaghetti noodles. Includes one bread choice.",
+    "price": 1200,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "9",
+    "title": "Veggie Quinoa Bowl",
+    "description": "Quinoa topped with roasted vegetables, feta cheese and pesto. Includes one bread choice.",
+    "price": 1700,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "10",
+    "title": "Creamy Garlic Chicken",
+    "description": "A seasoned chicken breast topped with a delicious parmesan garlic sauce. Includes one bread choice.",
+    "price": 1700,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "11",
+    "title": "Lemon Garlic Shrimp",
+    "description": "Spaghetti tossed in our lemon garlic sauce, topped with marinated shrimp. Includes one bread choice.",
+    "price": 2100,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "12",
+    "title": "Creamy Pesto Pasta",
+    "description": "A creamy alfredo and pesto sauce mixed with penne pasta. Includes one bread choice.",
+    "price": 1850,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "13",
+    "title": "Vegeterian Gorganzola",
+    "description": "Our penne gorganzola dish minus the meat and add the walnuts. Includes one bread choice.",
+    "price": 1650,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  }
+]

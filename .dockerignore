@@ -3,3 +3,8 @@ node_modules
 docker-compose.yaml
 Dockerfile
 .git
+.cache
+.next
+.vscode
+build
+public/build

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1",
+    "title": "Parmesan & Garlic Fries",
+    "description": "",
+    "price": 400,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Regular Fries",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Mashed Potatoes",
+    "description": "",
+    "price": 350,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Mexican Street Corn",
+    "description": "",
+    "price": 500,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Roasted Broccoli",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Sauteed Green Beans",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Vegetable Medley",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  }
+]

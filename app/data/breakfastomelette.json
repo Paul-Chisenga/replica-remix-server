@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "title": "Meat",
+    "description": "3 egg omelette with bacon, sausage, grilled onions and cheese.",
+    "price": 1100,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Veggie Omelette",
+    "description": "3 egg omelette with onions, zucchini, sundried tomatoes, feta and mozzerella cheese.",
+    "price": 1000,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Mexican Omelette",
+    "description": "3 egg omelette with mixed vegetables, mexican corn, chicken, cheddar cheese and pico de gallo.",
+    "price": 1150,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

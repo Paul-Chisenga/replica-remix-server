@@ -1,125 +1,77 @@
 import type { LoaderArgs } from "@remix-run/node";
-import { Form, Link, Outlet, useNavigation } from "@remix-run/react";
+import { Link, Outlet, useFetcher } from "@remix-run/react";
 import { useTypedLoaderData } from "remix-typedjson";
-import Button2 from "~/components/Button/Button2";
-import LinkButton2 from "~/components/Button/LinkButton2";
+import DashboardPageHeader from "~/components/common/DashboardPageHeader";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
 import prisma from "~/services/prisma.server";
-import { parseProdImageUrl } from "~/utils/helpers";
-
-const MENU_TITLES = [
-  "YEAST_DONUTS",
-  "SPECIAL_DONUTS",
-  "ALL_OTHER_PASTRIES",
-  "CAKES_CUPCAKES",
-  "BREAD",
-  "COFFE_TEA",
-  "BEER",
-  "WINE",
-  "ADDITIONAL_BEV",
-  "FRECH_JUICE",
-  "COMBINATIONS",
-  "OMELETTES",
-  "SANDWICHES",
-  "HEALTHIER_SIDE",
-  "ALL_OTHER_A_LA_CARTE",
-  "PANCAKES",
-  "APPETIZERS",
-  "SOUP_SALAD",
-  "BURGERS",
-  "SANDWICHES_LUNCH",
-  "TACOS",
-  "MAINS_1",
-  "MAINS_2",
-  "SIDES",
-  "DESSERTS",
-  "KIDS_BREAKFAST",
-  "KIDS_LUNCH",
-];
+import { parseMenuCategory, parseProdImageUrl } from "~/utils/helpers";
 
 const Products = () => {
-  const menu = useTypedLoaderData<typeof loader>();
-  const navigation = useNavigation();
+  const products = useTypedLoaderData<typeof loader>();
+  const fetcher = useFetcher();
 
   return (
     <>
-      <div className="tw-flex tw-gap-4">
-        <LinkButton2 to="new" className="tw-text-white tw-mb-6">
-          Add product
-        </LinkButton2>
-        <Form action="/admin/clean-submenu" method="DELETE">
-          <Button2 className="tw-bg-red-500">Clean Submenu</Button2>
-        </Form>
-        {/* <Form action="/admin/seed-products" method="POST">
-          <input type="hidden" name="menu" value={"YEAST_DONUTS"} />
-          <Button2>Add all products</Button2>
-        </Form> */}
-      </div>
-
-      <div className="tw-flex tw-flex-wrap tw-gap-4">
-        {MENU_TITLES.map((item) => (
-          <Form key={item} action="/admin/seed-products" method="POST">
-            <input type="hidden" name="menu" value={item} />
-            <Button2>{item}</Button2>
-          </Form>
-        ))}
-      </div>
-
-      <div className="tw-space-y-4 tw-py-10">
-        <div className=" tw-grid tw-grid-cols-2 tw-gap-6">
-          {menu.map((item) => (
-            <div key={item.id} className="">
-              <h1 className="tw-font-cormorant tw-font-bold tw-text-dark tw-capitalize">
-                {item.title}
-              </h1>
-              <div className="border tw-border-[#eee] tw-rounded-md tw-p-8 tw-bg-white">
-                {item.products.map((prod) => (
-                  <div key={prod.id}>
-                    {prod.images.map((image) => (
-                      <img
-                        key={image.key}
-                        src={parseProdImageUrl([image])}
-                        alt=""
-                        style={{ maxWidth: 200, maxHeight: 100 }}
-                        className="tw-rounded tw-object-contain"
-                      />
-                    ))}
-                    <div className="tw-flex tw-justify-between tw-flex-nowrap">
-                      <div>
-                        <h4 className="tw-font-cormorant tw-font-bold tw-text-dark tw-capitalize">
-                          {prod.title}
-                        </h4>
-                        <h5 className="tw-font-jost tw-font-normal">
-                          {prod.description}
-                        </h5>
-                      </div>
-                      <h5 className="tw-font-bold tw-text-dark tw-flex-shrink-0 ">
-                        {prod.price}
-                      </h5>
-                    </div>
-                    <br />
-                    <div className="tw-flex tw-justify-between tw-flex-wrap tw-gap-2 tw-pb-8">
-                      <Link
-                        to={`new?pId=${prod.id}`}
-                        className="primary-btn8 lg--btn btn-primary-fill"
-                      >
-                        Edit
-                      </Link>
-                      <Form action={`${prod.id}`} method="DELETE">
-                        <button className="primary-btn8 btn tw-bg-red-500 hover:tw-text-white">
-                          {navigation.state === "submitting"
-                            ? "Deletting.."
-                            : "Delete"}
-                        </button>
-                      </Form>
-                    </div>
+      <DashboardPageHeader>Products</DashboardPageHeader>
+      <Link to={"create"} className="my-btn outline primary semi-rounded mb-20">
+        Add product
+      </Link>
+      <Link
+        to={"upload"}
+        className="my-btn text dark semi-rounded mb-20 tw-ml-5"
+      >
+        upload menu picture
+      </Link>
+      <fetcher.Form action="clear" method="DELETE">
+        <button className="my-btn text red semi-rounded mb-20">
+          clear {fetcher.state === "submitting" && <DualRingLoader size={15} />}{" "}
+        </button>
+      </fetcher.Form>
+      <div className="table-wrapper">
+        <table className="my-table table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Title</th>
+              <th>Menu</th>
+              <th>Price</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product.id}>
+                <td data-label="Image">
+                  <img src={parseProdImageUrl(product.image)} alt="" />
+                </td>
+                <td data-label="Title">
+                  <p className="tw-text-dark">{product.title}</p>
+                  <p>{product.description}</p>
+                </td>
+                <td data-label="Menu">
+                  <p className="tw-text-dark">{product.menuItem.title}</p>
+                  <p>{parseMenuCategory(product.menuItem.category)}</p>
+                </td>
+                <td data-label="Price">ksh{product.price}</td>
+                <td data-label="Edit">
+                  <Link to={`${product.id}/edit`} className="icon">
+                    <i className="bi bi-pencil"></i>
+                  </Link>
+                </td>
+                <td data-label="Delete">
+                  <div
+                    className="icon"
+                    // onClick={() => handleDelete(item.id)}
+                  >
+                    <i className="bi bi-x" />
                   </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-
       <Outlet />
     </>
   );
@@ -128,13 +80,9 @@ const Products = () => {
 export default Products;
 
 export async function loader({ request }: LoaderArgs) {
-  const menu = await prisma.menuItem.findMany({
+  const menu = await prisma.product.findMany({
     include: {
-      products: {
-        include: {
-          images: true,
-        },
-      },
+      menuItem: true,
     },
     orderBy: {
       updatedAt: "desc",

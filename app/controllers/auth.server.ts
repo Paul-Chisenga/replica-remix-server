@@ -83,7 +83,7 @@ export async function destroyUserSession(request: Request) {
 }
 
 export async function login(
-  credentials: { email: string; password: string },
+  credentials: { email: string; password: string; provider?: boolean },
   redirectPath: string
 ) {
   const user = await prisma.profile.findUnique({
@@ -106,7 +106,7 @@ export async function login(
     user.password
   );
 
-  if (!isValidPassword) {
+  if (!isValidPassword && !credentials.provider) {
     throw error;
   }
 

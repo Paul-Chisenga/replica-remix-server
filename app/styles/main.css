@@ -60,6 +60,9 @@
   .food-items2-wrap:hover .food-img::before {
     @apply tw-scale-0;
   }
+  .card {
+    @apply tw-rounded-md tw-p-10 box--shadow tw-max-w-screen-sm tw-mx-auto;
+  }
 }
 @tailwind utilities;
 
@@ -355,6 +358,14 @@
   font-size: 14px;
   opacity: 0.9;
 }
+.table-wrapper .my-table img {
+  width: 80px;
+  height: 70px;
+  object-fit: cover;
+  -o-object-fit: cover;
+  object-position: top;
+  border-radius: 5px;
+}
 .table-wrapper .my-table thead {
   background: #fff;
 }
@@ -478,6 +489,42 @@
     display: none;
   }
 }
+.table-wrapper .my-table tbody tr td .icon {
+  height: 32px;
+  width: 32px;
+  line-height: 35px;
+  border-radius: 50%;
+  background-color: var(--white);
+  box-shadow: 4px 8px 30px rgba(141, 141, 141, 0.19);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  transition: 0.4s ease;
+}
+@media (max-width: 767px) {
+  .table-wrapper .my-table tbody tr td .icon {
+    margin: 0;
+    margin-left: auto;
+  }
+}
+.table-wrapper .my-table tbody tr td .icon i {
+  font-size: 25px;
+  line-height: 1;
+  transition: 0.4s ease;
+}
+.table-wrapper .my-table tbody tr td .icon:hover {
+  background-color: var(--primary-color1);
+}
+.table-wrapper .my-table tbody tr td .icon:hover i {
+  color: var(--white);
+}
+.table-wrapper .my-table tbody tr td img {
+  width: 54px;
+  height: 64px;
+  -o-object-fit: cover;
+  object-fit: cover;
+}
 /* riders table */
 .table-wrapper .my-table.rider-table thead {
   background: transparent;
@@ -487,4 +534,126 @@
 }
 .table-wrapper .my-table thead tr th {
   border-width: 0;
+}
+
+/* TABS */
+.tab .nav {
+  border: none;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 10px 0;
+  overflow-y: hidden;
+}
+.tab.orders .nav {
+}
+.tab .nav .nav-item {
+  flex-shrink: 0;
+}
+.tab .nav .nav-item .nav-link {
+  border: 1px solid #eeeeee;
+  border-radius: 2px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #002133;
+  font-family: var(--font-Jost);
+  padding: 6px 21px;
+  min-width: 113px;
+  transition: all 0.5s;
+}
+
+.tab .nav .nav-item .nav-link:hover {
+  color: var(--white);
+  background-color: var(--primary-color1);
+  border: 1px solid var(--primary-color1);
+}
+
+.tab .nav-tabs .nav-item.show .nav-link,
+.tab .nav-tabs .nav-link.active {
+  color: var(--white);
+  background-color: var(--primary-color1);
+}
+
+/* ACCORDION */
+.my-accordion.accordion .accordion-item {
+  margin-bottom: 25px;
+  border: none;
+}
+
+.my-accordion.accordion .accordion-item .accordion-header .accordion-button {
+  font-size: 1.563rem;
+  font-weight: 700;
+  color: var(--title-color-dark);
+  font-family: var(--font-cormorant);
+  background: #fafafa;
+  border-radius: 10px 0px 10px 0px;
+  padding: 14px 40px;
+  position: relative;
+}
+
+.my-accordion.accordion
+  .accordion-item
+  .accordion-header
+  .accordion-button::after {
+  content: "\f4fe";
+  font-weight: 300;
+  color: var(--title-color-dark);
+  font-family: "Bootstrap-icons";
+  background-image: none;
+  height: 33px;
+  width: 33px;
+  border-radius: 50%;
+  background: #fafafa;
+  border: 1px solid var(--title-color-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: -16px;
+}
+
+.my-accordion.accordion
+  .accordion-item
+  .accordion-header
+  .accordion-button:not(.collapsed) {
+  background: #fafafa;
+  border-radius: 10px 0px 0px 0px;
+  box-shadow: none;
+}
+
+.my-accordion.accordion
+  .accordion-item
+  .accordion-header
+  .accordion-button:not(.collapsed)::after {
+  content: "\f2ea";
+  transform: rotate(0deg);
+}
+
+.my-accordion.accordion
+  .accordion-item
+  .accordion-header
+  .accordion-button:focus {
+  box-shadow: none;
+}
+
+.my-accordion.accordion .accordion-item .accordion-collapse {
+  background: #fafafa;
+  border-radius: 0px 0px 10px 0px;
+}
+
+.my-accordion.accordion .accordion-item .accordion-collapse .accordion-body {
+  padding: 12px 40px;
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--text-color1);
+}
+
+/* orders accordion */
+.my-accordion.accordion.orders
+  .accordion-item
+  .accordion-header
+  .accordion-button::after {
+  color: var(--primary-color1);
+  border: 1px solid #34d399;
 }

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "title": "Americano",
+    "description": "",
+    "price": 220,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Espresso",
+    "description": "",
+    "price": 210,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Macchiato",
+    "description": "",
+    "price": 230,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Mocha",
+    "description": "",
+    "price": 350,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Caffe Latte",
+    "description": "",
+    "price": 280,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Caramel Macchiato",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Caramel Latte",
+    "description": "",
+    "price": 350,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Vanilla Latte",
+    "description": "",
+    "price": 350,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "9",
+    "title": "Cappuccino",
+    "description": "",
+    "price": 270,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "10",
+    "title": "Black Tea",
+    "description": "",
+    "price": 220,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "11",
+    "title": "Kenya Tea",
+    "description": "",
+    "price": 230,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "12",
+    "title": "Herbal Tea",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "13",
+    "title": "Dawa Tea",
+    "description": "",
+    "price": 320,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "14",
+    "title": "Hot Chocolate",
+    "description": "",
+    "price": 350,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "15",
+    "title": "Flat White",
+    "description": "",
+    "price": 270,
+    "choices": [],
+    "vegeterian": false
+  }
+]

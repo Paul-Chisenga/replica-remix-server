@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
 import { hashPassword } from "~/services/bcrypt.server";
-import { deleteFiles, uploadFile } from "~/services/files.server";
+import { deleteFile, uploadFile } from "~/services/files.server";
 import prisma from "~/services/prisma.server";
 import { parseCustomError } from "~/utils/helpers";
 import type { AttachmentPayload, ProductPayload } from "~/utils/types";
@@ -66,7 +66,24 @@ export async function createMenu(
     data: {
       title: payload.title,
       category: payload.category as any,
-      meta: { createdBy: adminProfileId },
+    },
+  });
+}
+export async function updateMenu(
+  adminProfileId: string,
+  menuId: string,
+  payload: {
+    title: string;
+    category: string;
+  }
+) {
+  await prisma.menuItem.update({
+    where: {
+      id: menuId,
+    },
+    data: {
+      title: payload.title,
+      category: payload.category as any,
     },
   });
 }
@@ -88,26 +105,28 @@ export async function createProduct(
   payload: ProductPayload
 ) {
   const product = await prisma.product.findUnique({
-    where: { title: payload.title },
+    where: {
+      title_menuItemId: { title: payload.title, menuItemId: payload.menuId },
+    },
   });
   if (product) {
     throw parseCustomError(
-      "A product with title is found, use another title",
+      "A product with title is found. use another title",
       422
     );
   }
 
-  const images: AttachmentPayload[] = [];
-  for (let i = 0; i < payload.images.length; i++) {
-    const file = payload.images[i];
-    if (file.size <= 0) continue;
-    const key = await uploadFile(file);
-    images.push({
-      ext: file.type,
-      key,
-      name: file.name,
-      size: file.size,
-    });
+  let image: AttachmentPayload | undefined;
+  if (payload.image) {
+    if (payload.image.size > 0) {
+      const key = await uploadFile(payload.image);
+      image = {
+        ext: payload.image.type,
+        key,
+        name: payload.image.name,
+        size: payload.image.size,
+      };
+    }
   }
 
   try {
@@ -118,15 +137,15 @@ export async function createProduct(
         price: payload.price,
         menuItemId: payload.menuId,
         choices: payload.choices,
-        images: { create: images },
-        meta: {
-          createdBy: adminProfileId,
-          vegeterian: !!payload.isVegeterian,
-        },
+        image: image ? image.key : undefined,
+        meta: { vegeterian: !!payload.isVegeterian },
       },
     });
   } catch (error) {
-    deleteFiles(images.map((item) => item.key)).catch(() => {});
+    if (image) {
+      deleteFile(image.key).catch(() => {});
+    }
+
     throw error;
   }
 }
@@ -139,23 +158,21 @@ export async function updateProduct(
     where: {
       id: productId,
     },
-    include: {
-      images: true,
-    },
   });
 
-  const images: AttachmentPayload[] = [];
-  for (let i = 0; i < payload.images.length; i++) {
-    const file = payload.images[i];
-    if (file.size <= 0) continue;
-    const key = await uploadFile(file);
-    images.push({
-      ext: file.type,
-      key,
-      name: file.name,
-      size: file.size,
-    });
+  let image: AttachmentPayload | undefined;
+  if (payload.image) {
+    if (payload.image.size > 0) {
+      const key = await uploadFile(payload.image);
+      image = {
+        ext: payload.image.type,
+        key,
+        name: payload.image.name,
+        size: payload.image.size,
+      };
+    }
   }
+
   try {
     await prisma.product.update({
       where: { id: productId },
@@ -165,30 +182,62 @@ export async function updateProduct(
         price: payload.price,
         menuItemId: payload.menuId,
         choices: payload.choices,
-        images:
-          images.length > 0 ? { deleteMany: {}, create: images } : undefined,
+        image: image ? image.key : undefined,
         meta: {
           ...(product.meta as any),
-          updatedBy: adminProfileId,
           vegeterian: !!payload.isVegeterian,
         },
       },
     });
-    if (images.length > 0) {
-      deleteFiles(product.images.map((im) => im.key)).catch(() => {});
+    if (product.image && image) {
+      deleteFile(product.image).catch(() => {});
     }
   } catch (error) {
-    deleteFiles(images.map((item) => item.key)).catch(() => {});
+    if (image) {
+      deleteFile(image.key).catch(() => {});
+    }
+    throw error;
+  }
+}
+export async function uploadMenuImage(
+  adminProfileId: string,
+  payload: { menuId: string; image: File }
+) {
+  const products = await prisma.product.findMany({
+    where: {
+      menuItemId: payload.menuId,
+      image: { isSet: false },
+    },
+  });
+
+  const key = await uploadFile(payload.image);
+  const image: AttachmentPayload = {
+    ext: payload.image.type,
+    key,
+    name: payload.image.name,
+    size: payload.image.size,
+  };
+
+  try {
+    await prisma.$transaction(
+      products.map((product) =>
+        prisma.product.update({
+          where: { id: product.id },
+          data: { image: image.key },
+        })
+      )
+    );
+  } catch (error) {
+    deleteFile(image.key).catch(() => {});
     throw error;
   }
 }
 export async function deleteProduct(adminProfileId: string, productId: string) {
   const deletedProd = await prisma.product.delete({
     where: { id: productId },
-    include: { images: true },
   });
-  if (deletedProd.images.length > 0) {
-    deleteFiles(deletedProd.images.map((item) => item.key)).catch(() => {});
+  if (deletedProd.image) {
+    deleteFile(deletedProd.image).catch(() => {});
   }
 }
 export async function getProducts() {

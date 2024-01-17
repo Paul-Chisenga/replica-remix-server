@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.400.0",
+    "@googleapis/oauth2": "^1.0.5",
+    "@googleapis/people": "^3.0.7",
     "@mui/material": "^5.11.1",
     "@mui/styled-engine-sc": "^5.11.0",
     "@prisma/client": "5",
@@ -37,6 +39,7 @@
     "remix-typedjson": "^0.1.7",
     "styled-components": "^5.3.6",
     "swiper": "^8.4.5",
+    "twilio": "^5.0.0-rc.1",
     "yet-another-react-lightbox": "^2.2.5"
   },
   "devDependencies": {

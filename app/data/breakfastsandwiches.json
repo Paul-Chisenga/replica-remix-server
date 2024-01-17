@@ -1,0 +1,194 @@
+[
+  {
+    "id": "1",
+    "title": "Bagel Sandwich",
+    "description": "Homemade bagel with an egg your way, bacon, cheese, and rocket.",
+    "price": 950,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "English Muffin Sandwich",
+    "description": "Homemade muffin with an egg your way, sausage, and cheese.",
+    "price": 850,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Brioche Sandwich",
+    "description": "Homemade brioche bun with an egg your way, bacon, cheese, rocket, mayo, and avocado mash.",
+    "price": 1200,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Vegeterian Breakfast Sandwich",
+    "description": "Homemade everything bagel with avocado, rocket, cucumber, tomato, cream cheese and pesto.",
+    "price": 1100,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": true
+  },
+  {
+    "id": "5",
+    "title": "Breakfast Taco",
+    "description": "Tortillas topped with chicken, eggs, cheddar cheese, avocados, pico de gallo, and our homemade mexican sauce.",
+    "price": 1100,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Breakfast Burrito",
+    "description": "Tortilla stuffed with chicken, eggs, cheddar cheese, avocados, jalepenos, and topped with our homemade hollandaise sauce and pico de gallo.",
+    "price": 1400,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Traditional Benedict",
+    "description": "Homemade english muffins topped with two eggs your way, bacon, tomatoes and our hollandaise sauce.",
+    "price": 1350,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Veggie Benedict Sandwich",
+    "description": "Homemade muffins topped with two eggs your way, sundried tomatoes, feta cheese, and hollandaise sauce.",
+    "price": 1350,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

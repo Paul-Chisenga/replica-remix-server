@@ -84,7 +84,7 @@ const Banner = () => {
           <h1 className="tw-capitalize">
             We love food, we want you to love it too.
           </h1>
-          <Link to="/shop">
+          <Link to="/menu/lunch-dinner">
             <a className="primary-btn7 btn-md2">
               <i className="bi bi-arrow-up-right-circle" /> Order now
             </a>

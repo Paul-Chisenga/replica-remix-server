@@ -214,12 +214,12 @@ const CurrentLocation: FC<CurrentLocationProps> = ({
   const handleGetLocation = () => {
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
+      setQuerying(true);
+      if (isQueryingLocation) {
+        isQueryingLocation();
+      }
       navigator.geolocation.getCurrentPosition(
         async (position: GeolocationPosition) => {
-          setQuerying(true);
-          if (isQueryingLocation) {
-            isQueryingLocation();
-          }
           const pos = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
@@ -357,12 +357,13 @@ const DeliveryAddress: FC<Props> = ({
             center={REPLICA_POSITION}
             disableDefaultUI={true}
             fullscreenControl
+            fullscreenControlOptions={{ position: ControlPosition.LEFT_TOP }}
             mapId={MAP_ID}
           >
-            <MapControl position={ControlPosition.BOTTOM_CENTER}>
+            <MapControl position={ControlPosition.TOP_LEFT}>
               <div
                 style={{ border: "1px solid" }}
-                className="tw-mb-4 tw-border-gray-300 tw-bg-white/95 tw-rounded-xl tw-drop-shadow-lg tw-p-4 sm:tw-w-[100vh] sm:tw-max-w-md tw-space-y-4"
+                className=" tw-border-gray-300 tw-bg-white/95 tw-rounded-xl tw-drop-shadow-lg tw-p-4 sm:tw-w-[100vh] sm:tw-max-w-sm tw-space-y-4"
               >
                 <Autocomplete
                   position={location}

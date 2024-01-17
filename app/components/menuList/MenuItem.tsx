@@ -1,10 +1,10 @@
+import type { Product } from "@prisma/client";
 import { Link } from "@remix-run/react";
 import type { FC } from "react";
 import { parseProdImageUrl } from "~/utils/helpers";
-import type { ProductWithImages } from "~/utils/types";
 
 interface Props {
-  product: ProductWithImages;
+  product: Product;
 }
 
 const MenuItem: FC<Props> = ({ product }) => {
@@ -13,7 +13,7 @@ const MenuItem: FC<Props> = ({ product }) => {
       <div className="item-name">
         <div className="item-img">
           <img
-            src={parseProdImageUrl(product.images)}
+            src={parseProdImageUrl(product.image)}
             alt=""
             style={{ width: 68, height: 68 }}
             className="tw-object-contain"

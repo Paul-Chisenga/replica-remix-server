@@ -1,0 +1,66 @@
+[
+  {
+    "id": "1",
+    "title": "Rosemary Bread",
+    "description": "",
+    "price": 450,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Brioche Buns",
+    "description": "",
+    "price": 200,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "English Muffin",
+    "description": "",
+    "price": 100,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Plain Bagel",
+    "description": "",
+    "price": 150,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "5",
+    "title": "Raisin Bagel",
+    "description": "",
+    "price": 150,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "6",
+    "title": "Everything Bagel",
+    "description": "",
+    "price": 150,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "7",
+    "title": "Garlic Knot",
+    "description": "",
+    "price": 150,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "8",
+    "title": "Tortilla",
+    "description": "",
+    "price": 250,
+    "choices": [],
+    "vegeterian": false
+  }
+]

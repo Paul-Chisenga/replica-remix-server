@@ -1,0 +1,55 @@
+[
+  {
+    "id": "1",
+    "title": "Kids Spaguetti",
+    "description": "",
+    "price": 600,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "Kids Mac N' Cheese",
+    "description": "",
+    "price": 750,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Bread",
+        "options": ["Glutten Free", "Rosemary Bread", "Garlic Knot"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Kids Cheeseburger",
+    "description": "One side item",
+    "price": 900,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice x 1",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

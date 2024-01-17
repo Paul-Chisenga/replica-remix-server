@@ -1,0 +1,41 @@
+[
+  {
+    "id": "1",
+    "title": "Goat Cheese Bruschetta",
+    "description": "Toasted baguettes topped with goat cheese, sundried tomatoes, and our lemon garlic sauce.",
+    "price": 1350,
+    "choices": [],
+    "vegeterian": true
+  },
+  {
+    "id": "2",
+    "title": "Wings",
+    "description": "Eight crispy wings tossed in your choice of sauce traditional buffalo or homemade BBQ.",
+    "price": 1500,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Wing Sauce",
+        "options": ["Traditional Buffalo", "BBQ"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "3",
+    "title": "Chips, Veggies, and Dip",
+    "description": "Tortilla chips and vegetables with our homemade creamy cilantro ranch dip and guacamole.",
+    "price": 1000,
+    "choices": [],
+    "vegeterian": false
+  },
+  {
+    "id": "4",
+    "title": "Artichoke Dip",
+    "description": "Deliciously creamy artichoke dip served with toasted baguette slices.",
+    "price": 1750,
+    "choices": [],
+    "vegeterian": true
+  }
+]

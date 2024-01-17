@@ -12,7 +12,9 @@ import { requireUserSession } from "~/controllers/auth.server";
 import { sendEmail } from "~/services/email.server";
 import { generateToken } from "~/services/jwt";
 import prisma from "~/services/prisma.server";
+import { sendSMS } from "~/services/twilio.server";
 import {
+  generateVerificationCode,
   hasErrors,
   invariantValidate,
   requiredFieldValidate,
@@ -86,7 +88,7 @@ export const action = async ({ request }: ActionArgs) => {
           "A User with this email exists already, choose another email address",
       };
     }
-
+    const code = generateVerificationCode();
     // send verification email
     const token = generateToken(
       {
@@ -94,11 +96,15 @@ export const action = async ({ request }: ActionArgs) => {
         lastname: data.lastname.trim(),
         email: data.email.trim(),
         phone: +data.phone,
-        verificationCode: "1254",
+        verificationCode: code,
       },
       process.env.ACCOUNT_NEW as string
     );
 
+    await sendSMS(
+      `+254${+data.phone}`,
+      `Your verification code from REPLICA is ${code}`
+    );
     await sendEmail({
       to: {
         name: data.firstname,

@@ -1,0 +1,82 @@
+[
+  {
+    "id": "1",
+    "title": "The Classic",
+    "description": "2 eggs your way, choice of bacon or sausage, choice of potatoes, salad, or fruit cup & choice of bread.",
+    "price": 850,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Side Item",
+        "options": ["Fruit Cup", "Salad w/Dressing", "Potatoes"],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Bread Choice ",
+        "options": [
+          "Plain Bagel",
+          "Raisin Bagel",
+          "Everything Bagel",
+          "White Bread",
+          "Wheat Bread",
+          "English Muffin",
+          "Gluten Free"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Meat Choice",
+        "options": ["Bacon", "Beef Sausage", "Pork Sausage"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  },
+  {
+    "id": "2",
+    "title": "The Trio",
+    "description": "2 eggs your way, choice of any pancake or french toast, choice of bacon or sausage.",
+    "price": 1000,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Egg Type",
+        "options": [
+          "Over Easy",
+          "Over Medium",
+          "Over Hard",
+          "Scrambled",
+          "Poached"
+        ],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Pancake or French Toast",
+        "options": ["Plain Pancake", "Carrot Pancake", "Chocolate Pancake"],
+        "requiredOptions": 1
+      },
+      {
+        "required": true,
+        "selector": "Breakfast Meat Choice",
+        "options": ["Bacon", "Beef Sausage", "Pork Sausage"],
+        "requiredOptions": 1
+      }
+    ],
+    "vegeterian": false
+  }
+]

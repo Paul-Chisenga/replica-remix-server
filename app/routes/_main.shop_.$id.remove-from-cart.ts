@@ -1,4 +1,5 @@
-import { Role, SelectedChoice } from "@prisma/client";
+import type { SelectedChoice } from "@prisma/client";
+import { Role } from "@prisma/client";
 import type { ActionArgs } from "@remix-run/node";
 import { requireUserSession } from "~/controllers/auth.server";
 import prisma from "~/services/prisma.server";

@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Role } from "@prisma/client";
 import {
-  redirect,
   type ActionArgs,
   type LoaderArgs,
   type V2_MetaFunction,
@@ -55,14 +54,9 @@ function Checkout() {
   }, 0);
 
   useEffect(() => {
-    if (actionData && actionData.success) {
-      cartContext.clearCart();
-    }
-  }, [actionData]);
-
-  useEffect(() => {
     if (items.length <= 0) {
-      navigate("/", { replace: true });
+      cartContext.clearCart();
+      navigate("/orders", { replace: true });
     }
   }, [items.length, navigate]);
 
@@ -84,7 +78,7 @@ function Checkout() {
                       >
                         <div className="product-img">
                           <img
-                            src={parseProdImageUrl(item.product.images)}
+                            src={parseProdImageUrl(item.product.image)}
                             alt=""
                             className="tw-object-cover tw-object-top tw-rounded"
                             style={{ width: 50, height: 70 }}
@@ -344,11 +338,7 @@ export async function loader({ request }: LoaderArgs) {
         },
       },
       include: {
-        product: {
-          include: {
-            images: true,
-          },
-        },
+        product: true,
       },
     });
 
@@ -424,7 +414,6 @@ export async function action({ request }: ActionArgs) {
           include: {
             product: {
               include: {
-                images: true,
                 menuItem: true,
               },
             },
@@ -443,23 +432,16 @@ export async function action({ request }: ActionArgs) {
                 description: item.product.description,
                 price: item.product.price,
                 choices: item.choices,
-                imageUrl: item.product.images[0]?.key ?? "",
+                imageUrl: item.product.image,
                 meta: item.product.meta,
                 menuItem: item.product.menuItem.title,
                 menuCategory: item.product.menuItem.category,
               },
               count: item.count,
             })),
-            customer: {
-              id: customer.id,
-              firstname: customer.profile.firstname,
-              lastname: customer.profile.lastname,
-              email: customer.profile.email,
-              phone: customer.profile.phone,
-              shippingAddress: customer.shippingAddress!,
-            },
+            customer: { connect: { id: customer.id } },
             meta: orderNote ? { orderNote } : undefined,
-            deliveryCode: 3452,
+            // deliveryCode: 3452,
           },
         });
 
@@ -577,8 +559,9 @@ export async function action({ request }: ActionArgs) {
       }
     );
 
-    return redirect("/orders");
+    return { success: true };
   } catch (error) {
+    console.log(errors);
     throw new Error("Something went wrong");
   }
 }

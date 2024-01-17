@@ -54,9 +54,6 @@ export async function loader() {
   const breakfastCount = await prisma.product.count({ where: breakfastWhere });
   const breakfast = await prisma.product.findMany({
     where: breakfastWhere,
-    include: {
-      images: true,
-    },
     skip: random(breakfastCount),
     take: 4,
   });
@@ -69,9 +66,6 @@ export async function loader() {
   const lunchCount = await prisma.product.count({ where: lunchWhere });
   const lunchDinner = await prisma.product.findMany({
     where: lunchWhere,
-    include: {
-      images: true,
-    },
     skip: random(lunchCount),
     take: 4,
   });
@@ -84,24 +78,18 @@ export async function loader() {
   const bakeryCount = await prisma.product.count({ where: bakeryWhere });
   const bakery = await prisma.product.findMany({
     where: bakeryWhere,
-    include: {
-      images: true,
-    },
     skip: random(bakeryCount),
     take: 4,
   });
 
   const beverageWhere: Prisma.ProductWhereInput = {
     menuItem: {
-      category: MenuCategory.BEVARAGE,
+      category: MenuCategory.BEVERAGE,
     },
   };
   const beverageCount = await prisma.product.count({ where: beverageWhere });
   const beverages = await prisma.product.findMany({
     where: beverageWhere,
-    include: {
-      images: true,
-    },
     skip: random(beverageCount),
     take: 4,
   });

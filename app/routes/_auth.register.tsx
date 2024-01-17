@@ -1,9 +1,9 @@
 import type { ActionArgs, LoaderArgs, V2_MetaFunction } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { Form, Link, useActionData } from "@remix-run/react";
+import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import FormError from "~/components/common/FormError";
-import FormSuccess from "~/components/common/FormSuccess";
 import MyForm from "~/components/Form/MyForm";
+import DualRingLoader from "~/components/indicators/DualRingLoader";
 import { getUserSession } from "~/controllers/auth.server";
 import { sendEmail } from "~/services/email.server";
 import { generateToken } from "~/services/jwt";
@@ -28,80 +28,57 @@ export const meta: V2_MetaFunction = () => {
 
 const Register = () => {
   const actionData = useActionData();
+  const navigation = useNavigation();
 
-  return (
-    <div className="container">
-      <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-screen-sm tw-mx-auto">
-        <h4 className="mb-20 tw-text-3xl title">Create an account</h4>
-        <FormError>{actionData?.error}</FormError>
-        {actionData?.success && (
-          <FormSuccess>
-            Success, Verification email sent,
+  if (actionData?.success) {
+    return (
+      <div className="container">
+        <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-md tw-mx-auto">
+          <div className="tw-px-2 tw-text-sm tw-text-emerald-500 tw-font-jost">
+            Success, A verification link has been sent to your email,
             <br />
             Use the link sent to your email to complete your registration
-          </FormSuccess>
-        )}
+          </div>
+          <br />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container tw-pb-32">
+      <div className="tw-rounded-md tw-p-10 box--shadow tw-max-w-screen-sm tw-mx-auto">
+        <h4 className="mb-20 tw-text-3xl title">Create an account</h4>
         <br />
         <Form action="" method="POST">
           <MyForm.Group>
+            <MyForm.Input
+              type="email"
+              placeholder="Your email address*"
+              label="Email"
+              required
+              name="email"
+            />
+            <MyForm.Input
+              type="password"
+              placeholder="must not be less than 6 characters."
+              label="Password"
+              required
+              name="password"
+              minLength={6}
+            />
+          </MyForm.Group>
+          <MyForm.Group>
             <MyForm.Misc>
-              <div className="row">
-                <div className="col-lg-6">
-                  <MyForm.Input
-                    type="text"
-                    placeholder="Your first name*"
-                    label="First Name"
-                    required
-                    name="firstname"
-                  />
-                </div>
-                <div className="col-lg-6">
-                  <MyForm.Input
-                    type="text"
-                    placeholder="Your last name*"
-                    label="Last Name"
-                    required
-                    name="lastname"
-                  />
-                </div>
-                <div className="col-12">
-                  <MyForm.Input
-                    type="email"
-                    placeholder="Your email address*"
-                    label="Email"
-                    required
-                    name="email"
-                  />
-                </div>
-                <div className="col-12">
-                  <MyForm.Input
-                    type="tel"
-                    placeholder="eg. 07......"
-                    label="Your phone number"
-                    required
-                    name="phone"
-                    errormessage={actionData?.errors?.phone}
-                  />
-                </div>
-              </div>
-              <div className="col-12">
-                <MyForm.Input
-                  type="password"
-                  placeholder="must not be less than 6 characters."
-                  label="Password"
-                  required
-                  name="password"
-                  minLength={6}
-                />
-              </div>
+              <FormError>{actionData?.error}</FormError>
             </MyForm.Misc>
           </MyForm.Group>
-
           <button
             type="submit"
             className="primary-btn8 lg--btn btn-primary-fill tw-block tw-w-full"
           >
             Create Account
+            {navigation.state === "submitting" && <DualRingLoader size={15} />}
           </button>
           <div className="tw-text-center tw-my-6 tw-text-sm tw-font-medium tw-font-jost">
             <span className="tw-text-emerald-600">Already registered ?</span>
@@ -110,6 +87,19 @@ const Register = () => {
               className="tw-text-secondary tw-underline hover:tw-text-black tw-inline-block tw-mx-1"
             >
               Login!
+            </Link>
+          </div>
+          {/* SOCIAL MEDIA LOGIN */}
+          <div
+            className=" tw-pt-4 tw-border-gray-100"
+            style={{ borderTop: "1px solid" }}
+          >
+            <Link
+              to={"/login/google"}
+              className="my-btn outline rounded dark tw-w-full tw-text-center tw-block"
+            >
+              <i className="bi bi-google"></i>
+              Sign up with google
             </Link>
           </div>
         </Form>
@@ -134,23 +124,9 @@ export async function action({ request }: ActionArgs) {
   invariantValidate(data);
 
   // Custom form errors
-  const errors = requiredFieldValidate(data, [
-    "firstname",
-    "lastname",
-    "email",
-    "phone",
-    "password",
-  ]);
+  const errors = requiredFieldValidate(data, ["email", "password"]);
   if (hasErrors(errors)) {
     return { errors };
-  }
-
-  if (`${+data.phone}`.length !== 9) {
-    return {
-      errors: {
-        phone: "Invalid phone number",
-      },
-    };
   }
 
   try {
@@ -167,7 +143,7 @@ export async function action({ request }: ActionArgs) {
 
     if (user) {
       throw parseCustomError(
-        "A User with this email exists already, choose another email address",
+        "A User with this email exists already, choose another email address.",
         422
       );
     }
@@ -175,24 +151,16 @@ export async function action({ request }: ActionArgs) {
     // send verification email
     const token = generateToken(
       {
-        firstname: data.firstname,
-        lastname: data.lastname,
         email: data.email,
         password: data.password,
-        phone: +data.phone,
       },
       process.env.ACCOUNT_NEW as string
     );
 
     await sendEmail({
-      to: {
-        name: data.firstname,
-        email: data.email,
-      },
+      to: { email: data.email },
       subject: "WELECOME TO REPLICA",
       message: `
-      Hey ${data.firstname},
-
       Thank you for registering on replica,
 
       Click <a href="${process.env.HOST_URL}/register/${token}" target="_blank" rel="noopener noreferrer">here</a> to verify your email address.

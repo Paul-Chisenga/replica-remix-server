@@ -45,11 +45,10 @@ export default function AssignRider() {
             <MyForm.Select.Wrapper
               id="rider"
               name="riderId"
-              label="Select a rider"
               required
               errormessage={actionData?.errors?.riderId}
             >
-              <MyForm.Select.Option value={""}></MyForm.Select.Option>
+              <MyForm.Select.Option value={""}>Select</MyForm.Select.Option>
               {riders.map((rider) => (
                 <MyForm.Select.Option key={rider.id} value={rider.id}>
                   {rider.profile.firstname + " " + rider.profile.lastname}

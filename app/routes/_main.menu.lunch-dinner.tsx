@@ -2,7 +2,7 @@ import { MenuCategory } from "@prisma/client";
 import type { V2_MetaFunction } from "@remix-run/node";
 import { useTypedLoaderData } from "remix-typedjson";
 import Breadcrumb from "~/components/common/Breadcrumb";
-import Menu1 from "~/components/menu/Menu1";
+import Menu2 from "~/components/menu/Menu2";
 import { menuLoader } from "~/utils/helpers";
 
 export const meta: V2_MetaFunction = () => {
@@ -18,14 +18,11 @@ export const meta: V2_MetaFunction = () => {
 
 const LunchDinnerMenu = () => {
   const menu = useTypedLoaderData<typeof loader>();
+
   return (
     <>
       <Breadcrumb pageName="lunch-dinner" pageTitle="Lunch/Dinner Menu" />
-      <Menu1
-        category={MenuCategory.FOOD}
-        menu={menu}
-        image="lunch_dinner.png"
-      />
+      <Menu2 menu={menu} />
     </>
   );
 };
