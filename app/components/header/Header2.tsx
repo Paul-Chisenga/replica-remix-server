@@ -69,10 +69,17 @@ const Header2: FC<Props> = ({ user }) => {
   return (
     <header
       ref={headerRef}
+      // className={
+      //   state.scrollY > 120
+      //     ? `header-area style-1 bg-color2 ${
+      //         !location.pathname.includes("menu") && "sticky"
+      //       }`
+      //     : "header-area style-1 bg-color2"
+      // }
       className={
         state.scrollY > 120
-          ? `header-area style-1 bg-color2 ${
-              !location.pathname.includes("menu") && "sticky"
+          ? `header-area style-1 bg-color2 sticky  ${
+              !location.pathname.includes("shop") && "shop"
             }`
           : "header-area style-1 bg-color2"
       }
@@ -145,7 +152,17 @@ const Header2: FC<Props> = ({ user }) => {
                 About
               </NavLink>
             </li>
-            <li className="menu-item-has-children">
+            <li>
+              <NavLink
+                to="/shop"
+                onClick={() =>
+                  dispatch({ type: "mobileMenu", isMobileMenu: false })
+                }
+              >
+                Menu
+              </NavLink>
+            </li>
+            {/* <li className="menu-item-has-children">
               <NavLink to="/menu" className="drop-down">
                 Menu
               </NavLink>
@@ -157,6 +174,7 @@ const Header2: FC<Props> = ({ user }) => {
                     : "bi bi-plus dropdown-icon"
                 }
               />
+              
               <ul
                 className={
                   state.activeMenu === "menu"
@@ -205,7 +223,7 @@ const Header2: FC<Props> = ({ user }) => {
                   </NavLink>
                 </li>
               </ul>
-            </li>
+            </li> */}
             <li>
               <NavLink
                 to="/reservation"
@@ -281,7 +299,7 @@ const Header2: FC<Props> = ({ user }) => {
             )}
           </div>
 
-          <Link to="/menu/lunch-dinner" className="primary-btn btn-md">
+          <Link to="/shop" className="primary-btn btn-md">
             Order Now
           </Link>
           <AccountDropdown user={user} />

@@ -54,8 +54,9 @@ const Banner = () => {
         </div>
         <p>
           <img className="left-vec" src="/images/icon/h3-open-vec.svg" alt="" />
-          7 a.m.-10.p.m (Mon-Thur) | 7.a.m-11.p.m (Fri-Sat){" "}
-          <strong>Closed Sunday</strong>
+          {/* 7 a.m.-10.p.m (Mon-Thur) | 7.a.m-11.p.m (Fri-Sat){" "}
+          <strong>Closed Sunday</strong> */}
+          7 a.m.-9.p.m (Mon-Sat) | 7.a.m-8.p.m (Sun)
           <img
             className="right-vec"
             src="/images/icon/h3-open-vec.svg"
@@ -84,7 +85,7 @@ const Banner = () => {
           <h1 className="tw-capitalize">
             We love food, we want you to love it too.
           </h1>
-          <Link to="/menu/lunch-dinner">
+          <Link to="/shop">
             <a className="primary-btn7 btn-md2">
               <i className="bi bi-arrow-up-right-circle" /> Order now
             </a>

@@ -1,4 +1,4 @@
-import type { Product } from "@prisma/client";
+import { MenuCategory, Product } from "@prisma/client";
 import type { FC } from "react";
 import Menu from "./Menu";
 
@@ -42,24 +42,28 @@ const MenuList: FC<Props> = ({
             <Menu
               title="Break-fast"
               products={breakfast}
-              page="/menu/breakfast"
+              page={`/shop?mcat=${MenuCategory.BREAKFAST}`}
             />
           </div>
           <div className="col-lg-6">
             <Menu
               title="Lunch/Dinner"
               products={lunchDinner}
-              page="/menu/lunch-dinner"
+              page={`/shop?mcat=${MenuCategory.FOOD}`}
             />
           </div>
           <div className="col-lg-6">
-            <Menu title="Bakery" products={bakery} page="/menu/bakery" />
+            <Menu
+              title="Bakery"
+              products={bakery}
+              page={`/shop?mcat=${MenuCategory.BAKERY}`}
+            />
           </div>
           <div className="col-lg-6">
             <Menu
               title="Beverage"
               products={beverages}
-              page="/menu/beverages"
+              page={`/shop?mcat=${MenuCategory.BEVERAGE}`}
             />
           </div>
         </div>

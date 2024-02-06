@@ -67,7 +67,7 @@ function Cart() {
           {cart.length === 0 && (
             <div className="tw-p-5 tw-text-center">
               <p className="">There is nothing to see</p>
-              <LinkButton2 to="/menu/lunch-dinner">Go shopping</LinkButton2>
+              <LinkButton2 to="/shop">Go shopping</LinkButton2>
             </div>
           )}
           {cart.length > 0 && (
@@ -256,7 +256,7 @@ function Cart() {
                     </tbody>
                   </table>
                   <div className="cart-btn-group">
-                    <Link to="/menu/lunch-dinner">
+                    <Link to="/shop">
                       <a className="primary-btn3 btn-lg">
                         Continue to shopping
                       </a>

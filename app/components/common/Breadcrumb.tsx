@@ -1,14 +1,15 @@
 import { Link } from "@remix-run/react";
 import type { FC } from "react";
+import type { InitProps } from "~/utils/types";
 
-interface Props {
+interface Props extends InitProps {
   pageTitle: string;
   pageName: string;
 }
 
-const Breadcrumb: FC<Props> = ({ pageName, pageTitle }) => {
+const Breadcrumb: FC<Props> = ({ pageName, pageTitle, className }) => {
   return (
-    <div className="breadcrumb-section">
+    <div className={`breadcrumb-section ${className}`}>
       <div className="breadcrumb-left-vec">
         <img
           src="/images/icon/breadcumb-left-vec.svg"

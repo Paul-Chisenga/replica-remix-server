@@ -7,8 +7,10 @@ function Topbar() {
           <div className="col-lg-5 col-md-5 d-flex align-items-center justify-content-md-start justify-content-center">
             <div className="open-time tw-text-center">
               <p>
-                <span>Opening Hour:</span> 7.a.m-10.p.m(Mon-Thur) |
-                7.a.m-11.p.m(Fri-Sat) <strong>Closed Sunday</strong>
+                {/* <span>Opening Hour:</span> 7.a.m-10.p.m(Mon-Thur) |
+                7.a.m-11.p.m(Fri-Sat) <strong>Closed Sunday</strong> */}
+                <span>Opening Hour:</span> 7.a.m-9.p.m(Mon-Sat) |
+                7.a.m-8.p.m(Sun)
               </p>
             </div>
           </div>

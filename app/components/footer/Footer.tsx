@@ -15,7 +15,7 @@ function Footer() {
                 <div className="menu-container">
                   <ul>
                     <li>
-                      <Link to="/menu">Our Menu</Link>
+                      <Link to="/shop">Our Menu</Link>
                     </li>
                     <li>
                       <Link to="/reservation">Private Event</Link>

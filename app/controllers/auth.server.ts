@@ -88,7 +88,7 @@ export async function login(
 ) {
   const user = await prisma.profile.findUnique({
     where: {
-      email: credentials.email,
+      email: credentials.email.trim(),
     },
   });
 

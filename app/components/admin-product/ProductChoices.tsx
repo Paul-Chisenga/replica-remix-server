@@ -1,5 +1,5 @@
 import type { ProductChoice } from "@prisma/client";
-import type { FC } from "react";
+import { FC, memo } from "react";
 import { useState, useEffect } from "react";
 import type { MyObject } from "~/utils/types";
 import DynamicFieldWrapper from "../Form/DynamicFieldWrapper";
@@ -49,7 +49,7 @@ const ProductChoices: FC<Props> = ({ errors, choices }) => {
                   name={`required${idx}`}
                   required
                   defaultChecked={choices ? choices[idx]?.required : false}
-                  checked={choices ? choices[idx]?.required : false}
+                  // checked={choices ? choices[idx]?.required : false}
                 />
                 <MyForm.Input
                   type={"radio"}
@@ -59,7 +59,7 @@ const ProductChoices: FC<Props> = ({ errors, choices }) => {
                   name={`required${idx}`}
                   required
                   defaultChecked={choices ? !choices[idx]?.required : false}
-                  checked={choices ? !choices[idx]?.required : false}
+                  // checked={choices ? !choices[idx]?.required : false}
                 />
               </div>
             </div>
@@ -72,7 +72,7 @@ const ProductChoices: FC<Props> = ({ errors, choices }) => {
                 required
                 errormessage={errors ? errors[`selector${idx}`] : undefined}
                 defaultValue={choices ? choices[idx]?.selector : ""}
-                value={choices ? choices[idx]?.selector : ""}
+                // value={choices ? choices[idx]?.selector : ""}
               />
               <MyForm.Input
                 type={"number"}
@@ -84,7 +84,7 @@ const ProductChoices: FC<Props> = ({ errors, choices }) => {
                   errors ? errors[`requiredOptions${idx}`] : undefined
                 }
                 defaultValue={choices ? choices[idx]?.requiredOptions : ""}
-                value={choices ? choices[idx]?.requiredOptions : ""}
+                // value={choices ? choices[idx]?.requiredOptions : ""}
               />
             </div>
             <div className="tw-mb-4">
@@ -102,4 +102,4 @@ const ProductChoices: FC<Props> = ({ errors, choices }) => {
   );
 };
 
-export default ProductChoices;
+export default memo(ProductChoices);

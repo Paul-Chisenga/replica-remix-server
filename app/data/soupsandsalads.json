@@ -46,7 +46,7 @@
   },
   {
     "id": "4",
-    "title": "House Sala",
+    "title": "House Salad",
     "description": "Mixed lettuce with croutons, bacon, cheddar cheese, tomatoes, cucumbers, and our homemade honey mustard. Served with a choice of bread.",
     "price": 1150,
     "choices": [
@@ -61,7 +61,7 @@
   },
   {
     "id": "5",
-    "title": "Tamato Bisque (Bowl)",
+    "title": "Tomato Bisque (Bowl)",
     "description": "Tomato bisque topped with goat cheese and croutons. Served with choice of bread.",
     "price": 1500,
     "choices": [
@@ -76,7 +76,7 @@
   },
   {
     "id": "6",
-    "title": "Tamato Bisque (Cup)",
+    "title": "Tomato Bisque (Cup)",
     "description": "Tomato bisque topped with goat cheese and croutons. Served with choice of bread.",
     "price": 900,
     "choices": [

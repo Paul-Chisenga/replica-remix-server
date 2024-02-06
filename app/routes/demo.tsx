@@ -10,11 +10,21 @@ import DynamicFieldWrapper from "~/components/Form/DynamicFieldWrapper";
 import MyForm from "~/components/Form/MyForm";
 import DualRingLoader from "~/components/indicators/DualRingLoader";
 import Modal from "~/components/Modal/Modal";
+import { deleteFile } from "~/services/files.server";
+import prisma from "~/services/prisma.server";
 
 const Demo = () => {
   const navigation = useNavigation();
   return (
     <div className="container tw-p-20 tw-mt-20 tw-space-y-4">
+      <Form action="" method="PATCH">
+        <button type="submit" className="my-btn fill semi-rounded primary">
+          remove img
+          {navigation.state === "submitting" && <DualRingLoader size={0} />}
+        </button>
+      </Form>
+      <br />
+
       <DynamicFieldWrapper
         count={0}
         onAdd={function (): void {
@@ -126,11 +136,19 @@ export async function loader() {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  await new Promise((res) => {
-    setTimeout(() => {
-      res("");
-    }, 3000);
+  await prisma.product.updateMany({
+    where: {
+      image:
+        "f0b8fb5aa657636611bbb2fa163a4cc20c2a5c8942bab5239aef74960062de6c.jpg",
+    },
+    data: {
+      image: null,
+    },
   });
+
+  await deleteFile(
+    "f0b8fb5aa657636611bbb2fa163a4cc20c2a5c8942bab5239aef74960062de6c.jpg"
+  );
 
   return null;
 };

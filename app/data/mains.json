@@ -138,7 +138,7 @@
   },
   {
     "id": "8",
-    "title": "Spaguetti",
+    "title": "Spaghetti",
     "description": "Classic tomato and minced beef sauce on top of spaghetti noodles. Includes one bread choice.",
     "price": 1200,
     "choices": [
@@ -171,7 +171,22 @@
     "title": "Creamy Garlic Chicken",
     "description": "A seasoned chicken breast topped with a delicious parmesan garlic sauce. Includes one bread choice.",
     "price": 1700,
-    "choices": [],
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice x 2",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 2
+      }
+    ],
     "vegeterian": false
   },
   {
@@ -218,5 +233,28 @@
       }
     ],
     "vegeterian": true
+  },
+  {
+    "id": "14",
+    "title": "Chicken Tenders",
+    "description": "Breaded and fried chicken tenders with our signature sauce.",
+    "price": 1600,
+    "choices": [
+      {
+        "required": true,
+        "selector": "Lunch/Dinner Side Choice x 2",
+        "options": [
+          "Parmesan & Garlic Fries",
+          "Regular Fries",
+          "Mashed Potatoes",
+          "Roasted Broccoli",
+          "Sauteed Green Beans",
+          "Mexican Street Corn",
+          "Vegetable Medley"
+        ],
+        "requiredOptions": 2
+      }
+    ],
+    "vegeterian": false
   }
 ]

@@ -16,13 +16,16 @@ const ShopItem: FC<Props> = ({ product }) => {
         <Link
           to={`/shop/${product.id}`}
           className="tw-block tw-bg-black/5 tw-rounded-t-md tw-rounded-tr-md sm:tw-h-[316px]"
+          // className="tw-block tw-bg-black/5 tw-rounded-t-md tw-rounded-tr-md"
         >
+          {/* {product.image && ( */}
           <img
             className=" tw-w-full hover:tw-bg-white/20 hover:tw-opacity-90 tw-transition-all tw-duration-200 tw-object-cover tw-object-top"
             src={parseProdImageUrl(product.image)}
             alt=""
             style={{ maxHeight: 316 }}
           />
+          {/* )} */}
         </Link>
         <div className="cart-icon">
           <Link to={`/shop/${product.id}`}>

@@ -22,7 +22,7 @@ const CreateProductForm: FC<Props> = ({ actionData, product, menu }) => {
           required
           name="title"
           defaultValue={product?.title}
-          value={product?.title}
+          // value={product?.title}
           errormessage={actionData?.errors?.title}
         />
         <MyForm.TextArea
@@ -31,7 +31,7 @@ const CreateProductForm: FC<Props> = ({ actionData, product, menu }) => {
           label="Description"
           name="description"
           defaultValue={product?.description ?? ""}
-          value={product?.description ?? ""}
+          // value={product?.description ?? ""}
           errormessage={actionData?.errors?.description}
         />
         <MyForm.Input
@@ -41,7 +41,7 @@ const CreateProductForm: FC<Props> = ({ actionData, product, menu }) => {
           name="price"
           required
           defaultValue={product?.price}
-          value={product?.price}
+          // value={product?.price}
           errormessage={actionData?.errors?.price}
         />
         <MyForm.Select.Wrapper
@@ -69,7 +69,7 @@ const CreateProductForm: FC<Props> = ({ actionData, product, menu }) => {
           label="Vegeterian"
           name="vegeterian"
           defaultChecked={!!(product?.meta as Prisma.JsonObject)?.vegeterian}
-          checked={(product as any)?.vegeterian}
+          // checked={(product as any)?.vegeterian}
         />
         <MyForm.Misc className="tw-mb-6">
           <MyForm.Label>Choices</MyForm.Label>

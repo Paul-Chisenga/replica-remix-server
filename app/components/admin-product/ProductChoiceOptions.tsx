@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { FC, memo } from "react";
 import { useState } from "react";
 import type { InitProps } from "~/utils/types";
 import DynamicFieldWrapper from "../Form/DynamicFieldWrapper";
@@ -12,6 +12,7 @@ interface Props extends InitProps {
 
 const ProductChoiceOptions: FC<Props> = ({ name, errors, options }) => {
   const [count, setCount] = useState(options?.length ?? 0);
+
   return (
     <div>
       {errors && errors[name] && <p className="input-error">{errors[name]}</p>}
@@ -29,7 +30,7 @@ const ProductChoiceOptions: FC<Props> = ({ name, errors, options }) => {
             name={name}
             required
             defaultValue={options ? options[index] : ""}
-            value={options ? options[index] : ""}
+            // value={options ? options[index] : ""}
           />
         ))}
       </DynamicFieldWrapper>
@@ -37,4 +38,4 @@ const ProductChoiceOptions: FC<Props> = ({ name, errors, options }) => {
   );
 };
 
-export default ProductChoiceOptions;
+export default memo(ProductChoiceOptions);

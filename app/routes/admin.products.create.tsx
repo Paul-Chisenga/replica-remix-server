@@ -26,7 +26,7 @@ import {
   MyFormData,
 } from "~/utils/helpers";
 import type { MyActionData, MyObject, ProductPayload } from "~/utils/types";
-import data from "~/data/coffeeandtea.json";
+import data from "~/data/mains.json";
 import DynamicFieldWrapper from "~/components/Form/DynamicFieldWrapper";
 
 const NewProduct = () => {
